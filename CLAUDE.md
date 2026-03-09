@@ -21,10 +21,17 @@ These files contain the full picture. Read them as needed:
 - **Google Workspace** - Email, docs, collaboration
 - **Figma** - Design
 - **Slack** - Team messaging (MCP connected)
-- **Teamwork.com** - Project management
+- **Teamwork.com** - Project management (API connected via `.claude/skills/teamwork/SKILL.md`)
 - **Bark.com** - Lead generation
 
 Some MCP servers are connected. Check available tools before attempting integrations.
+
+## Daily Tools
+
+These integrations are used every day and should be loaded proactively when relevant:
+
+- **Teamwork** - Read tasks, read comments, create tasks. Skill: `.claude/skills/teamwork/SKILL.md`. Trigger on any mention of tasks, projects, deadlines, assignments, or Teamwork. API key in `.env`.
+- **Insites Intranet** - CRM contacts, companies, tasks, databases, activities. Skill: `.claude/skills/insites/SKILL.md`. Trigger on any mention of the intranet, Insites, client CRM records, or contact/company lookups. API key in `.env`.
 
 ## Skills
 

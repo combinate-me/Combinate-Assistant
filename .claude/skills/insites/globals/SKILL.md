@@ -7,6 +7,8 @@ description: Insites Globals covers tasks, task comments, activities, and attach
 
 The Globals provides cross-module features that work across all Insites modules. Tasks, activities, and attachments can be linked to records in CRM, Pipelines, Events, or any other module.
 
+**Requires:** `INSITES_INSTANCE_URL` and `INSITES_API_KEY`. Use the combinate skill to resolve these for Combinate projects.
+
 **Base path:** `$INSITES_INSTANCE_URL/crm/api/v2/`
 
 **Note:** Despite being conceptually a "Globals" module in the Insites admin, tasks, activities, task comments, and attachments all use the `/crm/api/v2/` URL prefix.

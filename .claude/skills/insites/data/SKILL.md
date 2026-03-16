@@ -7,6 +7,8 @@ description: Insites Data module. Use for listing databases and reading or writi
 
 The Data module provides access to custom databases and their records. Databases are structured data stores with custom schemas defined in the Insites admin.
 
+**Requires:** `INSITES_INSTANCE_URL` and `INSITES_API_KEY`. Use the combinate skill to resolve these for Combinate projects.
+
 **Base paths:**
 - Databases: `$INSITES_INSTANCE_URL/databases/api/v2/databases`
 - Database items: `$INSITES_INSTANCE_URL/databases/api/v2/database/TABLE_ID/items`

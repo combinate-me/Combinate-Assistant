@@ -112,7 +112,15 @@ Example format:
 > Email draft ready in Gmail for Shane to review and send.
 > Outstanding: client to confirm language list before we proceed.
 
-## Step 6: Confirm with Shane
+## Step 6: NotebookLM Reminder
+
+After leaving the Teamwork comment, check whether the project has a NotebookLM notebook:
+
+1. Read the `Notebook LM` record from the Teamwork "Claude" custom item for this project (see `.claude/skills/combinate/teamwork/SKILL.md` for the custom items API)
+2. If a link is present, tell Shane: "Don't forget to add this document to the project NotebookLM: [link]"
+3. If the record is empty or missing, skip this step
+
+## Step 7: Confirm with Shane
 
 Present a summary of everything created with direct links. Flag anything that needs Shane's input before sending.
 

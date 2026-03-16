@@ -18,7 +18,7 @@ Use this skill for any interaction with Teamwork.com - reading tasks, reading co
 ## Authentication Setup
 
 API key is stored in `.env` as `TEAMWORK_API_KEY`.
-Your Teamwork site URL is stored as `TEAMWORK_SITE` (e.g. `https://combinate.teamwork.com`).
+Your Teamwork site URL is stored as `TEAMWORK_SITE` (e.g. `https://pm.cbo.me/`).
 
 To set up for the first time:
 1. Go to Teamwork > Profile picture > Edit Profile > API & Mobile
@@ -211,6 +211,59 @@ for t in data.get('todo-items', []):
     print(f\"[{t['id']}] {t['content']} | {project} | Due: {due} | {status}\")
 "
 ```
+
+---
+
+### 8. Reading Project Credentials (Custom Items)
+
+Every Teamwork project with Insites work has a "Claude" custom item (labelSingular: "insites instance") storing the client's TLA values, environment URLs, Google Drive folder, and NotebookLM link. Use this to resolve credentials before working on a client's Insites instance.
+
+**Step 1 — Find the custom item ID:**
+
+```bash
+source "/Users/shanemcgeorge/Claude/Combinate EA/.env" && curl -s \
+  -u "$TEAMWORK_API_KEY:x" \
+  "https://pm.cbo.me/projects/api/v3/projects/PROJECT_ID/customitems.json" | python3 -c "
+import sys, json
+data = json.load(sys.stdin)
+for item in data.get('customItems', []):
+    if item.get('labelSingular', '').lower() == 'insites instance':
+        print('Custom item ID:', item['id'])
+"
+```
+
+**Step 2 — Read all records:**
+
+```bash
+source "/Users/shanemcgeorge/Claude/Combinate EA/.env" && curl -s \
+  -u "$TEAMWORK_API_KEY:x" \
+  "https://pm.cbo.me/projects/api/v3/customitems/ITEM_ID/records.json" | python3 -c "
+import sys, json
+FIELD_UUID = '9f5d6c76-b4e2-4f91-a838-fa0c1475bff0'
+data = json.load(sys.stdin)
+for r in data.get('customItemRecords', []):
+    name = r.get('name', '')
+    value = (r.get('fieldValues') or {}).get(FIELD_UUID, '')
+    print(f'{name}: {value}')
+"
+```
+
+**Example output (BCC project 431726):**
+
+```
+Client TLA: BCC
+Project TLA: WEB
+Google Drive: https://drive.google.com/drive/folders/1sV-IDwdUJolwUlHvXyK7u2le22XszdYC
+Notebook LM: https://notebooklm.google.com/notebook/a14f8d7c-3af0-44fe-aaca-c70f72b52001
+Production: https://britishchamber.com/
+Staging: https://bcc-wmp.staging.oregon.platform-os.com/
+UAT: https://bcc-uat2.staging.oregon.platform-os.com/
+```
+
+**API key naming convention:** `COMBINATE_KEY_[CLIENT_TLA]_[PROJECT_TLA]_[ENV]`
+ENV values: `PRD`, `STG`, `UAT`, `DEV`
+
+See `.claude/skills/combinate/SKILL.md` for the full client instance resolution workflow.
 
 ---
 

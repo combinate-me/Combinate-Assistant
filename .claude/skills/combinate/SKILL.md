@@ -7,7 +7,7 @@ description: Combinate-specific workflows layered on top of Insites. Use this sk
 
 Combinate-specific workflows that layer on top of the generic Insites skills. This skill covers the Combinate configuration of Insites and cross-system client context gathering.
 
-**Insites instance:** Configured via `INSITES_INSTANCE_URL` in `.env` (set to `https://intranet.combinate.me`).
+**Combinate Intranet:** Configured via `COMBINATE_INTRANET_URL` + `COMBINATE_INTRANET_KEY` in `.env`. When calling Insites sub-skills for the Combinate intranet, set `INSITES_INSTANCE_URL=$COMBINATE_INTRANET_URL` and `INSITES_API_KEY=$COMBINATE_INTRANET_KEY`.
 
 **For underlying CRM operations** (contacts, companies), see `.claude/skills/insites/crm/SKILL.md`.
 
@@ -28,30 +28,90 @@ These are set by Shane in the Insites admin. If either field is missing, flag it
 
 ## Finding a Client's Google Drive Folder
 
-1. Search for the company by name in the CRM:
+The Google Drive URL for each client is stored in the Teamwork "Claude" custom item, not the CRM. Use the Client Instance Resolution workflow below to fetch it.
+
+1. Get the Teamwork project ID for the client (from context or Teamwork search)
+2. Run the custom item resolution (see **Client Instance Resolution** section below)
+3. Read the `Google Drive` record — this is the client's Drive folder URL
+4. Extract the folder ID from the URL: `https://drive.google.com/drive/folders/FOLDER_ID`
+5. Use the folder ID with Google Drive MCP tools to navigate the folder
+
+If the `Google Drive` record is empty, flag it to Shane — Erin should fill it in.
+
+---
+
+## Client Instance Resolution
+
+Every Teamwork project that has Insites work has a "Claude" custom item (labelSingular: "insites instance") containing the client's instance URLs, TLA values, Google Drive folder, and NotebookLM link.
+
+**Step 1 — Get the custom item ID for the project:**
 
 ```bash
 source "/Users/shanemcgeorge/Claude/Combinate EA/.env" && curl -s \
-  -H "Authorization: $INSITES_API_KEY" \
-  -H "Accept: application/json" \
-  "$INSITES_INSTANCE_URL/crm/api/v2/companies?page=1&size=25&search_by=company_name&keyword=CLIENT+NAME" | python3 -c "
+  -u "$TEAMWORK_API_KEY:x" \
+  "https://pm.cbo.me/projects/api/v3/projects/PROJECT_ID/customitems.json" | python3 -c "
 import sys, json
 data = json.load(sys.stdin)
-for c in data.get('results', []):
-    cf = c.get('custom_field') or {}
-    print(f\"[{c.get('uuid','')}] {c.get('company_name','')}\")
-    print(f\"  TLA: {cf.get('client_tla','(missing)')}\")
-    print(f\"  Drive: {cf.get('google_drive_url','(missing)')}\")
+for item in data.get('customItems', []):
+    if item.get('labelSingular', '').lower() == 'insites instance':
+        print('Custom item ID:', item['id'])
 "
 ```
 
-2. Extract the folder ID from `google_drive_url`:
-   - URL format: `https://drive.google.com/drive/folders/FOLDER_ID`
-   - The folder ID is the string after `/folders/`
+**Step 2 — Read all records:**
 
-3. Use the folder ID with Google Drive MCP tools to navigate the folder.
+```bash
+source "/Users/shanemcgeorge/Claude/Combinate EA/.env" && curl -s \
+  -u "$TEAMWORK_API_KEY:x" \
+  "https://pm.cbo.me/projects/api/v3/customitems/ITEM_ID/records.json" | python3 -c "
+import sys, json
+FIELD_UUID = '9f5d6c76-b4e2-4f91-a838-fa0c1475bff0'
+data = json.load(sys.stdin)
+for r in data.get('customItemRecords', []):
+    name = r.get('name', '')
+    value = (r.get('fieldValues') or {}).get(FIELD_UUID, '')
+    print(f'{name}: {value}')
+"
+```
 
-4. If `client_tla` or `google_drive_url` is missing: flag to Shane and ask him to update the CRM record.
+**Records returned:**
+
+| Record `name` | Contains |
+|---------------|---------|
+| `Client TLA` | e.g. `BCC` |
+| `Project TLA` | e.g. `WEB` |
+| `Google Drive` | Google Drive folder URL |
+| `Notebook LM` | NotebookLM notebook URL |
+| `Production` | Insites production URL |
+| `Staging` | Insites staging URL |
+| `UAT` | Insites UAT URL |
+
+**Step 3 — Determine the environment** (ask if not specified: Production, Staging, or UAT).
+
+**Step 4 — Build and verify the API key:**
+
+Key format: `COMBINATE_KEY_[CLIENT_TLA]_[PROJECT_TLA]_[ENV]`
+
+ENV values: `PRD` (production), `STG` (staging), `UAT` (UAT), `DEV` (development)
+
+Example: `COMBINATE_KEY_BCC_WEB_STG`
+
+```bash
+source "/Users/shanemcgeorge/Claude/Combinate EA/.env"
+# Then use: INSITES_INSTANCE_URL=<url from record> INSITES_API_KEY=<value of key above>
+```
+
+If the key is missing from `.env`, tell the developer: "Add `COMBINATE_KEY_BCC_WEB_STG=<your_key>` to your `.env` file."
+
+---
+
+## NotebookLM Reminder
+
+Whenever a document is created for a client (in any skill that creates Google Docs):
+
+1. After creating the document, read the `Notebook LM` record from the Teamwork custom item for the relevant project
+2. Tell the staff member: "Don't forget to add this document to the project NotebookLM: [link]"
+3. If the `Notebook LM` record is empty, skip the reminder
 
 ---
 
@@ -63,7 +123,7 @@ When a client or project is mentioned, pull context from all sources in parallel
 
 1. **Insites CRM** - Look up the company record for contacts, notes, custom fields, and activity history. Use `.claude/skills/insites/crm/SKILL.md`.
 
-2. **Google Drive** - Find the client folder via the `google_drive_url` custom field (see workflow above). Look for recent documents, briefs, and project files.
+2. **Google Drive** - Find the client folder via the `Google Drive` record in the Teamwork custom item (see workflow above). Look for recent documents, briefs, and project files.
 
 3. **Google Calendar** - Search for meetings with the client name. Check for recent meeting recordings and notes.
 

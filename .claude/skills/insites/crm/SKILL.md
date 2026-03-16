@@ -7,6 +7,8 @@ description: Insites CRM module. Use for looking up contacts and companies, sear
 
 The CRM module manages contacts and companies. For tasks and activities, see `.claude/skills/insites/globals/SKILL.md`.
 
+**Requires:** `INSITES_INSTANCE_URL` and `INSITES_API_KEY`. Use the combinate skill to resolve these for Combinate projects.
+
 **Base path:** `$INSITES_INSTANCE_URL/crm/api/v2/`
 
 **Auth:** See `.claude/skills/insites/SKILL.md` for the base request pattern and `.env` setup.

@@ -7,6 +7,8 @@ description: Insites Pipelines module. Use for managing sales pipelines, pipelin
 
 The Pipelines module manages sales pipelines, stages within those pipelines, and the opportunities (deals) that move through them.
 
+**Requires:** `INSITES_INSTANCE_URL` and `INSITES_API_KEY`. Use the combinate skill to resolve these for Combinate projects.
+
 **Base path:** `$INSITES_INSTANCE_URL/pipeline/api/v2/`
 
 **Auth:** See `.claude/skills/insites/SKILL.md` for the base request pattern and `.env` setup.

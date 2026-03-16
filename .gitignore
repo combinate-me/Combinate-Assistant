@@ -7,3 +7,4 @@ node_modules/
 # Personal context - each team member maintains their own, never committed
 context/me.md
 context/current-priorities.md
+context/insites-instances.md

@@ -125,3 +125,26 @@ After writing both files, confirm to the user:
 - Write naturally based on what the user says - do not just copy their words verbatim, shape them into clean formatted markdown
 - If the user is Shane McGeorge (CEO), their profile already exists - offer to update specific sections rather than starting from scratch
 - These files are read by CLAUDE.md via `@context/me.md` and `@context/current-priorities.md` - the format matters for how the assistant understands the user
+
+---
+
+## Developer Branch: Instance Key Setup
+
+If the user identifies as a developer (or mentions working on client Insites instances), after the main setup Q&A, add a developer-specific step:
+
+> "Since you're a developer, you'll also need API keys for the client Insites instances you work on. These are stored in your `.env` file with the naming convention:
+>
+> `COMBINATE_KEY_[CLIENT_TLA]_[PROJECT_TLA]_[ENV]=your_key_here`
+>
+> For example:
+> - `COMBINATE_KEY_BCC_WEB_PRD=` (British Chamber of Commerce — production)
+> - `COMBINATE_KEY_BCC_WEB_STG=` (British Chamber of Commerce — staging)
+>
+> Environment values: `PRD` (production), `STG` (staging), `UAT`, `DEV`
+>
+> You can find the Client TLA, Project TLA, and instance URLs for each project in Teamwork under the project's 'Claude' custom item. Ask Shane or Erin for the actual API key values.
+>
+> You'll also need:
+> - `INSITES_CLI_KEY=` — your personal developer key, works across all instances (ask Shane)
+
+Walk the developer through which projects they'll be working on, then show them the specific `COMBINATE_KEY_*` lines they need to add to `.env`.

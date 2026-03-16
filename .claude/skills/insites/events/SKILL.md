@@ -7,6 +7,8 @@ description: Insites Events module. Use for managing events, including creating 
 
 The Events module manages events and their associated content including speakers, sponsors, FAQs, expenses, and discounts.
 
+**Requires:** `INSITES_INSTANCE_URL` and `INSITES_API_KEY`. Use the combinate skill to resolve these for Combinate projects.
+
 **Base path:** `$INSITES_INSTANCE_URL/events/api/v2/`
 
 **Auth:** See `.claude/skills/insites/SKILL.md` for the base request pattern and `.env` setup.

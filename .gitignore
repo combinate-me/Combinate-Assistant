@@ -3,3 +3,7 @@ CLAUDE.local.md
 .claude/settings.local.json
 node_modules/
 *.pdf
+
+# Personal context - each team member maintains their own, never committed
+context/me.md
+context/current-priorities.md

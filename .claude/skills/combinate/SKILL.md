@@ -67,7 +67,7 @@ When a client or project is mentioned, pull context from all sources in parallel
 
 3. **Google Calendar** - Search for meetings with the client name. Check for recent meeting recordings and notes.
 
-4. **Teamwork** - Find the relevant project and open tasks. Use `.claude/skills/teamwork/SKILL.md`.
+4. **Teamwork** - Find the relevant project and open tasks. Use `.claude/skills/combinate/teamwork/SKILL.md`.
 
 5. **Slack** - Search for the client name or TLA across channels for internal conversations.
 

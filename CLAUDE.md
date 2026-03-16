@@ -21,8 +21,8 @@ These files contain the full picture. Read them as needed:
 - **Google Workspace** - Email, docs, collaboration
 - **Figma** - Design
 - **Slack** - Team messaging (MCP connected)
-- **Teamwork.com** - Project management (API connected via `.claude/skills/teamwork/SKILL.md`)
-- **Zendesk** - Customer support tickets (API connected via `.claude/skills/zendesk/SKILL.md`)
+- **Teamwork.com** - Project management (API connected via `.claude/skills/combinate/teamwork/SKILL.md`)
+- **Zendesk** - Customer support tickets (API connected via `.claude/skills/combinate/zendesk/SKILL.md`)
 - **Bark.com** - Lead generation
 
 Some MCP servers are connected. Check available tools before attempting integrations.
@@ -31,7 +31,7 @@ Some MCP servers are connected. Check available tools before attempting integrat
 
 These integrations are used every day and should be loaded proactively when relevant:
 
-- **Teamwork** - Read tasks, read comments, create tasks. Skill: `.claude/skills/teamwork/SKILL.md`. Trigger on any mention of tasks, projects, deadlines, assignments, or Teamwork. API key in `.env`.
+- **Teamwork** - Read tasks, read comments, create tasks. Skill: `.claude/skills/combinate/teamwork/SKILL.md`. Trigger on any mention of tasks, projects, deadlines, assignments, or Teamwork. API key in `.env`.
 - **Insites** - Platform entry point. Skill: `.claude/skills/insites/SKILL.md`. Routes to module sub-skills. API key in `.env`.
 - **CRM** - Contacts, companies, log email activities. Skill: `.claude/skills/insites/crm/SKILL.md`. Trigger on any CRM lookup, contact search, or email logging.
 - **Combinate** - Client context, Google Drive folders, cross-system lookups. Skill: `.claude/skills/combinate/SKILL.md`. Trigger when a client or project is mentioned and context needs to be gathered.
@@ -46,10 +46,9 @@ Skills are built organically. When you notice a recurring request, suggest turni
 
 #### Active Skills
 
-- **post-meeting-followup** - Full workflow for creating follow-up docs, spreadsheets, and client emails after client meetings. Skill: `.claude/skills/post-meeting-followup/SKILL.md`
+- **post-meeting-followup** - Full workflow for creating follow-up docs, spreadsheets, and client emails after client meetings. Skill: `.claude/skills/combinate/post-meeting-followup/SKILL.md`
 - **combinate** - Combinate-specific client context workflows: Google Drive folder lookup, cross-system context gathering, client TLA and custom CRM fields. Skill: `.claude/skills/combinate/SKILL.md`
-- **zendesk** - Read and reply to support tickets, add internal notes, search and update ticket status. Skill: `.claude/skills/zendesk/SKILL.md`
-- **design-task** - Full design task kickoff and wrap-up workflow: CRM research, Figma direction suggestions, Teamwork comment, Slack update to Lee, status to in-progress, time logging on completion. Skill: `.claude/skills/design-task/SKILL.md`
+- **zendesk** - Read and reply to support tickets, add internal notes, search and update ticket status. Skill: `.claude/skills/combinate/zendesk/SKILL.md`
 
 **Insites module sub-skills** (load the relevant one when working with a specific module):
 
@@ -84,7 +83,7 @@ Pull context from these sources in parallel:
 2. **Google Drive** - Look up the client's folder via the `google_drive_url` custom field in the Insites CRM.
 3. **Insites CRM** - Look up the company record for contacts, notes, and activity history. Skill: `.claude/skills/insites/crm/SKILL.md`.
 4. **Slack** - Search for the client name or TLA across channels for internal conversations.
-5. **Teamwork** - Find the relevant project and open tasks. Skill: `.claude/skills/teamwork/SKILL.md`.
+5. **Teamwork** - Find the relevant project and open tasks. Skill: `.claude/skills/combinate/teamwork/SKILL.md`.
 6. **Gmail** - Search for emails to/from the client domain or by company name.
 
 **Finding a client's Drive folder:** Combinate company records have two custom fields:
@@ -117,7 +116,7 @@ All Google Docs created for client work must use the **Combinate branded templat
 - **Template ID:** `12TovrIc6MuTjl0dvRycqR56HWssYISNvdnrI_4CwW8U`
 - Use `createDocumentFromTemplate` - never `createDocument` for client-facing docs
 - Replace `"Document Title"` and `"Document Subtitle"` placeholders in the cover
-- See `.claude/skills/post-meeting-followup/SKILL.md` for the full document creation workflow including how to clear sample content and apply heading styles
+- See `.claude/skills/combinate/post-meeting-followup/SKILL.md` for the full document creation workflow including how to clear sample content and apply heading styles
 
 Google Sheets do not have a branded template - use `createSpreadsheet` as normal.
 

@@ -42,6 +42,14 @@ Ask Shane any clarifying questions before drafting. Do not proceed on assumption
 - Create a new subfolder: `[TEAMWORK_TASK_ID] - [Short Description]`
 - All files for this task are saved here
 
+### Combinate Internal / Operational Tasks
+
+For internal Combinate tasks (not client-specific), save documents in the Combinate operational Drive folder:
+
+- **Folder ID:** `1u3PLAVitzpyw6tmzL9zDqPf8iMugwRm7`
+- **Folder URL:** https://drive.google.com/drive/folders/1u3PLAVitzpyw6tmzL9zDqPf8iMugwRm7
+- Still create a subfolder named `[TEAMWORK_TASK_ID] - [Short Description]` inside this folder
+
 ## Step 3: Create Supporting Documents
 
 All Google Docs must use the **Combinate branded template**. Never create a plain document.

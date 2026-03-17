@@ -96,6 +96,40 @@ Create an HTML email draft in Gmail:
 - Keep tone professional, confident, and direct - no filler phrases
 - Link to any supporting documents created in Step 3
 
+### Sales Materials for New Prospects
+
+For first meetings or early-stage prospects, include links to relevant sales materials from the Combinate shared sales folder.
+
+**Folder:** https://drive.google.com/drive/folders/1LX8xKZ6CYr2PsQ4TgTo4nJx0qrJjzlmX
+**Rule:** Always link to the PDF version - these are the latest versions. Do not link to the Google Doc/Slides source files.
+
+Key documents and their Drive file IDs:
+
+| Document | File ID |
+|---|---|
+| Capability Deck | `161-o1fS8xVJD08dGFzdU3HwjKrJWFNPl` |
+| Intro to Combinate & Insites | `165rhA0iONaZctYWoUQGoOvLD3a_FnVG9` |
+| Project Showcase | `1lJY6TFeRoMDHP9pculodOCAi4nokgTIw` |
+| Website Design Questionnaire | `1fT3Pg8Gl2BqYjB_SIFcwbs6h_PJzauzw` |
+| Website Scope of Works Questionnaire | `1-ArDIOwqCBu322bMM3KOLNgKOsnGSPOu` |
+| Software Scope of Works Questionnaire | `1-h30TFAYmDxxNbpSr8WWo90p9fJjRYPH` |
+| Mobile App Scope of Works Questionnaire | `1_lfU-q0UmNy-c8GhqRB0YGiEveGw7ldf` |
+| Corporate Identity Packages | `1NIrQ8Eu-Ck9eSeKgBBPEpjuO3zdkAtzX` |
+| Corporate Identity Questionnaire | `1ylUFuWa_uI20koLg4RIAOO8iCEIhG4tv` |
+| Post Launch Support (Insites Projects) | `1xq1U-VqVCN8mwbZyyoTZpMaCCozmfP--` |
+| Post Launch Support (Webflow Projects) | `1-_SVqeGcBYlHhMGd-wDKtJYAHigoQnhS` |
+| Project Discovery | `17Lfdr373iC6R3pLpsOIXQ-2JmrhZEC9R` |
+
+Link format: `https://drive.google.com/file/d/FILE_ID/view`
+
+**Which documents to include:**
+- New prospect (first or second contact): always include the Capability Deck
+- Website project: include Website Design Questionnaire + Website Scope of Works Questionnaire
+- Software/web app project: include Software Scope of Works Questionnaire
+- Mobile app project: include Mobile App Scope of Works Questionnaire
+- Branding/identity project: include Corporate Identity Packages + Corporate Identity Questionnaire
+- Use judgement - only include what is relevant to the project discussed
+
 ## Step 5: Leave a Comment on the Teamwork Task
 
 After completing the work, add a comment to the Teamwork task summarising:

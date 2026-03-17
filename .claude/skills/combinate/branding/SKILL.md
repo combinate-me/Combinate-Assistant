@@ -215,7 +215,7 @@ All client-facing Google Docs must use the **Combinate branded template**. Never
 | Google Docs (external) | Template ID: `12TovrIc6MuTjl0dvRycqR56HWssYISNvdnrI_4CwW8U` — black cover |
 | Google Docs (internal) | Internal template available in Google Docs gallery — white cover |
 | Google Sheets | Sheet template available in Google Sheets gallery |
-| Presentations (16:9) | Internal and external templates in Google Slides gallery |
+| Google Slides (16:9) | Template ID: `13-Ryfr6VEVq6xVfQBZ1x7OJ6LsQkSlJSmxZHO3UjlaQ` — use `copyFile` to create from template |
 | Proposals / SOWs | PandaDoc template library |
 
 ### Google Doc Creation Workflow (always follow this order)
@@ -333,6 +333,7 @@ All include the Combinate logo and `www.combinate.me` branding.
 | Logo clear space (symbol) | 0.5x all sides |
 | Logo default placement | Top left |
 | Google Doc template ID (external) | `12TovrIc6MuTjl0dvRycqR56HWssYISNvdnrI_4CwW8U` |
+| Google Slides template ID | `13-Ryfr6VEVq6xVfQBZ1x7OJ6LsQkSlJSmxZHO3UjlaQ` |
 | Email signature file | `branding/email-signature.html` |
 | Icon library | Phosphor Icons |
 | EDM tool | Ortto |

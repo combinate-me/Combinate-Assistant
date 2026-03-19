@@ -322,6 +322,7 @@ source .env && curl -s -X POST \
 - `contact_uuid`/`company_uuid` and `related_uuid` must both be set to the same UUID
 - `last_updated_by_administrator_uuid` must be set to `$INSITES_CRM_ADMIN_UUID` from `.env`
 - `start_date_time` is ISO 8601 format: `2026-03-10T00:00:00.000Z`
+- **`message` must be the exact verbatim plain-text body of the email — never a summary.** The CRM is the system of record for client communications. Use a Python heredoc (not curl `-d`) when the body contains special characters or is multi-line, to avoid shell escaping issues.
 
 ---
 
@@ -331,6 +332,7 @@ source .env && curl -s -X POST \
 - Companies: show name, email, website
 - When creating or updating records, confirm success and return the UUID
 - Use tables when listing multiple contacts or companies
+- **CRM record URLs** use the format: `$INSITES_INSTANCE_URL/admin/insites#/crm/companies/UUID` or `.../crm/contacts/UUID` — never omit the `/admin/insites#` segment
 
 ## Error Handling
 

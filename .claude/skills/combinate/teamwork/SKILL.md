@@ -267,6 +267,14 @@ See `.claude/skills/combinate/SKILL.md` for the full client instance resolution 
 
 ---
 
+## Logging Emails as Comments
+
+When adding an email to a Teamwork task as a comment, always post the **exact verbatim content** of the email — never a summary. Include a header showing the date, recipient, and subject, then the full email body. The task comment is part of the audit trail and must accurately reflect what was communicated.
+
+Use HTML format with a date/recipient header, then `<hr>` followed by the full email body. Use a Python heredoc rather than curl `-d` for multi-line HTML to avoid shell escaping issues.
+
+---
+
 ## Presenting Results
 
 When surfacing task data, present it in a clean, scannable format:

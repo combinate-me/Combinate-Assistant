@@ -46,6 +46,7 @@ Skills are built organically. When you notice a recurring request, suggest turni
 
 #### Active Skills
 
+- **pre-meeting-presentation** - Builds a branded HTML presentation before any client or prospect meeting. Gathers context from Teamwork, Calendar, Gmail, CRM, Drive, and Slack. Exports to PDF. Skill: `.claude/skills/combinate/pre-meeting-presentation/SKILL.md`
 - **post-meeting-followup** - Full workflow for creating follow-up docs, spreadsheets, and client emails after client meetings. Skill: `.claude/skills/combinate/post-meeting-followup/SKILL.md`
 - **combinate** - Combinate-specific client context workflows: Google Drive folder lookup, cross-system context gathering, client TLA and custom CRM fields. Skill: `.claude/skills/combinate/SKILL.md`
 - **zendesk** - Read and reply to support tickets, add internal notes, search and update ticket status. Skill: `.claude/skills/combinate/zendesk/SKILL.md`

@@ -110,7 +110,16 @@ Run all of the following in parallel without asking:
 
 ## Step 2: Dialog — Questions (One at a Time)
 
-After Step 1 completes, proceed through these questions in order. Skip any question where the answer was already found in the custom item (mention what was found so the user can correct it if wrong).
+After Step 1 completes, proceed through these questions in order.
+
+**Skipping rules (strictly enforced):**
+- Q2–Q7: Skip (with a confirmation message showing what was found) only if the answer was fully resolved from the custom item. Never silently skip — always tell the user what was found and give them a chance to correct or add to it.
+- Q8 (Proposal) and Q9 (Other docs): **NEVER skip.** These questions must always be asked, regardless of what was found in the custom item. There is no custom item field for these.
+- Slack Channel (Q5b): **NEVER skip.** If not found in the custom item, ask explicitly. Do not assume there is no channel.
+
+When a value is provided for a question that was not already in the custom item:
+- If the record exists but is empty: update it (PATCH).
+- If the record does not exist at all: create it first, then populate it. See the "Writing Back to the Custom Item" section for both the create and update API calls.
 
 **Question 2 — Teamwork task**
 > "Do you have a Teamwork task for this, or would you like me to create one?"
@@ -127,32 +136,37 @@ Use the Insites instance to pull CMS pages and database list to inform the docum
 **Question 4 — PCD confirmation**
 If the PCD was found and read in Step 1: "I found and read the PCD: [link]. Moving on."
 If not found: "I couldn't find the PCD in the custom item. Do you have a link to the Project Centric Document (Google Doc)?"
-Read it on receipt using `readDocument`. Write the link back to the `PCD` record in the Teamwork custom item.
+Read it on receipt using `readDocument`. Write the link back to the `PCD` record — create the record if it does not exist.
 
 **Question 5 — GitHub repo**
 If resolved from custom item: "Found the GitHub repo: [URL]. I'll review it now."
 If not found: "What is the GitHub repo URL? You can paste more than one if there are separate repos."
 Read the repo immediately on receipt (see GitHub Reading section — this is a required step).
-Write any newly provided URL back to the `GitHub` record.
+Write any newly provided URL back to the `GitHub` record — create the record if it does not exist.
 
-**Question 6 — Figma designs**
-If resolved: "Found Figma: [URL]. I'll reference it in the document."
+**Question 5b — Slack Channel** *(never skip)*
+If resolved from custom item: "The Slack channel for this project is #[channel]. I'll search it for context."
+If not found or empty: "I didn't find a Slack channel for this project in the custom item. Is there one? If so, what's the channel name?"
+Search the channel (if available) as part of the Step 1c auto-pull. Write any newly provided value back to the `Slack Channel` record — create the record if it does not exist.
+
+**Question 6 — Figma designs** *(always confirm even if found)*
+If resolved from custom item: "Found Figma: [URL]. Is this the right file, or are there additional Figma links to include?"
 If not found: "Do you have a Figma link for this project?"
-Link-only reference — Figma cannot be read directly.
-Write any newly provided URL back to the `Figma` record.
+Accept multiple URLs. Link-only reference — Figma cannot be read directly.
+Write any newly provided URL back to the `Figma` record — create the record if it does not exist.
 
-**Question 7 — Lucidchart diagrams**
-If resolved: "Found Lucidchart folder: [URL]. I'll reference relevant diagrams."
+**Question 7 — Lucidchart diagrams** *(always confirm even if found)*
+If resolved from custom item: "Found Lucidchart: [URL]. Are there any other diagrams to include?"
 If not found: "Are there any Lucidchart diagrams to reference?"
-Link-only reference.
-Write any newly provided URL back to the `Lucidchart` record.
+Accept multiple URLs. Link-only reference.
+Write any newly provided URL back to the `Lucidchart` record — create the record if it does not exist.
 
-**Question 8 — Proposal**
-> "Do you have the original project proposal? Paste a Google Doc link if so."
+**Question 8 — Proposal** *(always ask — never skip)*
+> "Do you have the original project proposal? Paste a Google Doc link or PDF if so."
 
-Not stored in the custom item. Optional — skip if the user declines.
+Not stored in the custom item. Read any Google Doc provided. Optional — move on only if the user explicitly declines.
 
-**Question 9 — Other docs (last question)**
+**Question 9 — Other docs (last question)** *(always ask — never skip)*
 > "Anything else I should pull in — meeting notes, change requests, scope amendments, or other references?"
 
 Accept any additional Google Doc links. Read everything provided.
@@ -301,6 +315,10 @@ Insert between the Databases section and the Image Dimensions section. One secti
 
 Whenever a link is provided that is not already stored in the Teamwork custom item, write it back immediately. This keeps the custom item as the single source of truth for future invocations.
 
+There are two cases:
+
+### Case 1 — Record exists but is empty: update it (PATCH)
+
 **Find the record ID:**
 
 ```bash
@@ -332,9 +350,28 @@ source "/Users/shanemcgeorge/Claude/Combinate EA/.env" && curl -s -X PATCH \
   "https://pm.cbo.me/projects/api/v3/customitemrecords/RECORD_ID.json"
 ```
 
-Replace `RECORD_NAME` with the record name (e.g. `GitHub`, `Figma`, `PCD`, `Lucidchart`, `User Guide`) and `NEW_VALUE_HERE` with the URL. Confirm to the user: "I've saved that link to the project's custom item for future reference."
+### Case 2 — Record does not exist at all: create it (POST)
 
-Always write the newly created user guide URL back to the `User Guide` record after Step 6.
+If the record name is not present in the custom item at all (older projects may be missing standard records), create it first:
+
+```bash
+source "/Users/shanemcgeorge/Claude/Combinate EA/.env" && curl -s -X POST \
+  -u "$TEAMWORK_API_KEY:x" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "customItemRecord": {
+      "name": "RECORD_NAME",
+      "fieldValues": {
+        "9f5d6c76-b4e2-4f91-a838-fa0c1475bff0": "NEW_VALUE_HERE"
+      }
+    }
+  }' \
+  "https://pm.cbo.me/projects/api/v3/customitems/ITEM_ID/records.json"
+```
+
+Replace `RECORD_NAME` with the record name (e.g. `GitHub`, `Figma`, `PCD`, `Lucidchart`, `Slack Channel`, `User Guide`) and `NEW_VALUE_HERE` with the URL or value. Confirm to the user: "I've saved that to the project's custom item for future reference."
+
+Always write the newly created user guide URL back to the `User Guide` record after Step 6 — create the record if it does not exist.
 
 ---
 

@@ -198,7 +198,29 @@ Example: `~/Downloads/25429514-IEC-2026-03-19.html`
 
 ---
 
-## Step 5 — Export PDF
+## Step 5 — Approval Before PDF Export
+
+After saving the HTML file, **do not immediately generate the PDF**. Ask Shane:
+
+> "The presentation is ready — [N] slides saved to `~/Downloads/[filename].html`. Please open it in your browser and let me know:
+>
+> 1. Yes, it's okay
+> 2. Yes, it's okay — download PDF
+> 3. No, I need edits
+
+Wait for Shane's response before proceeding.
+
+- **Option 1** — Stop here. No PDF needed.
+- **Option 2** — Proceed to export PDF (Step 6).
+- **Option 3** — Ask what changes are needed, make the edits, re-save the HTML, and ask again.
+
+---
+
+## Step 6 — Export PDF
+
+Only proceed here after explicit approval (option 2 from Step 5).
+
+The print CSS must include `@page { size: A4 landscape; }` — verify this is present in the HTML before exporting. If it's missing, add it via a Python patch before running Chrome.
 
 Try each method in order until one succeeds:
 
@@ -225,7 +247,7 @@ If all methods fail, tell Shane the PDF could not be auto-generated and show the
 
 ---
 
-## Step 6 — Upload Files to Google Drive
+## Step 7 — Upload Files to Google Drive
 
 ### Primary method — Drive desktop sync
 
@@ -241,7 +263,7 @@ If Drive desktop sync is not found: note the local file paths in the Teamwork co
 
 ---
 
-## Step 7 — Leave Teamwork Comment
+## Step 8 — Leave Teamwork Comment
 
 Post a comment on the Teamwork task. Include a status table covering every step of the skill execution. Use ✓ for completed, ✗ for not found or failed, and – for not applicable.
 

@@ -25,7 +25,7 @@ Auth: `TEAMWORK_API_KEY`, `TEAMWORK_SITE`, `SLACK_BOT_TOKEN` from `.env`.
 ```bash
 source .env && curl -s \
   -u "$TEAMWORK_API_KEY:x" \
-  "$TEAMWORK_SITE/tasks.json?responsible-party-ids=215051&pageSize=250&includeCompletedTasks=false&getSubTasks=true&nestSubTasks=false" | python3 -c "
+  "$TEAMWORK_SITE/tasks.json?responsible-party-ids=215051&pageSize=250&includeCompletedTasks=false&getSubTasks=true&nestSubTasks=false" | python -c "
 import sys, json
 from datetime import datetime
 
@@ -44,7 +44,7 @@ for t in tasks:
         due_today.append(t)
 
 print(json.dumps({'overdue': overdue, 'due_today': due_today}))
-" > /tmp/tw_tasks.json
+" > "$TEMP/tw_tasks.json"
 ```
 
 ---
@@ -56,7 +56,7 @@ Tasks are in the Developers column if their `workflowStages` array contains `sta
 ```bash
 source .env && curl -s \
   -u "$TEAMWORK_API_KEY:x" \
-  "https://pm.cbo.me/projects/api/v3/tasks.json?projectIds=295192&includeCompletedTasks=false&pageSize=100" | python3 -c "
+  "https://pm.cbo.me/projects/api/v3/tasks.json?projectIds=295192&includeCompletedTasks=false&pageSize=100" | python -c "
 import sys, json
 data = json.load(sys.stdin)
 dev_tasks = [
@@ -64,7 +64,7 @@ dev_tasks = [
     if any(s.get('stageId') == 22157 for s in (t.get('workflowStages') or []))
 ]
 print(json.dumps(dev_tasks))
-" > /tmp/dev_tasks.json
+" > "$TEMP/dev_tasks.json"
 ```
 
 ---
@@ -72,12 +72,13 @@ print(json.dumps(dev_tasks))
 ## Step 3 — Build and send the Slack message
 
 ```bash
-source .env && python3 - << 'PYEOF'
+source .env && python - << 'PYEOF'
 import json, subprocess, os
 from datetime import datetime
 
-tw = json.load(open('/tmp/tw_tasks.json'))
-dev_tasks = json.load(open('/tmp/dev_tasks.json'))
+temp = os.environ.get('TEMP', '/tmp')
+tw = json.load(open(os.path.join(temp, 'tw_tasks.json')))
+dev_tasks = json.load(open(os.path.join(temp, 'dev_tasks.json')))
 site = os.environ.get('TEAMWORK_SITE', 'https://pm.cbo.me')
 
 lines = []

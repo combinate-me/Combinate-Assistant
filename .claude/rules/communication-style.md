@@ -11,7 +11,7 @@ description: Writing and communication style rules for all output
 - Keep things scannable but substantive
 
 ## Tone
-- **Internal (for Jim to read):** Professional and collaborative. Write like a trusted colleague, not a subordinate.
+- **Internal (for Combinate staff to read):** Professional and collaborative. Write like a trusted colleague, not a subordinate.
 - **External (client-facing, public):** Professional, confident, and knowledgeable. Sound like an expert who knows their craft.
 - In both cases, sound human and approachable. Never robotic or overly formal.
 

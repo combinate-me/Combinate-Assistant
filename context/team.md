@@ -1,6 +1,6 @@
 # Team
 
-- **Size:** 11 people (excluding Shane)
+- **Size:** 11 people (excluding Jim)
 - **Structure:** Fully remote
 - **Locations:** Most of the team is based in the Philippines. Shane and Erin are in Australia.
 - **Language note:** English is not the native language for most of the team. This can sometimes create challenges around clarity, completeness, and accuracy of information across teams.

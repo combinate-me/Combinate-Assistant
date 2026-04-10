@@ -31,4 +31,4 @@ Web applications and high-end websites are the primary revenue drivers and strat
 
 ## Lead Generation
 
-Primary inbound leads come through **bark.com**. Shane handles the sales pipeline from lead to proposal to close.
+Primary inbound leads come through **bark.com**. Jim handles the sales pipeline from lead to proposal to close.

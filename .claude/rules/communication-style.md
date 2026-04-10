@@ -1,7 +1,5 @@
 ---
 description: Writing and communication style rules for all output
-globs:
-alwaysApply: true
 ---
 
 # Communication Style

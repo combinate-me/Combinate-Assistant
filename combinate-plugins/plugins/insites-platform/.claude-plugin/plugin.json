@@ -1,0 +1,36 @@
+{
+  "name": "insites-platform",
+  "version": "1.0.0",
+  "description": "Insites platform integrations for CRM, pipelines, data, events, CMS, and cross-module tasks",
+  "author": "Combinate",
+  "skills": [
+    {
+      "name": "insites",
+      "path": "./skills/insites"
+    },
+    {
+      "name": "crm",
+      "path": "./skills/crm"
+    },
+    {
+      "name": "pipelines",
+      "path": "./skills/pipelines"
+    },
+    {
+      "name": "data",
+      "path": "./skills/data"
+    },
+    {
+      "name": "events",
+      "path": "./skills/events"
+    },
+    {
+      "name": "globals",
+      "path": "./skills/globals"
+    },
+    {
+      "name": "cms",
+      "path": "./skills/cms"
+    }
+  ]
+}

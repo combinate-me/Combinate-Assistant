@@ -1,0 +1,24 @@
+{
+  "name": "combinate-internal",
+  "owner": {
+    "name": "Combinate",
+    "email": "jim@combinate.me"
+  },
+  "plugins": [
+    {
+      "name": "combinate-workflows",
+      "source": "./plugins/combinate-workflows",
+      "description": "Combinate client workflows: context gathering, post-meeting follow-up, daily brief, EOD report, branding, Teamwork, Slack, and Zendesk integrations"
+    },
+    {
+      "name": "insites-platform",
+      "source": "./plugins/insites-platform",
+      "description": "Insites platform integrations: CRM, pipelines, data, events, CMS, and cross-module globals"
+    },
+    {
+      "name": "dev-tools",
+      "source": "./plugins/dev-tools",
+      "description": "Developer tools: production-grade frontend design, web app testing, React artifact builder, deep research, and PDF processing"
+    }
+  ]
+}

@@ -35,7 +35,7 @@ INSITES_CRM_ADMIN_UUID=your_crm_admin_uuid_here
 All API requests use the `Authorization` header with the API key directly (not Basic Auth):
 
 ```bash
-source /Users/combinate-maiks/Combinate-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
+source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/[module]/api/v2/[endpoint]"
@@ -80,4 +80,4 @@ Each Insites module has its own sub-skill. Load the relevant one when working wi
 | 401 Unauthorized | API key wrong or missing | Check `INSITES_API_KEY` in `.env` |
 | 404 Not Found | Wrong path or UUID | Check the URL against the API path reference above |
 | 429 Too Many Requests | Rate limit hit (300 req/60s) | Wait and retry |
-| HTML instead of JSON | `Authorization` header not sent | Ensure `source /Users/combinate-maiks/Combinate-Assistant/.env && [ -f .env ] && source .env; true` runs before the curl command |
+| HTML instead of JSON | `Authorization` header not sent | Ensure `source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source .env; true` runs before the curl command |

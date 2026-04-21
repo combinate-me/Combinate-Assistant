@@ -21,7 +21,7 @@ The Events module manages events and their associated content including speakers
 ### List Events
 
 ```bash
-source /Users/combinate-maiks/Combinate-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
+source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/events/api/v2/events?page=1&size=25" | python3 -c "
@@ -36,7 +36,7 @@ for e in data.get('results', []):
 ### Get a Single Event
 
 ```bash
-source /Users/combinate-maiks/Combinate-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
+source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/events/api/v2/events/EVENT_UUID"
@@ -45,7 +45,7 @@ source /Users/combinate-maiks/Combinate-Assistant/.env && [ -f .env ] && source 
 ### Create an Event
 
 ```bash
-source /Users/combinate-maiks/Combinate-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X POST \
+source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X POST \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   -H "Content-Type: application/json" \
@@ -70,7 +70,7 @@ else:
 **Note:** The event PATCH endpoint requires `status` to be included in the request body even when you are not changing it. Valid values: `enabled`, `disabled`.
 
 ```bash
-source /Users/combinate-maiks/Combinate-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X PATCH \
+source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X PATCH \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   -H "Content-Type: application/json" \
@@ -81,7 +81,7 @@ source /Users/combinate-maiks/Combinate-Assistant/.env && [ -f .env ] && source 
 ### Update Event Status
 
 ```bash
-source /Users/combinate-maiks/Combinate-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X PATCH \
+source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X PATCH \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   -H "Content-Type: application/json" \
@@ -92,7 +92,7 @@ source /Users/combinate-maiks/Combinate-Assistant/.env && [ -f .env ] && source 
 ### Delete an Event
 
 ```bash
-source /Users/combinate-maiks/Combinate-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X DELETE \
+source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X DELETE \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/events/api/v2/events/EVENT_UUID"
@@ -105,7 +105,7 @@ source /Users/combinate-maiks/Combinate-Assistant/.env && [ -f .env ] && source 
 ### List Speakers
 
 ```bash
-source /Users/combinate-maiks/Combinate-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
+source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/events/api/v2/event-speakers?event_uuid=EVENT_UUID" | python3 -c "
@@ -119,7 +119,7 @@ for s in data.get('results', []):
 ### Add a Speaker
 
 ```bash
-source /Users/combinate-maiks/Combinate-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X POST \
+source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X POST \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   -H "Content-Type: application/json" \
@@ -135,7 +135,7 @@ source /Users/combinate-maiks/Combinate-Assistant/.env && [ -f .env ] && source 
 ### Delete a Speaker
 
 ```bash
-source /Users/combinate-maiks/Combinate-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X DELETE \
+source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X DELETE \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/events/api/v2/event-speakers/SPEAKER_ID"
@@ -148,7 +148,7 @@ source /Users/combinate-maiks/Combinate-Assistant/.env && [ -f .env ] && source 
 ### List Sponsors
 
 ```bash
-source /Users/combinate-maiks/Combinate-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
+source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/events/api/v2/event-sponsors?event_uuid=EVENT_UUID" | python3 -c "
@@ -162,7 +162,7 @@ for s in data.get('results', []):
 ### Add a Sponsor
 
 ```bash
-source /Users/combinate-maiks/Combinate-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X POST \
+source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X POST \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   -H "Content-Type: application/json" \
@@ -181,7 +181,7 @@ source /Users/combinate-maiks/Combinate-Assistant/.env && [ -f .env ] && source 
 ### List FAQs
 
 ```bash
-source /Users/combinate-maiks/Combinate-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
+source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/events/api/v2/event-faqs?event_uuid=EVENT_UUID" | python3 -c "
@@ -197,7 +197,7 @@ for f in data.get('results', []):
 ### Add a FAQ
 
 ```bash
-source /Users/combinate-maiks/Combinate-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X POST \
+source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X POST \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   -H "Content-Type: application/json" \

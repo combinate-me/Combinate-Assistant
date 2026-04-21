@@ -1,11 +1,23 @@
 ---
 name: insites-globals
-description: Insites Globals covers tasks, task comments, activities, and attachments - cross-module features that can be linked to records in any Insites module (CRM contacts/companies, pipeline opportunities, events, etc.). Read this skill when working with tasks, activities, or attachments in Insites.
+description: Insites Globals covers tasks, task comments, activities, and attachments - cross-module features that can be linked to records in any Insites module (CRM contacts/companies, pipeline opportunities, events, etc.). Read this skill when working with tasks, activities, or attachments in Insites. v1.0.0
+metadata:
+  version: 1.0.0
 ---
 
 # Insites Globals
 
-The Globals provides cross-module features that work across all Insites modules. Tasks, activities, and attachments can be linked to records in CRM, Pipelines, Events, or any other module.
+## Overview
+
+The Globals module provides cross-module features that work across all Insites modules. Tasks, activities, and attachments can be linked to records in CRM, Pipelines, Events, or any other module.
+
+## When to Use
+
+- Creating, updating, or completing tasks in Insites (linked to any record type)
+- Adding comments to tasks or reading task comment threads
+- Logging activities (emails, calls, notes, meetings) against any Insites record
+- Listing or deleting attachments on Insites records
+- Any mention of Insites tasks, activities, or attachments
 
 **Requires:** `INSITES_INSTANCE_URL` and `INSITES_API_KEY`. Use the combinate skill to resolve these for Combinate projects.
 

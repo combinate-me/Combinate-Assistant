@@ -1,9 +1,13 @@
 ---
 name: research
-description: Deep research skill for Shane at Combinate. Use this skill whenever Shane wants to research a topic, competitor, technology, pricing strategy, market trend, or anything requiring synthesised external knowledge. Trigger on phrases like "research X", "what do we know about X", "look into X", "find out what agencies charge for X", "I want to understand X before deciding", or any question that requires pulling together multiple sources into a coherent briefing. This goes deeper than a quick web search - it uses the Perplexity API to run multi-step research tailored to Combinate's business context.
+description: Deep research skill for Shane at Combinate. Use this skill whenever Shane wants to research a topic, competitor, technology, pricing strategy, market trend, or anything requiring synthesised external knowledge. Trigger on phrases like "research X", "what do we know about X", "look into X", "find out what agencies charge for X", "I want to understand X before deciding", or any question that requires pulling together multiple sources into a coherent briefing. This goes deeper than a quick web search - it uses the Perplexity API to run multi-step research tailored to Combinate's business context. v1.0.0
+metadata:
+  version: 1.0.0
 ---
 
 # Skill: Research
+
+## Overview
 
 Use this skill when Shane asks to research a topic, competitor, technology, market trend, pricing strategy, or anything requiring synthesised external knowledge. This goes deeper than a quick web search - it is multi-step research tailored to Combinate's business context.
 

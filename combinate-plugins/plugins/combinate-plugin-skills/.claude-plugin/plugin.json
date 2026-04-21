@@ -1,0 +1,68 @@
+{
+  "name": "combinate-workflows",
+  "version": "1.0.0",
+  "description": "Combinate client workflows and daily operations",
+  "author": "Combinate",
+  "skills": [
+    {
+      "name": "client-context",
+      "path": "./skills/client-workflows/client-context",
+      "category": "Client Workflows"
+    },
+    {
+      "name": "post-meeting-followup",
+      "path": "./skills/client-workflows/post-meeting-followup",
+      "category": "Client Workflows"
+    },
+    {
+      "name": "eod-report",
+      "path": "./skills/daily-operations/eod-report",
+      "category": "Daily Operations"
+    },
+    {
+      "name": "branding",
+      "path": "./skills/productivity/branding",
+      "category": "Productivity"
+    },
+    {
+      "name": "slack",
+      "path": "./skills/integrations/slack",
+      "category": "Integrations"
+    },
+    {
+      "name": "teamwork",
+      "path": "./skills/integrations/teamwork",
+      "category": "Integrations"
+    },
+    {
+      "name": "zendesk",
+      "path": "./skills/integrations/zendesk",
+      "category": "Integrations"
+    },
+    {
+      "name": "push-to-repo",
+      "path": "./skills/repository/push-to-repo",
+      "category": "Repository"
+    },
+    {
+      "name": "pull-from-repo",
+      "path": "./skills/repository/pull-from-repo",
+      "category": "Repository"
+    },
+    {
+      "name": "rename-remote",
+      "path": "./skills/repository/rename-remote",
+      "category": "Repository"
+    },
+    {
+      "name": "check-repo-status",
+      "path": "./skills/repository/check-repo-status",
+      "category": "Repository"
+    },
+    {
+      "name": "skill-sharing",
+      "path": "./skills/repository/skill-sharing",
+      "category": "Repository"
+    }
+  ]
+}

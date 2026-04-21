@@ -6,31 +6,38 @@
   "skills": [
     {
       "name": "insites",
-      "path": "./skills/insites"
+      "path": "./skills/insites",
+      "category": "Insites Platform"
     },
     {
       "name": "crm",
-      "path": "./skills/crm"
+      "path": "./skills/crm",
+      "category": "Insites Platform"
     },
     {
       "name": "pipelines",
-      "path": "./skills/pipelines"
+      "path": "./skills/pipelines",
+      "category": "Insites Platform"
     },
     {
       "name": "data",
-      "path": "./skills/data"
+      "path": "./skills/data",
+      "category": "Insites Platform"
     },
     {
       "name": "events",
-      "path": "./skills/events"
+      "path": "./skills/events",
+      "category": "Insites Platform"
     },
     {
       "name": "globals",
-      "path": "./skills/globals"
+      "path": "./skills/globals",
+      "category": "Insites Platform"
     },
     {
       "name": "cms",
-      "path": "./skills/cms"
+      "path": "./skills/cms",
+      "category": "Insites Platform"
     }
   ]
 }

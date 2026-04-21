@@ -4,6 +4,10 @@ CLAUDE.local.md
 .claude/settings.local.json
 node_modules/
 *.pdf
+.DS_Store
+
+# Root-level session artifacts
+/*.html
 
 # Personal context - each team member maintains their own, never committed
 context/me.md

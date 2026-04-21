@@ -1,11 +1,23 @@
 ---
 name: insites
-description: Insites platform integration. Use this skill as the entry point for any interaction with an Insites instance. Routes to module-specific sub-skills for CRM, Pipelines, Data, Events, Globals, and CMS development. Trigger on any mention of Insites or when no specific module is referenced.
+description: Insites platform integration. Use this skill as the entry point for any interaction with an Insites instance. Routes to module-specific sub-skills for CRM, Pipelines, Data, Events, Globals, and CMS development. Trigger on any mention of Insites or when no specific module is referenced. v1.0.0
+metadata:
+  version: 1.0.0
 ---
 
 # Skill: Insites
 
+## Overview
+
 Insites is a platform for building web applications with integrated business tools. This skill is the entry point. When a specific module is involved, read the relevant sub-skill listed below.
+
+## When to Use
+
+- Any interaction with an Insites instance where no specific module is known yet
+- Setting up authentication and environment variables for an Insites project
+- Routing to the correct module sub-skill (CRM, Pipelines, Data, Events, Globals, CMS)
+- Any mention of "Insites" without a specific module context
+- Resolving the correct API base path for a given Insites module
 
 ---
 

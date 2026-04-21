@@ -1,6 +1,6 @@
 ---
 name: data
-description: Insites Data module. Use for listing databases and reading or writing database items (records). Trigger on any mention of Insites databases, database records, or data stored in Insites.
+description: Insites Data module. Use for listing databases and reading or writing database items (records). Trigger on any mention of Insites databases, database records, or data stored in Insites. v1.0.0
 ---
 
 # Insites: Data Module

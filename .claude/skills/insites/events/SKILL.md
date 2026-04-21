@@ -1,11 +1,22 @@
 ---
 name: insites-events
-description: Insites Events module. Use for managing events, including creating and updating events, managing speakers, sponsors, FAQs, expenses, and discounts. Trigger on any mention of events in Insites.
+description: Insites Events module. Use for managing events, including creating and updating events, managing speakers, sponsors, FAQs, expenses, and discounts. Trigger on any mention of events in Insites. v1.0.0
+metadata:
+  version: 1.0.0
 ---
 
 # Insites: Events Module
 
+## Overview
+
 The Events module manages events and their associated content including speakers, sponsors, FAQs, expenses, and discounts.
+
+## When to Use
+
+- Creating, updating, or deleting events in Insites
+- Managing event speakers, sponsors, or FAQs
+- Any mention of events or event-related records in an Insites instance
+- Looking up event details, dates, or status for a client project
 
 **Requires:** `INSITES_INSTANCE_URL` and `INSITES_API_KEY`. Use the combinate skill to resolve these for Combinate projects.
 

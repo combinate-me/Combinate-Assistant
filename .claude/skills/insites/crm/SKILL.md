@@ -1,9 +1,23 @@
 ---
 name: insites-crm
-description: Insites CRM module. Use for looking up contacts and companies, searching the CRM, adding/updating records, and logging emails as activities. Trigger on any mention of CRM contacts, companies, client records, or logging emails to the CRM.
+description: Insites CRM module. Use for looking up contacts and companies, searching the CRM, adding/updating records, and logging emails as activities. Trigger on any mention of CRM contacts, companies, client records, or logging emails to the CRM. v1.0.0
+metadata:
+  version: 1.0.0
 ---
 
 # Insites: CRM Module
+
+## Overview
+
+The CRM module manages contacts and companies in Insites. Use it to look up, create, update, and archive contact and company records, and to log emails as activities against those records.
+
+## When to Use
+
+- Looking up a contact or company by name or email in the Insites CRM
+- Creating or updating a contact or company record
+- Logging a sent email as an activity on a contact or company record
+- Searching the CRM before responding about a client or prospect
+- Archiving or restoring a contact or company record
 
 The CRM module manages contacts and companies. For tasks and activities, see `.claude/skills/insites/globals/SKILL.md`.
 

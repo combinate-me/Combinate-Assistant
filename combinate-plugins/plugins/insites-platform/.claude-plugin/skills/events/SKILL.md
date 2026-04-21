@@ -1,6 +1,6 @@
 ---
 name: insites-events
-description: Insites Events module. Use for managing events, including creating and updating events, managing speakers, sponsors, FAQs, expenses, and discounts. Trigger on any mention of events in Insites.
+description: Insites Events module. Use for managing events, including creating and updating events, managing speakers, sponsors, FAQs, expenses, and discounts. Trigger on any mention of events in Insites. v1.0.0
 ---
 
 # Insites: Events Module

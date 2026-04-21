@@ -6,23 +6,28 @@
   "skills": [
     {
       "name": "frontend-design",
-      "path": "./skills/frontend-design"
+      "path": "./skills/frontend-design",
+      "category": "Developer Tools"
     },
     {
       "name": "webapp-testing",
-      "path": "./skills/webapp-testing"
+      "path": "./skills/webapp-testing",
+      "category": "Developer Tools"
     },
     {
       "name": "web-artifacts-builder",
-      "path": "./skills/web-artifacts-builder"
+      "path": "./skills/web-artifacts-builder",
+      "category": "Developer Tools"
     },
     {
       "name": "research",
-      "path": "./skills/research"
+      "path": "./skills/research",
+      "category": "Developer Tools"
     },
     {
       "name": "pdf",
-      "path": "./skills/pdf"
+      "path": "./skills/pdf",
+      "category": "Developer Tools"
     }
   ]
 }

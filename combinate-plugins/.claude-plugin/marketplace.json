@@ -8,16 +8,19 @@
     {
       "name": "combinate-workflows",
       "source": "./plugins/combinate-workflows",
+      "category": "Client Operations",
       "description": "Combinate client workflows: context gathering, post-meeting follow-up, daily brief, EOD report, branding, Teamwork, Slack, and Zendesk integrations"
     },
     {
       "name": "insites-platform",
       "source": "./plugins/insites-platform",
+      "category": "Insites Platform",
       "description": "Insites platform integrations: CRM, pipelines, data, events, CMS, and cross-module globals"
     },
     {
       "name": "dev-tools",
       "source": "./plugins/dev-tools",
+      "category": "Developer Tools",
       "description": "Developer tools: production-grade frontend design, web app testing, React artifact builder, deep research, and PDF processing"
     }
   ]

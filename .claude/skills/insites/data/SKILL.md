@@ -1,11 +1,22 @@
 ---
 name: data
-description: Insites Data module. Use for listing databases and reading or writing database items (records). Trigger on any mention of Insites databases, database records, or data stored in Insites.
+description: Insites Data module. Use for listing databases and reading or writing database items (records). Trigger on any mention of Insites databases, database records, or data stored in Insites. v1.0.0
+metadata:
+  version: 1.0.0
 ---
 
 # Insites: Data Module
 
+## Overview
+
 The Data module provides access to custom databases and their records. Databases are structured data stores with custom schemas defined in the Insites admin.
+
+## When to Use
+
+- Listing the databases available on an Insites instance
+- Reading, creating, updating, or deleting records (items) in a database
+- Inspecting the schema of a database by examining existing item properties
+- Any mention of Insites databases, database records, or data stored in Insites
 
 **Requires:** `INSITES_INSTANCE_URL` and `INSITES_API_KEY`. Use the combinate skill to resolve these for Combinate projects.
 

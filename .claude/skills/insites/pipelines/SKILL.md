@@ -1,11 +1,22 @@
 ---
 name: insites-pipelines
-description: Insites Pipelines module. Use for managing sales pipelines, pipeline stages, opportunities, and related contacts. Trigger on any mention of pipelines, sales pipeline, opportunities, deals, or pipeline stages in Insites.
+description: Insites Pipelines module. Use for managing sales pipelines, pipeline stages, opportunities, and related contacts. Trigger on any mention of pipelines, sales pipeline, opportunities, deals, or pipeline stages in Insites. v1.0.0
+metadata:
+  version: 1.0.0
 ---
 
 # Insites: Pipelines Module
 
+## Overview
+
 The Pipelines module manages sales pipelines, stages within those pipelines, and the opportunities (deals) that move through them.
+
+## When to Use
+
+- Viewing or managing sales pipelines and pipeline stages in Insites
+- Creating, updating, or moving opportunities (deals) between stages
+- Linking CRM contacts to an opportunity as related contacts
+- Any mention of pipelines, sales pipeline, deals, or opportunities in Insites
 
 **Requires:** `INSITES_INSTANCE_URL` and `INSITES_API_KEY`. Use the combinate skill to resolve these for Combinate projects.
 

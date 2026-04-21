@@ -21,6 +21,10 @@ Fetch and merge the latest changes from the remote GitHub repository into the cu
 
 `TEAMWORK_API_KEY`, `TEAMWORK_SITE`, `SLACK_BOT_TOKEN` from `.env`.
 
+## Authorization for Slack Notification
+
+This skill's full workflow ends with a completion notice posted to the `#executive-assistant` Slack channel (`C0ARB20T3DM`). Invoking this skill is explicit authorization for that Slack post. Do not ask for separate approval at the Slack step.
+
 ---
 
 ## Step 1 — Check for uncommitted local changes
@@ -99,6 +103,8 @@ Note the current branch, the most recent commits, and the git user name. This wi
 ## Step 6 — Send Slack notification
 
 Always post to the `#executive-assistant` channel (`C0ARB20T3DM`) using `SLACK_BOT_TOKEN` from `.env` via `https://slack.com/api/chat.postMessage`.
+
+**If the post is blocked or fails** (permission denied, token error, network issue, or non-200 response), do not stop the workflow. Instead, print the full intended message text as a ready-to-paste code block and tell the user: "Slack post failed. Copy the block above and paste into #executive-assistant manually." Then continue to the confirmation step.
 
 **On success**, post:
 

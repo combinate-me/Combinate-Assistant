@@ -29,6 +29,10 @@ These must be set in `.env`:
 Repo: `combinate-me/Executive-Assistant`
 Jim's Slack user ID: `UE0U3PBGT`
 
+## Authorization for Slack Notification
+
+This skill's full workflow ends with a review-request post to the `#executive-assistant` Slack channel (`C0ARB20T3DM`) tagging Jim. Invoking this skill is explicit authorization for that Slack post. Do not ask for separate approval at the Slack step.
+
 ---
 
 ## Step 1 — Check and configure .env
@@ -143,7 +147,9 @@ Save the PR URL from the response — you'll need it for the Slack message.
 
 ## Step 7 — Notify #executive-assistant in Slack
 
-Post a notification to the `#executive-assistant` channel (`C0ARB20T3DM`):
+Post a notification to the `#executive-assistant` channel (`C0ARB20T3DM`).
+
+**If the post is blocked or fails** (permission denied, token error, network issue, or non-200 response), do not stop the workflow. Instead, print the full intended message text as a ready-to-paste code block and tell the user: "Slack post failed. Copy the block above and paste into #executive-assistant manually." Then continue to Step 8.
 
 ```bash
 source .env && curl -s -X POST \

@@ -27,7 +27,7 @@ Always use this skill when the user wants to send a daily summary or report to t
 Auto-fetch Jim's timelogs for today. Do not ask the user to provide task URLs.
 
 ```bash
-source .env && TODAY=$(date +%Y%m%d) && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && TODAY=$(date +%Y%m%d) && curl -s \
   -u "$TEAMWORK_API_KEY:x" \
   "$TEAMWORK_SITE/time_entries.json?userId=215051&fromdate=${TODAY}&todate=${TODAY}&pageSize=250" \
   > /tmp/tw_timelogs.json

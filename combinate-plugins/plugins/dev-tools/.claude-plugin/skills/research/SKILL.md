@@ -63,7 +63,7 @@ Provide your response with:
 
 ### 5. Execute the API Call
 ```bash
-source .env && curl -s https://api.perplexity.ai/chat/completions \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s https://api.perplexity.ai/chat/completions \
   -H "Authorization: Bearer $PERPLEXITY_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{

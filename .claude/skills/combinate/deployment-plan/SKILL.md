@@ -81,7 +81,7 @@ Post the following as an HTML comment to the Teamwork task. The steps are always
 Use the Teamwork API to post the comment:
 
 ```bash
-source /Users/combinate-maiks/Executive-Assistant/.env && export TEAMWORK_API_KEY && export TEAMWORK_SITE && python3 << 'EOF'
+source $HOME/Executive-Assistant/.env && export TEAMWORK_API_KEY && export TEAMWORK_SITE && python3 << 'EOF'
 import os, json, urllib.request, urllib.error, base64
 
 api_key = os.environ['TEAMWORK_API_KEY']

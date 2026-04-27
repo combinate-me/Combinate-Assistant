@@ -32,7 +32,7 @@ Supported `search_by` fields:
 ### List Contacts
 
 ```bash
-source .env && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/crm/api/v2/contacts?page=1&size=25" | python3 -c "
@@ -50,7 +50,7 @@ for c in data.get('results', []):
 ### Search Contacts
 
 ```bash
-source .env && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/crm/api/v2/contacts?page=1&size=25&search_by=email&keyword=SEARCH+TERM" | python3 -c "
@@ -71,7 +71,7 @@ for c in results:
 ### Get a Single Contact
 
 ```bash
-source .env && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/crm/api/v2/contacts/CONTACT_UUID" | python3 -c "
@@ -91,7 +91,7 @@ print(f\"Notes:     {c.get('notes', '')}\")
 ### Add a Contact
 
 ```bash
-source .env && curl -s -X POST \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X POST \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   -H "Content-Type: application/json" \
@@ -114,7 +114,7 @@ print(f\"Created: {c.get('name', '')}  UUID: {c.get('uuid', '')}\")
 **Note:** The contact PATCH endpoint requires `email` to be included in the request body even when you are not changing it. Omitting it causes a GraphQL validation error.
 
 ```bash
-source .env && curl -s -X PATCH \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X PATCH \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   -H "Content-Type: application/json" \
@@ -126,13 +126,13 @@ source .env && curl -s -X PATCH \
 
 ```bash
 # Archive
-source .env && curl -s -X PATCH \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X PATCH \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/crm/api/v2/contacts/CONTACT_UUID/archive"
 
 # Restore
-source .env && curl -s -X PATCH \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X PATCH \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/crm/api/v2/contacts/CONTACT_UUID/restore"
@@ -145,7 +145,7 @@ source .env && curl -s -X PATCH \
 ### List Companies
 
 ```bash
-source .env && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/crm/api/v2/companies?page=1&size=25" | python3 -c "
@@ -160,7 +160,7 @@ for c in data.get('results', []):
 ### Search Companies
 
 ```bash
-source .env && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/crm/api/v2/companies?page=1&size=25&search_by=company_name&keyword=SEARCH+TERM" | python3 -c "
@@ -179,7 +179,7 @@ for c in results:
 ### Get a Single Company
 
 ```bash
-source .env && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/crm/api/v2/companies/COMPANY_UUID" | python3 -c "
@@ -197,7 +197,7 @@ print(f\"Custom:  {c.get('custom_field', {})}\")
 ### Add a Company
 
 ```bash
-source .env && curl -s -X POST \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X POST \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   -H "Content-Type: application/json" \
@@ -216,7 +216,7 @@ print(f\"Created: {c.get('company_name', '')}  UUID: {c.get('uuid', '')}\")
 ### Update a Company
 
 ```bash
-source .env && curl -s -X PATCH \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X PATCH \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   -H "Content-Type: application/json" \
@@ -228,13 +228,13 @@ source .env && curl -s -X PATCH \
 
 ```bash
 # Archive
-source .env && curl -s -X PATCH \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X PATCH \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/crm/api/v2/companies/COMPANY_UUID/archive"
 
 # Restore
-source .env && curl -s -X PATCH \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X PATCH \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/crm/api/v2/companies/COMPANY_UUID/restore"
@@ -251,7 +251,7 @@ Use this workflow to record a sent email as an activity on a contact or company 
 Search by email to find the contact:
 
 ```bash
-source .env && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/crm/api/v2/contacts?page=1&size=25&search_by=email&keyword=SEARCH+TERM" | python3 -c "
@@ -271,7 +271,7 @@ for c in results:
 Log against a **contact** record:
 
 ```bash
-source .env && curl -s -X POST \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X POST \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   -H "Content-Type: application/json" \
@@ -301,7 +301,7 @@ else:
 Log against a **company** record instead:
 
 ```bash
-source .env && curl -s -X POST \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X POST \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   -H "Content-Type: application/json" \

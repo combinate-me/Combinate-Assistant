@@ -20,7 +20,7 @@ The Pipelines module manages sales pipelines, stages within those pipelines, and
 ### List Pipelines
 
 ```bash
-source .env && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/pipeline/api/v2/pipelines?page=1&size=25" | python3 -c "
@@ -34,7 +34,7 @@ for p in data.get('results', []):
 ### Get a Single Pipeline
 
 ```bash
-source .env && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/pipeline/api/v2/pipelines/PIPELINE_UUID"
@@ -43,7 +43,7 @@ source .env && curl -s \
 ### Create a Pipeline
 
 ```bash
-source .env && curl -s -X POST \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X POST \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   -H "Content-Type: application/json" \
@@ -54,7 +54,7 @@ source .env && curl -s -X POST \
 ### Update a Pipeline
 
 ```bash
-source .env && curl -s -X PATCH \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X PATCH \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   -H "Content-Type: application/json" \
@@ -65,7 +65,7 @@ source .env && curl -s -X PATCH \
 ### Delete a Pipeline
 
 ```bash
-source .env && curl -s -X DELETE \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X DELETE \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/pipeline/api/v2/pipelines/PIPELINE_UUID"
@@ -80,7 +80,7 @@ Stages are the columns within a pipeline (e.g. Lead, Qualified, Proposal, Closed
 ### List Stages
 
 ```bash
-source .env && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/pipeline/api/v2/pipeline-stages?pipeline_uuid=PIPELINE_UUID" | python3 -c "
@@ -94,7 +94,7 @@ for s in data.get('results', []):
 ### Add a Stage
 
 ```bash
-source .env && curl -s -X POST \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X POST \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   -H "Content-Type: application/json" \
@@ -108,7 +108,7 @@ source .env && curl -s -X POST \
 ### Update a Stage
 
 ```bash
-source .env && curl -s -X PATCH \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X PATCH \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   -H "Content-Type: application/json" \
@@ -119,7 +119,7 @@ source .env && curl -s -X PATCH \
 ### Delete a Stage
 
 ```bash
-source .env && curl -s -X DELETE \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X DELETE \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/pipeline/api/v2/pipeline-stages/STAGE_UUID"
@@ -134,7 +134,7 @@ Opportunities represent individual deals or leads within a pipeline stage.
 ### List Opportunities
 
 ```bash
-source .env && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/pipeline/api/v2/opportunities?page=1&size=25" | python3 -c "
@@ -152,7 +152,7 @@ for o in data.get('results', []):
 ### Get a Single Opportunity
 
 ```bash
-source .env && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/pipeline/api/v2/opportunities/OPPORTUNITY_UUID"
@@ -161,7 +161,7 @@ source .env && curl -s \
 ### Create an Opportunity
 
 ```bash
-source .env && curl -s -X POST \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X POST \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   -H "Content-Type: application/json" \
@@ -185,7 +185,7 @@ else:
 ### Update an Opportunity (e.g. move to a different stage)
 
 ```bash
-source .env && curl -s -X PATCH \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X PATCH \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   -H "Content-Type: application/json" \
@@ -199,7 +199,7 @@ source .env && curl -s -X PATCH \
 ### Delete an Opportunity
 
 ```bash
-source .env && curl -s -X DELETE \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X DELETE \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/pipeline/api/v2/opportunities/OPPORTUNITY_UUID"
@@ -214,7 +214,7 @@ Link CRM contacts to an opportunity to track who is involved in the deal.
 ### List Related Contacts
 
 ```bash
-source .env && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/pipeline/api/v2/opportunity-related-contacts?opportunity_uuid=OPPORTUNITY_UUID" | python3 -c "
@@ -229,7 +229,7 @@ for c in data.get('results', []):
 ### Add a Related Contact
 
 ```bash
-source .env && curl -s -X POST \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X POST \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   -H "Content-Type: application/json" \
@@ -243,7 +243,7 @@ source .env && curl -s -X POST \
 ### Remove a Related Contact
 
 ```bash
-source .env && curl -s -X DELETE \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X DELETE \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/pipeline/api/v2/opportunity-related-contacts/RELATED_CONTACT_ID"

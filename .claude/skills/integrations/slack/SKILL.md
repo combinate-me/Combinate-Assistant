@@ -36,7 +36,7 @@ The `.env` file is gitignored - tokens never get committed.
 All Slack API calls use Bearer auth with the user token.
 
 ```bash
-source .env && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -H "Authorization: Bearer $SLACK_USER_TOKEN" \
   -H "Content-Type: application/json" \
   "https://slack.com/api/[endpoint]"
@@ -51,7 +51,7 @@ source .env && curl -s \
 Use to find channel IDs before making channel-specific calls.
 
 ```bash
-source .env && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
   "https://slack.com/api/conversations.list?limit=200&exclude_archived=true" | python3 -c "
 import sys, json
@@ -72,7 +72,7 @@ for c in sorted(data.get('channels', []), key=lambda x: x['name']):
 Replace `CHANNEL_ID` with the channel ID from the list above.
 
 ```bash
-source .env && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
   "https://slack.com/api/conversations.history?channel=CHANNEL_ID&limit=25" | python3 -c "
 import sys, json
@@ -100,7 +100,7 @@ To fetch more messages, increase `limit` (max 999). To fetch messages before a s
 Requires the user token. Replace `SEARCH_QUERY` with your search term.
 
 ```bash
-source .env && curl -s -G \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -G \
   -H "Authorization: Bearer $SLACK_USER_TOKEN" \
   --data-urlencode "query=SEARCH_QUERY" \
   --data-urlencode "count=20" \
@@ -137,7 +137,7 @@ for m in matches:
 Use when a message has replies and you need the full thread. Replace `CHANNEL_ID` and `THREAD_TS` with values from a message.
 
 ```bash
-source .env && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
   "https://slack.com/api/conversations.replies?channel=CHANNEL_ID&ts=THREAD_TS" | python3 -c "
 import sys, json
@@ -163,7 +163,7 @@ for m in messages:
 Replace `CHANNEL_ID` and the message text as needed. Always confirm with the user before posting.
 
 ```bash
-source .env && curl -s -X POST \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X POST \
   -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -187,7 +187,7 @@ else:
 Same as posting a message but with the parent message's timestamp as `thread_ts`.
 
 ```bash
-source .env && curl -s -X POST \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X POST \
   -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -210,7 +210,7 @@ else:
 ### 7. Get User List (resolve user IDs to names)
 
 ```bash
-source .env && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
   "https://slack.com/api/users.list" | python3 -c "
 import sys, json

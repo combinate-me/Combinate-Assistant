@@ -37,7 +37,7 @@ As soon as the client name is known, immediately find the Teamwork project and r
 ### 1a. List projects and find the right one
 
 ```bash
-source "/Users/shanemcgeorge/Claude/Combinate EA/.env" && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -u "$TEAMWORK_API_KEY:x" \
   "https://pm.cbo.me/projects.json" | python3 -c "
 import sys, json
@@ -50,7 +50,7 @@ for p in data.get('projects', []):
 ### 1b. Resolve the full custom item
 
 ```bash
-source "/Users/shanemcgeorge/Claude/Combinate EA/.env" && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -u "$TEAMWORK_API_KEY:x" \
   "https://pm.cbo.me/projects/api/v3/projects/PROJECT_ID/customitems.json" | python3 -c "
 import sys, json
@@ -62,7 +62,7 @@ for item in data.get('customItems', []):
 ```
 
 ```bash
-source "/Users/shanemcgeorge/Claude/Combinate EA/.env" && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -u "$TEAMWORK_API_KEY:x" \
   "https://pm.cbo.me/projects/api/v3/customitems/ITEM_ID/records.json" | python3 -c "
 import sys, json
@@ -323,7 +323,7 @@ There are two cases:
 **Find the record ID:**
 
 ```bash
-source "/Users/shanemcgeorge/Claude/Combinate EA/.env" && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -u "$TEAMWORK_API_KEY:x" \
   "https://pm.cbo.me/projects/api/v3/customitems/ITEM_ID/records.json" | python3 -c "
 import sys, json
@@ -338,7 +338,7 @@ for r in data.get('customItemRecords', []):
 **Update the record:**
 
 ```bash
-source "/Users/shanemcgeorge/Claude/Combinate EA/.env" && curl -s -X PATCH \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X PATCH \
   -u "$TEAMWORK_API_KEY:x" \
   -H "Content-Type: application/json" \
   -d '{
@@ -356,7 +356,7 @@ source "/Users/shanemcgeorge/Claude/Combinate EA/.env" && curl -s -X PATCH \
 If the record name is not present in the custom item at all (older projects may be missing standard records), create it first:
 
 ```bash
-source "/Users/shanemcgeorge/Claude/Combinate EA/.env" && curl -s -X POST \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X POST \
   -u "$TEAMWORK_API_KEY:x" \
   -H "Content-Type: application/json" \
   -d '{
@@ -436,7 +436,7 @@ Example format:
 After leaving the comment, log 0.5 hours (30 minutes) on the Teamwork task.
 
 ```bash
-source "/Users/shanemcgeorge/Claude/Combinate EA/.env" && curl -s -X POST \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X POST \
   -u "$TEAMWORK_API_KEY:x" \
   -H "Content-Type: application/json" \
   -d '{

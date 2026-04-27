@@ -24,7 +24,7 @@ The Data module provides access to custom databases and their records. Databases
 ### List Databases
 
 ```bash
-source .env && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/databases/api/v2/databases?page=1&size=25" | python3 -c "
@@ -41,7 +41,7 @@ for d in items.get('results', []):
 ### Get a Single Database
 
 ```bash
-source .env && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/databases/api/v2/databases/DATABASE_UUID"
@@ -58,7 +58,7 @@ Database items are the individual records (rows) stored in a database. The items
 Replace `TABLE_ID` with the numeric `id` from the database listing (not the UUID):
 
 ```bash
-source .env && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/databases/api/v2/database/TABLE_ID/items?page=1&size=25" | python3 -c "
@@ -74,7 +74,7 @@ for item in items.get('results', []):
 ### Get a Single Item
 
 ```bash
-source .env && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/databases/api/v2/database/TABLE_ID/items/ITEM_UUID"
@@ -85,7 +85,7 @@ source .env && curl -s \
 Fields use dot-notation with the `properties.` prefix. Field names vary by database schema - inspect an existing item's `properties` to see available fields:
 
 ```bash
-source .env && curl -s -X POST \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X POST \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   -H "Content-Type: application/json" \
@@ -109,7 +109,7 @@ else:
 Update uses **PUT** (not PATCH). Fields use the same `properties.` dot-notation. The URL uses the numeric item ID:
 
 ```bash
-source .env && curl -s -X PUT \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X PUT \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   -H "Content-Type: application/json" \
@@ -122,7 +122,7 @@ source .env && curl -s -X PUT \
 ### Delete an Item
 
 ```bash
-source .env && curl -s -X DELETE \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X DELETE \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/databases/api/v2/database/TABLE_ID/items/ITEM_ID"

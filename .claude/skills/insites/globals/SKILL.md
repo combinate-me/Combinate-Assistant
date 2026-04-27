@@ -23,7 +23,7 @@ The Globals provides cross-module features that work across all Insites modules.
 ### List Tasks
 
 ```bash
-source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/crm/api/v2/tasks?page=1&size=25" | python3 -c "
@@ -41,7 +41,7 @@ for t in data.get('results', []):
 ### Get a Single Task
 
 ```bash
-source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/crm/api/v2/tasks/TASK_ID"
@@ -50,7 +50,7 @@ source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source 
 ### Create a Task
 
 ```bash
-source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X POST \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X POST \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   -H "Content-Type: application/json" \
@@ -69,7 +69,7 @@ print(f\"Created: {t.get('task_name', '')}  ID: {t.get('id', '')}  UUID: {t.get(
 ### Update a Task
 
 ```bash
-source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X PATCH \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X PATCH \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   -H "Content-Type: application/json" \
@@ -81,7 +81,7 @@ source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source 
 
 ```bash
 # Complete (requires completed_by.uuid in body)
-source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X PATCH \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X PATCH \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   -H "Content-Type: application/json" \
@@ -89,7 +89,7 @@ source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source 
   "$INSITES_INSTANCE_URL/crm/api/v2/tasks/TASK_UUID/complete"
 
 # Reopen
-source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X PATCH \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X PATCH \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/crm/api/v2/tasks/TASK_ID/open"
@@ -98,7 +98,7 @@ source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source 
 ### Delete a Task
 
 ```bash
-source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X DELETE \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X DELETE \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/crm/api/v2/tasks/TASK_ID"
@@ -111,7 +111,7 @@ source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source 
 ### List Comments on a Task
 
 ```bash
-source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/crm/api/v2/tasks/comments?task_id=TASK_ID" | python3 -c "
@@ -133,7 +133,7 @@ for c in results:
 ### Add a Comment
 
 ```bash
-source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X POST \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X POST \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   -H "Content-Type: application/json" \
@@ -147,7 +147,7 @@ source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source 
 ### Update a Comment
 
 ```bash
-source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X PATCH \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X PATCH \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   -H "Content-Type: application/json" \
@@ -164,7 +164,7 @@ Activities log interactions (emails, calls, notes) against records in any module
 ### List Activities
 
 ```bash
-source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/crm/api/v2/activities?page=1&size=25" | python3 -c "
@@ -182,7 +182,7 @@ for a in data.get('results', []):
 ### Get a Single Activity
 
 ```bash
-source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/crm/api/v2/activities/ACTIVITY_ID"
@@ -193,7 +193,7 @@ source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source 
 Replace placeholders. `feature_type` determines the linked record type.
 
 ```bash
-source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X POST \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X POST \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   -H "Content-Type: application/json" \
@@ -232,7 +232,7 @@ else:
 ### Update an Activity
 
 ```bash
-source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X PATCH \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X PATCH \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   -H "Content-Type: application/json" \
@@ -243,7 +243,7 @@ source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source 
 ### Delete an Activity
 
 ```bash
-source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X DELETE \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X DELETE \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/crm/api/v2/activities/ACTIVITY_ID"
@@ -256,7 +256,7 @@ source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source 
 ### List Attachments
 
 ```bash
-source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/crm/api/v2/attachments?page=1&size=25" | python3 -c "
@@ -270,7 +270,7 @@ for a in data.get('results', []):
 ### Get a Single Attachment
 
 ```bash
-source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/crm/api/v2/attachments/ATTACHMENT_ID"
@@ -279,7 +279,7 @@ source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source 
 ### Delete an Attachment
 
 ```bash
-source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X DELETE \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X DELETE \
   -H "Authorization: $INSITES_API_KEY" \
   -H "Accept: application/json" \
   "$INSITES_INSTANCE_URL/crm/api/v2/attachments/ATTACHMENT_ID"

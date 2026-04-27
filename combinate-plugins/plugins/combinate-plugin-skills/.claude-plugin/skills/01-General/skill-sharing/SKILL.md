@@ -258,7 +258,7 @@ Check that `.env` exists and `GITHUB_TOKEN` is set:
 
 ```bash
 test -f ".env" && echo "exists" || echo "missing"
-source .env && echo "${GITHUB_TOKEN:+set}"
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && echo "${GITHUB_TOKEN:+set}"
 ```
 
 If `.env` is missing, create it from `.env.example`:
@@ -414,7 +414,7 @@ If there is nothing to commit, tell the user and stop.
 ### C5 — Push the branch
 
 ```bash
-source .env && git push origin BRANCH_NAME
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && git push origin BRANCH_NAME
 ```
 
 If the push succeeds, always proceed to C6. Do not stop or ask the user. Pushing a branch without opening a PR is not a valid end state.
@@ -422,7 +422,7 @@ If the push succeeds, always proceed to C6. Do not stop or ask the user. Pushing
 ### C6 — Create the pull request (always runs after C5)
 
 ```bash
-source .env && curl -s -X POST \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X POST \
   -H "Authorization: Bearer $GITHUB_TOKEN" \
   -H "Content-Type: application/json" \
   -d "{
@@ -447,7 +447,7 @@ Save the PR URL for the Slack message.
 ### C7 — Notify #executive-assistant in Slack
 
 ```bash
-source .env && curl -s -X POST \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X POST \
   -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
   -H "Content-Type: application/json" \
   -d "{

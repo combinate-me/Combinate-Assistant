@@ -39,7 +39,7 @@ The `.env` file is gitignored - the API key never gets committed.
 All Teamwork API calls use HTTP Basic Auth where the username is the API key and the password is `x` (literally the letter x).
 
 ```bash
-source .env && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -u "$TEAMWORK_API_KEY:x" \
   -H "Content-Type: application/json" \
   "$TEAMWORK_SITE/[endpoint]"
@@ -54,7 +54,7 @@ source .env && curl -s \
 Use to find project IDs before making project-specific calls.
 
 ```bash
-source .env && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -u "$TEAMWORK_API_KEY:x" \
   "$TEAMWORK_SITE/projects.json" | python3 -c "
 import sys, json
@@ -71,7 +71,7 @@ for p in data.get('projects', []):
 Replace `PROJECT_ID` with the actual project ID.
 
 ```bash
-source .env && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -u "$TEAMWORK_API_KEY:x" \
   "$TEAMWORK_SITE/projects/PROJECT_ID/tasks.json?pageSize=50&includeCompletedTasks=false" | python3 -c "
 import sys, json
@@ -93,7 +93,7 @@ To include completed tasks, set `includeCompletedTasks=true`.
 Replace `TASK_ID` with the actual task ID.
 
 ```bash
-source .env && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -u "$TEAMWORK_API_KEY:x" \
   "$TEAMWORK_SITE/tasks/TASK_ID.json" | python3 -c "
 import sys, json
@@ -117,7 +117,7 @@ print(t.get('description', '(none)'))
 Replace `TASK_ID` with the actual task ID.
 
 ```bash
-source .env && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -u "$TEAMWORK_API_KEY:x" \
   "$TEAMWORK_SITE/tasks/TASK_ID/comments.json" | python3 -c "
 import sys, json
@@ -143,7 +143,7 @@ Replace `PROJECT_ID` with the target project ID. Tasklist ID is required - use t
 
 **Step 1: Find tasklists in a project**
 ```bash
-source .env && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -u "$TEAMWORK_API_KEY:x" \
   "$TEAMWORK_SITE/projects/PROJECT_ID/tasklists.json" | python3 -c "
 import sys, json
@@ -161,7 +161,7 @@ Required: `content` (task title), `todo-list-id`
 Optional: `description`, `due-date` (YYYYMMDD), `responsible-party-id`, `priority` (low/medium/high)
 
 ```bash
-source .env && curl -s -X POST \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s -X POST \
   -u "$TEAMWORK_API_KEY:x" \
   -H "Content-Type: application/json" \
   -d '{
@@ -185,7 +185,7 @@ On success, the response will include the new task ID.
 Use this to look up person IDs for task assignment.
 
 ```bash
-source .env && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -u "$TEAMWORK_API_KEY:x" \
   "$TEAMWORK_SITE/people.json" | python3 -c "
 import sys, json
@@ -202,7 +202,7 @@ for p in data.get('people', []):
 Replace `PERSON_ID` with the person's ID from the people list.
 
 ```bash
-source .env && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -u "$TEAMWORK_API_KEY:x" \
   "$TEAMWORK_SITE/tasks.json?responsible-party-ids=PERSON_ID&pageSize=50" | python3 -c "
 import sys, json
@@ -224,7 +224,7 @@ Every Teamwork project with Insites work has a "Claude" custom item (labelSingul
 **Step 1 — Find the custom item ID:**
 
 ```bash
-source .env && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -u "$TEAMWORK_API_KEY:x" \
   "https://pm.cbo.me/projects/api/v3/projects/PROJECT_ID/customitems.json" | python3 -c "
 import sys, json
@@ -238,7 +238,7 @@ for item in data.get('customItems', []):
 **Step 2 — Read all records:**
 
 ```bash
-source .env && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -u "$TEAMWORK_API_KEY:x" \
   "https://pm.cbo.me/projects/api/v3/customitems/ITEM_ID/records.json" | python3 -c "
 import sys, json

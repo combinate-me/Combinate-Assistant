@@ -23,7 +23,7 @@ Always ask which report type if not specified: **SOD**, **Midday**, or **EOD**. 
 Default is Maiks (ID: `262695`). If generating for someone else, look up their ID first:
 
 ```bash
-source /Users/combinate-maiks/Executive-Assistant/.env && curl -s \
+source $HOME/Executive-Assistant/.env && curl -s \
   -u "$TEAMWORK_API_KEY:x" \
   "$TEAMWORK_SITE/people.json" | python3 -c "
 import sys, json
@@ -40,7 +40,7 @@ for p in data.get('people', []):
 Replace `PERSON_ID` and `YYYYMMDD` with the correct values.
 
 ```bash
-source /Users/combinate-maiks/Executive-Assistant/.env && export TEAMWORK_API_KEY && export TEAMWORK_SITE && python3 << 'EOF'
+source $HOME/Executive-Assistant/.env && export TEAMWORK_API_KEY && export TEAMWORK_SITE && python3 << 'EOF'
 import os, json, urllib.request, base64
 from collections import defaultdict
 

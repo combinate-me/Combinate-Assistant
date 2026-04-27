@@ -27,7 +27,7 @@ Find your Teamwork user ID from your profile URL in Teamwork. Find your Slack us
 ## Step 1 — Fetch today's timelogs
 
 ```bash
-source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source .env; true
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true
 TODAY=$(date +%Y%m%d)
 curl -s \
   -u "$TEAMWORK_API_KEY:x" \
@@ -42,7 +42,7 @@ curl -s \
 For each unique task in the timelogs (excluding RSM), fetch its current status from Teamwork.
 
 ```bash
-source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source .env; true && python3 << 'EOF'
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && python3 << 'EOF'
 import json, subprocess, os
 
 SKIP_KEYWORDS = ['rapid standup', 'rsm', 'daily standup']

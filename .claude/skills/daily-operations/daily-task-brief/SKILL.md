@@ -35,7 +35,7 @@ Auth: `TEAMWORK_API_KEY`, `TEAMWORK_SITE`, `SLACK_BOT_TOKEN` from `.env`.
 ## Step 1 — Fetch Jim's tasks (overdue + due today)
 
 ```bash
-source .env && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -u "$TEAMWORK_API_KEY:x" \
   "$TEAMWORK_SITE/tasks.json?responsible-party-ids=215051&pageSize=250&includeCompletedTasks=false&getSubTasks=true&nestSubTasks=false" | python -c "
 import sys, json
@@ -66,7 +66,7 @@ print(json.dumps({'overdue': overdue, 'due_today': due_today}))
 Tasks are in the Developers column if their `workflowStages` array contains `stageId: 22157`.
 
 ```bash
-source .env && curl -s \
+source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && curl -s \
   -u "$TEAMWORK_API_KEY:x" \
   "https://pm.cbo.me/projects/api/v3/tasks.json?projectIds=295192&includeCompletedTasks=false&pageSize=100" | python -c "
 import sys, json

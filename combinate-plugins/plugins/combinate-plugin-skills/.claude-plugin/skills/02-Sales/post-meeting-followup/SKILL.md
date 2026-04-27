@@ -1,7 +1,10 @@
 ---
 name: post-meeting-followup
 model: claude-sonnet-4-6
-description: Full post-meeting follow-up workflow for Combinate client meetings. Use this skill whenever Shane has just had a client meeting and needs to follow up - this includes creating a summary document, analysis spreadsheet, and a client-ready email draft. Trigger on phrases like "help me follow up from my [client] meeting", "we just had a call with [client]", "create a follow-up doc", "draft a follow-up email after our meeting", or any post-meeting task where a client email, summary, or action items are needed.
+metadata:
+  version: 1.0.0
+  category: 02-Sales
+description: Full post-meeting follow-up workflow for Combinate client meetings. Use this skill whenever Shane has just had a client meeting and needs to follow up - this includes creating a summary document, analysis spreadsheet, and a client-ready email draft. Trigger on phrases like "help me follow up from my [client] meeting", "we just had a call with [client]", "create a follow-up doc", "draft a follow-up email after our meeting", or any post-meeting task where a client email, summary, or action items are needed. v1.0.0
 ---
 
 # Skill: Post-Meeting Follow-Up
@@ -151,7 +154,7 @@ Example format:
 
 After leaving the Teamwork comment, check whether the project has a NotebookLM notebook:
 
-1. Read the `Notebook LM` record from the Teamwork "Claude" custom item for this project (see `.claude/skills/combinate/teamwork/SKILL.md` for the custom items API)
+1. Read the `Notebook LM` record from the Teamwork "Claude" custom item for this project (see `.claude/skills/integrations/teamwork/SKILL.md` for the custom items API)
 2. If a link is present, tell Shane: "Don't forget to add this document to the project NotebookLM: [link]"
 3. If the record is empty or missing, skip this step
 

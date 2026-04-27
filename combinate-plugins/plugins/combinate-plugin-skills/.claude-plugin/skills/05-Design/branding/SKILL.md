@@ -1,7 +1,10 @@
 ---
 name: branding
 model: claude-haiku-4-5-20251001
-description: Combinate brand standards and asset reference for the AI. Use this skill whenever creating client-facing content, proposals, emails, documents, presentations, or any external communications for Combinate. Covers brand heart, colours, typography, logo usage, templates, email signature, imagery, and tone. Trigger on any task involving Combinate brand application, visual identity, or content creation for external audiences.
+metadata:
+  version: 1.0.0
+  category: 05-Design
+description: Combinate brand standards and asset reference for the AI. Use this skill whenever creating client-facing content, proposals, emails, documents, presentations, or any external communications for Combinate. Covers brand heart, colours, typography, logo usage, templates, email signature, imagery, and tone. Trigger on any task involving Combinate brand application, visual identity, or content creation for external audiences. v1.0.0
 ---
 
 # Skill: Combinate Branding

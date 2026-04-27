@@ -6,63 +6,43 @@
   "skills": [
     {
       "name": "client-context",
-      "path": "./skills/client-workflows/client-context",
-      "category": "Client Workflows"
+      "path": "./skills/02-Sales/client-context",
+      "category": "02-Sales"
     },
     {
       "name": "post-meeting-followup",
-      "path": "./skills/client-workflows/post-meeting-followup",
-      "category": "Client Workflows"
+      "path": "./skills/02-Sales/post-meeting-followup",
+      "category": "02-Sales"
     },
     {
       "name": "eod-report",
-      "path": "./skills/daily-operations/eod-report",
-      "category": "Daily Operations"
+      "path": "./skills/01-General/eod-report",
+      "category": "01-General"
     },
     {
       "name": "branding",
-      "path": "./skills/productivity/branding",
-      "category": "Productivity"
+      "path": "./skills/05-Design/branding",
+      "category": "05-Design"
     },
     {
       "name": "slack",
-      "path": "./skills/integrations/slack",
-      "category": "Integrations"
+      "path": "./skills/01-General/slack",
+      "category": "01-General"
     },
     {
       "name": "teamwork",
-      "path": "./skills/integrations/teamwork",
-      "category": "Integrations"
+      "path": "./skills/01-General/teamwork",
+      "category": "01-General"
     },
     {
       "name": "zendesk",
-      "path": "./skills/integrations/zendesk",
-      "category": "Integrations"
-    },
-    {
-      "name": "push-to-repo",
-      "path": "./skills/repository/push-to-repo",
-      "category": "Repository"
-    },
-    {
-      "name": "pull-from-repo",
-      "path": "./skills/repository/pull-from-repo",
-      "category": "Repository"
-    },
-    {
-      "name": "rename-remote",
-      "path": "./skills/repository/rename-remote",
-      "category": "Repository"
-    },
-    {
-      "name": "check-repo-status",
-      "path": "./skills/repository/check-repo-status",
-      "category": "Repository"
+      "path": "./skills/08-Support/zendesk",
+      "category": "08-Support"
     },
     {
       "name": "skill-sharing",
-      "path": "./skills/repository/skill-sharing",
-      "category": "Repository"
+      "path": "./skills/01-General/skill-sharing",
+      "category": "01-General"
     }
   ]
 }

@@ -1,5 +1,8 @@
 ---
 name: slack
+metadata:
+  version: 1.0.0
+  category: 01-General
 description: Slack integration for Combinate's team messaging. Use this skill for any interaction with Slack - searching messages, reading channel history, posting messages, and finding conversations about a client or topic. Trigger on any mention of Slack, team messages, or phrases like "search Slack for X", "what was said about [client] in Slack", "post a message to [channel]", "show me recent messages in [channel]", or "what's the conversation in [channel]". v1.0.0
 ---
 

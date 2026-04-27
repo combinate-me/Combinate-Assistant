@@ -1,5 +1,8 @@
 ---
 name: eod-report
+metadata:
+  version: 1.0.0
+  category: 01-General
 description: End-of-day standup skill for Combinate team members. Run this at the end of your workday to summarise what you worked on, log AI usage and costs, Teamwork tasks, and post a structured digest to the #developers Slack channel. Trigger whenever someone says "end of day", "EOD standup", "daily wrap-up", "log my day", "post standup", or asks to summarise or report on their day's work. v1.0.0
 ---
 

@@ -1,5 +1,8 @@
 ---
 name: teamwork
+metadata:
+  version: 1.0.0
+  category: 01-General
 description: Teamwork.com integration for Combinate's project management. Use this skill for any interaction with Teamwork - reading tasks, checking project status, viewing comments, creating tasks, and finding who is assigned to what. Trigger on any mention of tasks, deadlines, assignments, project updates, Teamwork, or questions like "what's open on X project", "what is [person] working on", "create a task for X", "what are the comments on task Y", or "what's the status of [project]". This is a daily-use skill. v1.0.0
 ---
 

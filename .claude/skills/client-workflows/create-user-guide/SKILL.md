@@ -10,7 +10,7 @@ Produces a structured User Guide Google Doc for a client project. Works conversa
 
 **Cross-references:**
 - Client context and Google Drive lookup: `.claude/skills/combinate/SKILL.md`
-- Teamwork task management: `.claude/skills/combinate/teamwork/SKILL.md`
+- Teamwork task management: `.claude/skills/integrations/teamwork/SKILL.md`
 - Google Doc creation workflow: `.claude/skills/combinate/post-meeting-followup/SKILL.md`
 - CRM lookups: `.claude/skills/insites/crm/SKILL.md`
 

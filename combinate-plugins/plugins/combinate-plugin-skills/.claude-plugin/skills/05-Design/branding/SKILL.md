@@ -9,7 +9,17 @@ description: Combinate brand standards and asset reference for the AI. Use this 
 
 # Skill: Combinate Branding
 
+## Overview
+
 This skill defines how to apply the Combinate brand correctly across all outputs. Refer to this whenever creating external-facing content, documents, emails, or any visual/written material representing Combinate.
+
+## When to Use
+
+- Creating any client-facing document, proposal, or presentation
+- Drafting external emails or communications on behalf of Combinate
+- Applying brand colours, typography, or logo to any design or content
+- Choosing or verifying the correct Google Doc template for a deliverable
+- Writing copy or content for external audiences and needing to match brand tone
 
 ## Source Files
 

@@ -10,9 +10,9 @@ Produces a structured User Guide Google Doc for a client project. Works conversa
 
 **Cross-references:**
 - Client context and Google Drive lookup: `.claude/skills/combinate/SKILL.md`
-- Teamwork task management: `.claude/skills/integrations/teamwork/SKILL.md`
+- Teamwork task management: `.claude/skills/_plugins/combinate-workflows/01-General/teamwork/SKILL.md`
 - Google Doc creation workflow: `.claude/skills/combinate/post-meeting-followup/SKILL.md`
-- CRM lookups: `.claude/skills/insites/crm/SKILL.md`
+- CRM lookups: `.claude/skills/_plugins/insites-platform/crm/SKILL.md`
 
 ---
 
@@ -104,7 +104,7 @@ Run all of the following in parallel without asking:
 - **Master project sheet** - Read the document/sheet from the `Master Project Sheet` record (if present).
 - **Slack** - Use the `Slack Channel` record to search the specific project channel for feature discussions, support issues, and known bugs.
 - **Gmail** - Search Gmail for emails to/from the client domain and by company name.
-- **Insites CRM** - Look up the company record using `.claude/skills/insites/crm/SKILL.md`.
+- **Insites CRM** - Look up the company record using `.claude/skills/_plugins/insites-platform/crm/SKILL.md`.
 - **Existing user guide** - Check the `User Guide` record from the custom item. If present, read that document to determine whether to extend it or create a fresh version.
 
 ---

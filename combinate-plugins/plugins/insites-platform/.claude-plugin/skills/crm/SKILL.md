@@ -1,17 +1,18 @@
 ---
 name: insites-crm
+model: claude-haiku-4-5-20251001
 description: Insites CRM module. Use for looking up contacts and companies, searching the CRM, adding/updating records, and logging emails as activities. Trigger on any mention of CRM contacts, companies, client records, or logging emails to the CRM. v1.0.0
 ---
 
 # Insites: CRM Module
 
-The CRM module manages contacts and companies. For tasks and activities, see `.claude/skills/insites/globals/SKILL.md`.
+The CRM module manages contacts and companies. For tasks and activities, see `.claude/skills/_plugins/insites-platform/globals/SKILL.md`.
 
 **Requires:** `INSITES_INSTANCE_URL` and `INSITES_API_KEY`. Use the combinate skill to resolve these for Combinate projects.
 
 **Base path:** `$INSITES_INSTANCE_URL/crm/api/v2/`
 
-**Auth:** See `.claude/skills/insites/SKILL.md` for the base request pattern and `.env` setup.
+**Auth:** See `.claude/skills/_plugins/insites-platform/insites/SKILL.md` for the base request pattern and `.env` setup.
 
 ---
 
@@ -322,6 +323,7 @@ source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && cur
 - `contact_uuid`/`company_uuid` and `related_uuid` must both be set to the same UUID
 - `last_updated_by_administrator_uuid` must be set to `$INSITES_CRM_ADMIN_UUID` from `.env`
 - `start_date_time` is ISO 8601 format: `2026-03-10T00:00:00.000Z`
+- **`message` must be the exact verbatim plain-text body of the email — never a summary.** The CRM is the system of record for client communications. Use a Python heredoc (not curl `-d`) when the body contains special characters or is multi-line, to avoid shell escaping issues.
 
 ---
 
@@ -331,6 +333,7 @@ source $HOME/Executive-Assistant/.env && [ -f .env ] && source .env; true && cur
 - Companies: show name, email, website
 - When creating or updating records, confirm success and return the UUID
 - Use tables when listing multiple contacts or companies
+- **CRM record URLs** use the format: `$INSITES_INSTANCE_URL/admin/insites#/crm/companies/UUID` or `.../crm/contacts/UUID` — never omit the `/admin/insites#` segment
 
 ## Error Handling
 

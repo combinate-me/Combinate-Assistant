@@ -1,5 +1,6 @@
 ---
 name: data
+model: claude-haiku-4-5-20251001
 description: Insites Data module. Use for listing databases and reading or writing database items (records). Trigger on any mention of Insites databases, database records, or data stored in Insites. v1.0.0
 ---
 
@@ -15,7 +16,7 @@ The Data module provides access to custom databases and their records. Databases
 
 **Note:** Databases list responses are wrapped under an `items` key.
 
-**Auth:** See `.claude/skills/insites/SKILL.md` for the base request pattern and `.env` setup.
+**Auth:** See `.claude/skills/_plugins/insites-platform/insites/SKILL.md` for the base request pattern and `.env` setup.
 
 ---
 

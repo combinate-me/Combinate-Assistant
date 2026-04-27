@@ -23,7 +23,7 @@ Combinate-specific workflows that layer on top of the generic Insites skills. Th
 
 **Combinate Intranet:** Configured via `COMBINATE_INTRANET_URL` + `COMBINATE_INTRANET_KEY` in `.env`. When calling Insites sub-skills for the Combinate intranet, set `INSITES_INSTANCE_URL=$COMBINATE_INTRANET_URL` and `INSITES_API_KEY=$COMBINATE_INTRANET_KEY`.
 
-**For underlying CRM operations** (contacts, companies), see `.claude/skills/insites/crm/SKILL.md`.
+**For underlying CRM operations** (contacts, companies), see `.claude/skills/_plugins/insites-platform/crm/SKILL.md`.
 
 ---
 
@@ -135,13 +135,13 @@ When a client or project is mentioned, pull context from all sources in parallel
 
 **Pull these in parallel:**
 
-1. **Insites CRM** - Look up the company record for contacts, notes, custom fields, and activity history. Use `.claude/skills/insites/crm/SKILL.md`.
+1. **Insites CRM** - Look up the company record for contacts, notes, custom fields, and activity history. Use `.claude/skills/_plugins/insites-platform/crm/SKILL.md`.
 
 2. **Google Drive** - Find the client folder via the `Google Drive` record in the Teamwork custom item (see workflow above). Look for recent documents, briefs, and project files.
 
 3. **Google Calendar** - Search for meetings with the client name. Check for recent meeting recordings and notes.
 
-4. **Teamwork** - Find the relevant project and open tasks. Use `.claude/skills/integrations/teamwork/SKILL.md`.
+4. **Teamwork** - Find the relevant project and open tasks. Use `.claude/skills/_plugins/combinate-workflows/01-General/teamwork/SKILL.md`.
 
 5. **Slack** - Search for the client name or TLA across channels for internal conversations.
 

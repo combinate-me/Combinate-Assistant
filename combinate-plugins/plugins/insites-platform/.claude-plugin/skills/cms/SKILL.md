@@ -1,5 +1,6 @@
 ---
 name: insites-cms
+model: claude-sonnet-4-6
 description: Insites CMS developer skill. Use when building or modifying pages, partials, layouts, or templates in an Insites application. Covers architecture, file structure, GraphQL data access, Liquid templating, assets, partials, layouts, and background jobs. Trigger on any development task involving Insites pages, templates, queries, or application code. v1.0.0
 ---
 
@@ -82,13 +83,13 @@ Load the relevant reference when working in that domain:
 
 | Domain | Reference |
 |--------|-----------|
-| GraphQL queries & mutations | `.claude/skills/insites/cms/references/graphql/README.md` |
-| Liquid objects (`context`, loops) | `.claude/skills/insites/cms/references/liquid/objects/README.md` |
-| Liquid filters | `.claude/skills/insites/cms/references/liquid/filters/README.md` |
-| Partials (render, function, scope) | `.claude/skills/insites/cms/references/partials/README.md` |
-| Assets (CDN, cache-busting) | `.claude/skills/insites/cms/references/assets/README.md` |
-| Layouts (application shell) | `.claude/skills/insites/cms/references/layouts/README.md` |
-| Background jobs | `.claude/skills/insites/cms/references/background_jobs/README.md` |
+| GraphQL queries & mutations | `.claude/skills/_plugins/insites-platform/cms/references/graphql/README.md` |
+| Liquid objects (`context`, loops) | `.claude/skills/_plugins/insites-platform/cms/references/liquid/objects/README.md` |
+| Liquid filters | `.claude/skills/_plugins/insites-platform/cms/references/liquid/filters/README.md` |
+| Partials (render, function, scope) | `.claude/skills/_plugins/insites-platform/cms/references/partials/README.md` |
+| Assets (CDN, cache-busting) | `.claude/skills/_plugins/insites-platform/cms/references/assets/README.md` |
+| Layouts (application shell) | `.claude/skills/_plugins/insites-platform/cms/references/layouts/README.md` |
+| Background jobs | `.claude/skills/_plugins/insites-platform/cms/references/background_jobs/README.md` |
 
 ---
 

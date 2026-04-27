@@ -9,6 +9,8 @@ description: Zendesk integration for Combinate's support ticket system. Use this
 
 # Skill: Zendesk
 
+## Overview
+
 Use this skill for any interaction with Combinate's Zendesk support system - reading tickets, drafting replies, adding internal notes, and updating ticket status.
 
 ## When to Use

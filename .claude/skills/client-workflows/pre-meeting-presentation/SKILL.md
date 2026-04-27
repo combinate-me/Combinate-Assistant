@@ -37,7 +37,7 @@ Pull all of the following in parallel:
 1. **Teamwork** — Read the task description, all comments, and any linked articles or documents
 2. **Google Calendar** — Find the meeting by name. Read the event for attendees, agenda, attached notes, and video call link
 3. **Gmail** — Search emails to/from the client contact and company domain. Capture recent threads, outstanding questions, and key context
-4. **Insites CRM** — Look up the company record for contacts, notes, and activity history (use `.claude/skills/insites/crm/SKILL.md`)
+4. **Insites CRM** — Look up the company record for contacts, notes, and activity history (use `.claude/skills/_plugins/insites-platform/crm/SKILL.md`)
 5. **Google Drive** — For existing clients: find the client folder via the Teamwork custom item `Google Drive` record. Look for existing docs, briefs, or previous presentations
 6. **Slack** — Search for recent internal conversations about the client or project
 

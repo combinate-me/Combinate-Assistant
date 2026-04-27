@@ -1,5 +1,6 @@
 ---
 name: insites
+model: claude-haiku-4-5-20251001
 description: Insites platform integration. Use this skill as the entry point for any interaction with an Insites instance. Routes to module-specific sub-skills for CRM, Pipelines, Data, Events, Globals, and CMS development. Trigger on any mention of Insites or when no specific module is referenced. v1.0.0
 ---
 
@@ -50,12 +51,12 @@ Each Insites module has its own sub-skill. Load the relevant one when working wi
 
 | Module | Sub-skill | What it covers |
 |--------|-----------|----------------|
-| **Globals** | `.claude/skills/insites/globals/SKILL.md` | Tasks, task comments, activities, attachments - applicable to records in any module |
-| **CRM** | `.claude/skills/insites/crm/SKILL.md` | Contacts, companies, relationships, custom fields; log email as activity |
-| **Pipelines** | `.claude/skills/insites/pipelines/SKILL.md` | Sales pipelines, pipeline stages, opportunities, related contacts |
-| **Data** | `.claude/skills/insites/data/SKILL.md` | Databases and database items |
-| **Events** | `.claude/skills/insites/events/SKILL.md` | Events, speakers, sponsors, FAQs, expenses, discounts |
-| **CMS** | `.claude/skills/insites/cms/SKILL.md` | Building pages, templates, layouts; GraphQL, Liquid, partials, assets, background jobs |
+| **Globals** | `.claude/skills/_plugins/insites-platform/globals/SKILL.md` | Tasks, task comments, activities, attachments - applicable to records in any module |
+| **CRM** | `.claude/skills/_plugins/insites-platform/crm/SKILL.md` | Contacts, companies, relationships, custom fields; log email as activity |
+| **Pipelines** | `.claude/skills/_plugins/insites-platform/pipelines/SKILL.md` | Sales pipelines, pipeline stages, opportunities, related contacts |
+| **Data** | `.claude/skills/_plugins/insites-platform/data/SKILL.md` | Databases and database items |
+| **Events** | `.claude/skills/_plugins/insites-platform/events/SKILL.md` | Events, speakers, sponsors, FAQs, expenses, discounts |
+| **CMS** | `.claude/skills/_plugins/insites-platform/cms/SKILL.md` | Building pages, templates, layouts; GraphQL, Liquid, partials, assets, background jobs |
 
 ---
 

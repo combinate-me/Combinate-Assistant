@@ -8,6 +8,8 @@ description: Slack integration for Combinate's team messaging. Use this skill fo
 
 # Skill: Slack
 
+## Overview
+
 Use this skill for any interaction with Combinate's Slack workspace - searching messages, reading channel history, and posting messages.
 
 ## When to Use

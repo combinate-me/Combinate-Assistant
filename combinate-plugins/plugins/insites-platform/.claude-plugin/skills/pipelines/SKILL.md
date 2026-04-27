@@ -1,5 +1,6 @@
 ---
 name: insites-pipelines
+model: claude-haiku-4-5-20251001
 description: Insites Pipelines module. Use for managing sales pipelines, pipeline stages, opportunities, and related contacts. Trigger on any mention of pipelines, sales pipeline, opportunities, deals, or pipeline stages in Insites. v1.0.0
 ---
 
@@ -11,7 +12,7 @@ The Pipelines module manages sales pipelines, stages within those pipelines, and
 
 **Base path:** `$INSITES_INSTANCE_URL/pipeline/api/v2/`
 
-**Auth:** See `.claude/skills/insites/SKILL.md` for the base request pattern and `.env` setup.
+**Auth:** See `.claude/skills/_plugins/insites-platform/insites/SKILL.md` for the base request pattern and `.env` setup.
 
 ---
 

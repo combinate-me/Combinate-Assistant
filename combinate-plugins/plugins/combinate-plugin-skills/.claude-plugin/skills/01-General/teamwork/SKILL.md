@@ -1,5 +1,6 @@
 ---
 name: teamwork
+model: claude-haiku-4-5-20251001
 metadata:
   version: 1.0.0
   category: 01-General
@@ -266,7 +267,15 @@ UAT: https://bcc-uat2.staging.oregon.platform-os.com/
 **API key naming convention:** `COMBINATE_KEY_[CLIENT_TLA]_[PROJECT_TLA]_[ENV]`
 ENV values: `PRD`, `STG`, `UAT`, `DEV`
 
-See `.claude/skills/client-workflows/combinate/SKILL.md` for the full client instance resolution workflow.
+See `.claude/skills/_plugins/combinate-workflows/02-Sales/client-context/SKILL.md` for the full client instance resolution workflow.
+
+---
+
+## Logging Emails as Comments
+
+When adding an email to a Teamwork task as a comment, always post the **exact verbatim content** of the email — never a summary. Include a header showing the date, recipient, and subject, then the full email body. The task comment is part of the audit trail and must accurately reflect what was communicated.
+
+Use HTML format with a date/recipient header, then `<hr>` followed by the full email body. Use a Python heredoc rather than curl `-d` for multi-line HTML to avoid shell escaping issues.
 
 ---
 

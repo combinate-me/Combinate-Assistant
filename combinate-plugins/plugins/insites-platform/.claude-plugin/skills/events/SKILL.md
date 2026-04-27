@@ -1,5 +1,6 @@
 ---
 name: insites-events
+model: claude-haiku-4-5-20251001
 description: Insites Events module. Use for managing events, including creating and updating events, managing speakers, sponsors, FAQs, expenses, and discounts. Trigger on any mention of events in Insites. v1.0.0
 ---
 
@@ -11,7 +12,7 @@ The Events module manages events and their associated content including speakers
 
 **Base path:** `$INSITES_INSTANCE_URL/events/api/v2/`
 
-**Auth:** See `.claude/skills/insites/SKILL.md` for the base request pattern and `.env` setup.
+**Auth:** See `.claude/skills/_plugins/insites-platform/insites/SKILL.md` for the base request pattern and `.env` setup.
 
 ---
 

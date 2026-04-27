@@ -1,20 +1,26 @@
 ---
-name: eod-standup
-description: Generates Maiks' end-of-day standup and sends it to her Slack DM. Pulls today's timelogs from Teamwork, checks task statuses, infers Claude AI usage from the session, asks about other tools and blockers, then posts a structured digest. Trigger on "Generate EOD", "end of day", "EOD standup", "daily wrap-up", "log my day", or any request to generate or send a daily summary.
+name: eod-teamwork
+description: End-of-day or midday standup workflow for Combinate team members. Use this skill to generate a daily standup digest from your Teamwork timelogs and post it as a comment on your Teamwork EOD/Midday task. Pulls today's timelogs, checks task statuses, asks about blockers, then formats a structured digest. Trigger on "eod teamwork", "EOD Teamwork", "midday teamwork", "generate EOD", "end of day", "EOD standup", "daily wrap-up", or "log my day".
 ---
 
-# Skill: EOD Standup
+# Skill: EOD Teamwork
 
-Generate Maiks' end-of-day standup from Teamwork timelogs and send to her Slack DM.
+Generate a Combinate team member's end-of-day or midday standup digest from Teamwork timelogs.
 
-## Key IDs
+> **WIP:** This skill currently sends the digest to the user's Slack DM as a placeholder. The intended target is a comment on the team member's daily EOD/Midday Teamwork task — that change is still being finalised.
 
-| Item | Value |
-|------|-------|
-| Maiks' Teamwork user ID | `262695` |
-| Maiks' Slack user ID | `U04TCQABML6` |
+## Configuration
 
-Auth: `TEAMWORK_API_KEY`, `TEAMWORK_SITE` from `.env`. Slack via `slack_send_message` MCP tool.
+Reads from `.env`:
+
+| Variable | Purpose |
+|---|---|
+| `TEAMWORK_API_KEY` | Teamwork API auth |
+| `TEAMWORK_SITE` | Teamwork instance URL (e.g. `https://pm.cbo.me`) |
+| `TEAMWORK_USER_ID` | Your Teamwork user ID — fetches your timelogs |
+| `SLACK_USER_ID` | Your Slack user ID — placeholder DM channel until the Teamwork-comment target is wired up |
+
+Find your Teamwork user ID from your profile URL in Teamwork. Find your Slack user ID via profile menu → "Copy member ID". Slack send uses the `slack_send_message` MCP tool.
 
 ---
 
@@ -25,7 +31,7 @@ source /Users/combinate-maiks/Executive-Assistant/.env && [ -f .env ] && source 
 TODAY=$(date +%Y%m%d)
 curl -s \
   -u "$TEAMWORK_API_KEY:x" \
-  "$TEAMWORK_SITE/time_entries.json?userId=262695&fromdate=${TODAY}&todate=${TODAY}&pageSize=250" \
+  "$TEAMWORK_SITE/time_entries.json?userId=${TEAMWORK_USER_ID}&fromdate=${TODAY}&todate=${TODAY}&pageSize=250" \
   > /tmp/tw_timelogs_eod.json
 ```
 
@@ -136,16 +142,18 @@ Apply any edits, then proceed.
 
 ---
 
-## Step 7 — Send to Slack DM
+## Step 7 — Send to Slack DM (WIP placeholder)
+
+> **TODO:** Switch this step to post the digest as a comment on the team member's daily EOD/Midday Teamwork task once the target task is identified. Until then, this sends to the user's Slack DM as a placeholder.
 
 Use the `slack_send_message` MCP tool:
 
 ```
-channel_id: U04TCQABML6
+channel_id: $SLACK_USER_ID
 message: [formatted post]
 ```
 
-Confirm: "Sent to your Slack DM."
+Confirm: "Sent to your Slack DM (placeholder — will switch to a Teamwork comment once the EOD task is wired up)."
 
 ---
 

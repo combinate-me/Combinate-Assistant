@@ -1,4 +1,4 @@
-# Contributing to Combinate Assistant
+# Contributing to Executive Assistant
 
 This repository contains shared Claude Skills and Plugins used across Combinate projects. Direct pushes to `master` are not allowed. All changes must go through a pull request.
 

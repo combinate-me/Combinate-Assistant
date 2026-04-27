@@ -1,6 +1,6 @@
 # Getting Started
 
-Welcome to the Combinate Assistant. This guide will walk you through every step of the setup process from scratch.
+Welcome to the Executive Assistant. This guide will walk you through every step of the setup process from scratch.
 
 This will take about 15-20 minutes the first time. You only need to do this once.
 
@@ -8,7 +8,7 @@ This will take about 15-20 minutes the first time. You only need to do this once
 
 ## Step 1: Install VS Code
 
-VS Code (Visual Studio Code) is a free application made by Microsoft. It is the program you will use to run the Combinate Assistant.
+VS Code (Visual Studio Code) is a free application made by Microsoft. It is the program you will use to run the Executive Assistant.
 
 1. Open your web browser and go to **https://code.visualstudio.com**
 2. Click the large blue **Download** button in the middle of the page
@@ -22,7 +22,7 @@ You should see a welcome screen with a dark or light background. That means it w
 
 ## Step 2: Install Git
 
-Git is a tool that lets you download files from GitHub (where the Combinate Assistant is stored). You may already have it installed.
+Git is a tool that lets you download files from GitHub (where the Executive Assistant is stored). You may already have it installed.
 
 **Check if you already have Git:**
 
@@ -68,9 +68,9 @@ Claude Code is the AI engine that powers this assistant. You need a Claude accou
 
 ---
 
-## Step 5: Download the Combinate Assistant
+## Step 5: Download the Executive Assistant
 
-Now you will download the Combinate Assistant files to your computer.
+Now you will download the Executive Assistant files to your computer.
 
 1. In VS Code, click **View** in the top menu bar, then click **Command Palette**
    - On Mac you can also press **Cmd + Shift + P**
@@ -78,7 +78,7 @@ Now you will download the Combinate Assistant files to your computer.
 2. A search box will appear at the top of the screen. Type **Git: Clone** and click the result that says **Git: Clone**
 3. Another box will appear asking for a URL. Paste the following and press **Enter**:
    ```
-   https://github.com/combinate-me/Combinate-Assistant.git
+   https://github.com/combinate-me/Executive-Assistant.git
    ```
 4. A window will open asking where to save the folder. Choose a location you can find easily, such as your **Documents** folder. Click **Select Repository Location** (or **Select as Repository Destination** on Windows)
 5. VS Code will download the files - this takes about 30 seconds
@@ -98,7 +98,7 @@ API keys are passwords that allow the assistant to connect to tools like Teamwor
 2. You will see a list of settings, most of which already have values
 3. Go to **File** in the top menu bar and click **Save As...**
 4. In the filename box at the top, change `.env.example` to `.env` (just remove the word "example" and the dot before it, so it reads exactly `.env`)
-5. Make sure the save location is still the **Combinate-Assistant** folder (it should be by default)
+5. Make sure the save location is still the **Executive-Assistant** folder (it should be by default)
 6. Click **Save**
 
 The new `.env` file will now appear in the left panel.
@@ -145,7 +145,7 @@ The other lines (URLs and site addresses) are already filled in and do not need 
    ```
 6. The assistant will ask you a few questions about your name, role, and current priorities. Answer each one and press Enter. This takes about 2 minutes.
 
-When it is done, you are set up and ready to use the Combinate Assistant.
+When it is done, you are set up and ready to use the Executive Assistant.
 
 ---
 
@@ -154,7 +154,7 @@ When it is done, you are set up and ready to use the Combinate Assistant.
 Each time you want to use the assistant:
 
 1. Open **VS Code**
-2. If the Combinate-Assistant folder is not already open, go to **File > Open Folder** and select the **Combinate-Assistant** folder
+2. If the Executive-Assistant folder is not already open, go to **File > Open Folder** and select the **Executive-Assistant** folder
 3. Open the terminal: **Terminal > New Terminal**
 4. Type `claude` and press **Enter**
 
@@ -164,7 +164,7 @@ Each time you want to use the assistant:
 
 Shane regularly updates the shared files (context, skills, and settings). To get the latest updates:
 
-1. Open VS Code with the Combinate-Assistant folder open
+1. Open VS Code with the Executive-Assistant folder open
 2. Open the terminal and type the following, then press **Enter**:
    ```
    git pull

@@ -1,6 +1,6 @@
-# SOP: Setting Up the Combinate Assistant Globally
+# SOP: Setting Up the Executive Assistant Globally
 
-This guide covers the global Claude Code configuration that makes the Combinate Assistant work across your whole machine - not just inside the project folder.
+This guide covers the global Claude Code configuration that makes the Executive Assistant work across your whole machine - not just inside the project folder.
 
 Complete the main `SETUP.md` first, then follow this guide.
 
@@ -12,20 +12,20 @@ Run these commands in order from your terminal:
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/combinate-me/Combinate-Assistant.git ~/Combinate-Assistant
+git clone https://github.com/combinate-me/Executive-Assistant.git ~/Executive-Assistant
 
 # 2. Create the symlink (connects global Claude skills to the repo)
-rm -rf ~/.claude/skills && ln -s ~/Combinate-Assistant/.claude/skills ~/.claude/skills
+rm -rf ~/.claude/skills && ln -s ~/Executive-Assistant/.claude/skills ~/.claude/skills
 
 # 3. Copy global settings (MCP servers)
-cp ~/Combinate-Assistant/.claude/settings.json ~/.claude/settings.json
+cp ~/Executive-Assistant/.claude/settings.json ~/.claude/settings.json
 
 # 4. Set up your .env
-cp ~/Combinate-Assistant/.env.example ~/Combinate-Assistant/.env
+cp ~/Executive-Assistant/.env.example ~/Executive-Assistant/.env
 # Then open .env and fill in your API keys
 
 # 5. Launch
-cd ~/Combinate-Assistant && claude
+cd ~/Executive-Assistant && claude
 ```
 
 Once Claude is running, type:
@@ -43,7 +43,7 @@ Claude Code has two layers of configuration:
 
 | Layer | Location | What it does |
 |-------|----------|--------------|
-| Project | `~/Combinate-Assistant/` | Context files, .env, branding, templates |
+| Project | `~/Executive-Assistant/` | Context files, .env, branding, templates |
 | Global | `~/.claude/` | Skills, MCP servers, rules, memory |
 
 The global layer loads automatically every time you open Claude Code, regardless of which folder you are in. This is where the skills and integrations live.
@@ -118,10 +118,10 @@ web-artifacts-builder
 
 If the skills folder is missing or the symlink was not created, run:
 ```bash
-rm -rf ~/.claude/skills && ln -s ~/Combinate-Assistant/.claude/skills ~/.claude/skills
+rm -rf ~/.claude/skills && ln -s ~/Executive-Assistant/.claude/skills ~/.claude/skills
 ```
 
-> The symlink means `~/.claude/skills` and `~/Combinate-Assistant/.claude/skills` are the same folder. When you `git pull` on master, skills update automatically - no manual copy needed.
+> The symlink means `~/.claude/skills` and `~/Executive-Assistant/.claude/skills` are the same folder. When you `git pull` on master, skills update automatically - no manual copy needed.
 
 ---
 
@@ -129,14 +129,14 @@ rm -rf ~/.claude/skills && ln -s ~/Combinate-Assistant/.claude/skills ~/.claude/
 
 The global `CLAUDE.md` references context files using relative paths like `@context/me.md`. These resolve relative to the folder Claude is opened from.
 
-**Always open Claude from the Combinate-Assistant folder:**
+**Always open Claude from the Executive-Assistant folder:**
 
 ```bash
-cd ~/Combinate-Assistant
+cd ~/Executive-Assistant
 claude
 ```
 
-Or open VS Code with the Combinate-Assistant folder, then run `claude` in the terminal.
+Or open VS Code with the Executive-Assistant folder, then run `claude` in the terminal.
 
 If you open Claude from a different folder, the context files will not load correctly.
 
@@ -170,8 +170,8 @@ If Teamwork is not responding, check your `.env` file has `TEAMWORK_API_KEY` fil
 | `~/.claude/CLAUDE.md` | Global instructions (shared via repo) |
 | `~/.claude/rules/` | Communication and tone rules |
 | `~/.claude/memory/` | Persistent memory across sessions |
-| `~/Combinate-Assistant/.env` | Your personal API keys |
-| `~/Combinate-Assistant/context/` | Project context files |
+| `~/Executive-Assistant/.env` | Your personal API keys |
+| `~/Executive-Assistant/context/` | Project context files |
 
 ---
 

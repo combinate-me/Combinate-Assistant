@@ -43,6 +43,11 @@
       "name": "skill-sharing",
       "path": "./skills/01-General/skill-sharing",
       "category": "01-General"
+    },
+    {
+      "name": "droplr",
+      "path": "./skills/01-General/droplr",
+      "category": "01-General"
     }
   ]
 }

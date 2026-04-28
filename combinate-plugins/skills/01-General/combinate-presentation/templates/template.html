@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{TITLE}} - Combinate Presentation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================
+       COMBINATE PRESENTATION - UNIFIED TEMPLATE
+       Supports dark / light / mixed themes via toggle
+       ============================================ */
+    :root {
+      --cmb-blue: #1E43FF;
+      --cmb-black: #181818;
+      --cmb-grey: #4E4E4E;
+      --cmb-light-grey: #D1D1D1;
+      --cmb-ghost-white: #EFF2F9;
+      --cmb-emerald: #10b981;
+      --cmb-amber: #f59e0b;
+      --cmb-red: #ef4444;
+    }
+
+    /* Dark theme */
+    body.theme-dark {
+      --bg: #0a0a0f;
+      --bg-card: rgba(255, 255, 255, 0.04);
+      --bg-card-hover: rgba(255, 255, 255, 0.06);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(30, 67, 255, 0.3);
+      --text: #ffffff;
+      --text-secondary: rgba(255, 255, 255, 0.5);
+      --text-muted: rgba(255, 255, 255, 0.3);
+      --text-faint: rgba(255, 255, 255, 0.15);
+      --nav-bg: rgba(10, 10, 15, 0.85);
+    }
+
+    /* Light theme */
+    body.theme-light {
+      --bg: #f4f2ee;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f8f8f6;
+      --border: #d4d0c8;
+      --border-accent: rgba(30, 67, 255, 0.3);
+      --text: #181818;
+      --text-secondary: #4E4E4E;
+      --text-muted: #6b7280;
+      --text-faint: #9ca3af;
+      --nav-bg: rgba(244, 242, 238, 0.92);
+    }
+
+    /* Mixed theme: title/closing slides dark, content slides light */
+    body.theme-mixed {
+      --bg: #f4f2ee;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f8f8f6;
+      --border: #d4d0c8;
+      --border-accent: rgba(30, 67, 255, 0.3);
+      --text: #181818;
+      --text-secondary: #4E4E4E;
+      --text-muted: #6b7280;
+      --text-faint: #9ca3af;
+      --nav-bg: rgba(10, 10, 15, 0.85);
+    }
+    body.theme-mixed .slide.hero {
+      --bg: #0a0a0f;
+      --bg-card: rgba(255, 255, 255, 0.04);
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #ffffff;
+      --text-secondary: rgba(255, 255, 255, 0.5);
+      --text-muted: rgba(255, 255, 255, 0.3);
+      --text-faint: rgba(255, 255, 255, 0.15);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', 'Helvetica Neue', Helvetica, system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Typography */
+    h1, h2, h3, h4 { font-family: 'Inter', 'Helvetica Neue', Helvetica, sans-serif; font-weight: 700; line-height: 1.2; }
+    h1 { font-size: 56px; }
+    h2 { font-size: 40px; margin-bottom: 32px; }
+    h3 { font-size: 18px; margin-bottom: 8px; }
+    h4 { font-size: 15px; }
+
+    .category {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--cmb-blue);
+      margin-bottom: 16px;
+    }
+
+    .subtitle { font-size: 20px; color: var(--text-secondary); max-width: 600px; }
+    .meta { font-size: 13px; color: var(--text-faint); }
+    .gradient-text {
+      background: linear-gradient(135deg, var(--cmb-blue), #4f6dff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Slides */
+    .slide {
+      display: none;
+      width: 100vw;
+      height: 100vh;
+      position: absolute;
+      top: 0; left: 0;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 56px 56px;
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+    .slide.active { display: flex; }
+    .slide.center { text-align: center; }
+    .slide .content {
+      max-width: 960px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .slide .content .category,
+    .slide .content h2 {
+      align-self: flex-start;
+    }
+
+    /* Brand blob background for hero slides in dark theme */
+    body.theme-dark .slide.hero::before,
+    body.theme-mixed .slide.hero::before {
+      content: '';
+      position: absolute;
+      top: -20%;
+      right: -10%;
+      width: 60%;
+      height: 80%;
+      background: radial-gradient(ellipse at center, rgba(30, 67, 255, 0.15) 0%, transparent 70%);
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .slide.hero > * { position: relative; z-index: 1; }
+
+    /* Animation */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .slide.active .anim {
+      opacity: 0;
+      animation: fadeUp 0.5s ease-out forwards;
+    }
+    .anim-d1 { animation-delay: 0.1s !important; }
+    .anim-d2 { animation-delay: 0.2s !important; }
+    .anim-d3 { animation-delay: 0.3s !important; }
+    .anim-d4 { animation-delay: 0.4s !important; }
+    .anim-d5 { animation-delay: 0.5s !important; }
+    .anim-d6 { animation-delay: 0.6s !important; }
+    .anim-d7 { animation-delay: 0.7s !important; }
+
+    /* Cards */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      transition: border-color 0.2s;
+    }
+    .card:hover { border-color: var(--border-accent); }
+    .card p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+
+    .stat-card { text-align: center; }
+    .stat-card .stat-value { font-family: 'Inter', sans-serif; font-size: 48px; font-weight: 700; margin-bottom: 4px; }
+    .stat-card .stat-label { font-size: 14px; color: var(--text-secondary); }
+
+    .step-card { display: flex; align-items: flex-start; gap: 16px; }
+    .step-number {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: rgba(30, 67, 255, 0.15);
+      color: var(--cmb-blue);
+      font-weight: 700;
+      font-size: 16px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* Icon box */
+    .icon-box {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      margin-bottom: 16px;
+    }
+    .icon-box svg { width: 20px; height: 20px; }
+    .icon-box.blue { background: rgba(30, 67, 255, 0.15); color: var(--cmb-blue); }
+    .icon-box.emerald { background: rgba(16, 185, 129, 0.15); color: var(--cmb-emerald); }
+    .icon-box.amber { background: rgba(245, 158, 11, 0.15); color: var(--cmb-amber); }
+    .icon-box.red { background: rgba(239, 68, 68, 0.15); color: var(--cmb-red); }
+
+    /* Grids */
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+    /* Highlight box */
+    .highlight-box {
+      background: rgba(30, 67, 255, 0.06);
+      border: 1px solid rgba(30, 67, 255, 0.15);
+      border-radius: 16px;
+      padding: 24px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .highlight-box h4 { color: var(--cmb-blue); margin-bottom: 4px; }
+    .highlight-box p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+
+    /* Icon list */
+    .icon-list { list-style: none; }
+    .icon-list li {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 14px; color: var(--text-secondary);
+      padding: 4px 0;
+    }
+    .icon-list .check-icon { width: 16px; height: 16px; color: var(--cmb-emerald); flex-shrink: 0; margin-top: 2px; }
+
+    /* Glow effect */
+    .glow { box-shadow: 0 0 60px rgba(30, 67, 255, 0.12); }
+
+    /* ============================================
+       NAVIGATION BAR
+       ============================================ */
+    .progress-bar-track {
+      position: fixed; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--bg-card); z-index: 100;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--cmb-blue);
+      transition: width 0.3s ease;
+    }
+
+    .nav-bar {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      height: 48px;
+      background: var(--nav-bg, rgba(10, 10, 15, 0.85));
+      backdrop-filter: blur(12px);
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center;
+      padding: 0 24px;
+      z-index: 100;
+    }
+
+    .nav-logo { height: 28px; }
+    .nav-logo svg { height: 28px; width: auto; }
+
+    .theme-toggle {
+      display: flex; align-items: center; gap: 2px;
+      background: var(--bg-card, rgba(255,255,255,0.04));
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 2px;
+      margin-left: 12px;
+    }
+    .theme-toggle button {
+      width: 24px; height: 22px;
+      border: none; border-radius: 4px;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+      font-size: 11px;
+      padding: 0;
+    }
+    .theme-toggle button.active {
+      background: var(--cmb-blue);
+      color: #fff;
+    }
+    .theme-toggle button:hover:not(.active) { color: var(--text); }
+
+    .nav-dots {
+      position: absolute; left: 50%; transform: translateX(-50%);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .nav-dot {
+      width: 6px; height: 6px;
+      border-radius: 3px;
+      background: var(--text-faint);
+      border: none; cursor: pointer;
+      transition: all 0.3s;
+      padding: 0;
+    }
+    .nav-dot.active {
+      width: 20px;
+      background: var(--cmb-blue);
+    }
+    .nav-dot:hover:not(.active) { background: var(--text-muted); }
+
+    .nav-right {
+      margin-left: auto;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .nav-counter { font-size: 12px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+    .nav-btn {
+      width: 28px; height: 28px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    .nav-btn:hover { color: var(--text); border-color: var(--text-muted); }
+    .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .nav-btn svg { width: 14px; height: 14px; }
+
+    /* Nav timer */
+    .nav-timer {
+      display: flex; align-items: center; gap: 6px;
+      margin-left: 12px;
+      font-size: 12px;
+      font-family: 'Inter', sans-serif;
+      font-variant-numeric: tabular-nums;
+      cursor: pointer;
+      user-select: none;
+    }
+    .nav-timer .timer-segment { color: var(--cmb-blue); font-weight: 600; }
+    .nav-timer .timer-countdown { color: var(--text); font-weight: 500; }
+    .nav-timer .timer-countdown.warning { color: var(--cmb-amber); font-weight: 600; }
+    .nav-timer .timer-countdown.danger { color: var(--cmb-red); font-weight: 700; }
+    .timer-overtime-dot {
+      display: inline-block;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--cmb-red);
+      margin-right: 4px;
+      animation: pulse-dot 1s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.7); }
+    }
+    .nav-timer .timer-start-btn {
+      background: rgba(30, 67, 255, 0.15);
+      color: var(--cmb-blue);
+      border: 1px solid rgba(30, 67, 255, 0.3);
+      border-radius: 6px;
+      padding: 2px 10px;
+      font-size: 11px; font-weight: 600;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+    }
+    .nav-timer .timer-start-btn:hover { background: rgba(30, 67, 255, 0.25); }
+    .nav-timer.paused .timer-countdown { opacity: 0.5; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .slide { padding: 32px; }
+      h1 { font-size: 36px; }
+      h2 { font-size: 28px; }
+      .grid-3, .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Progress bar -->
+  <div class="progress-bar-track">
+    <div id="progressFill" class="progress-bar-fill" style="width: 0%"></div>
+  </div>
+
+  <!-- ==================== SLIDES GO HERE ==================== -->
+
+  <!-- SLIDE: Title -->
+  <div class="slide center hero">
+    <div class="anim anim-d1" style="margin-bottom: 40px;">
+      <!-- Combinate horizontal logo: icosahedron + wordmark (theme-adaptive) -->
+      <svg width="320" height="74" viewBox="0 0 704 162" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g fill="var(--text)">
+          <path d="M224.9,101.9c-4.3-3.9-6.6-9.5-6.9-16.8v-7.9c0.3-7.2,2.6-12.5,6.9-16.8c4.3-3.9,10.2-5.9,17.5-5.9c5.3,0,9.6,1,13.2,2.6c3.6,2,6.3,3.9,7.9,6.9c1.6,2.6,2.6,5.3,3,7.6c0,0.7,0,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-8.9c-0.7,0-1.3,0-1.6-0.3c-0.3-0.3-0.7-1-1-1.6c-1-2.6-2.3-4.3-4-5.3c-1.6-1-3.6-1.6-6.3-1.6c-3.3,0-5.9,1-7.9,3.3c-2,2-3,5.3-3,9.5v6.9c0.3,8.5,4,12.8,10.9,12.8c2.6,0,4.6-0.7,6.3-1.6c1.6-1,3-3,4-5.6c0.3-0.7,0.7-1.3,1-1.6c0.3-0.3,1-0.3,1.6-0.3h8.9c0.7,0,1.3,0.3,1.6,0.7c0.3,0.3,0.7,1,0.7,1.6c0,2.3-1,4.9-2.6,7.6c-1.6,2.6-4.3,4.9-7.9,6.9c-3.6,2-7.9,3-13.2,3C235.1,107.8,229.2,105.8,224.9,101.9z"/>
+          <path d="M277.3,101.9c-4.3-3.9-6.6-9.5-6.9-16.4v-8.5c0.3-6.9,2.6-12.2,6.9-16.4c4.3-3.9,10.2-5.9,17.8-5.9c7.6,0,13.5,2,17.8,5.9c4.3,3.9,6.6,9.5,6.9,16.4c0,0.7,0,2.3,0,4.3c0,2,0,3.6,0,4.3c-0.3,6.9-2.6,12.5-6.9,16.4c-4.3,3.9-10.2,5.9-17.8,5.9C287.5,107.8,281.6,105.8,277.3,101.9z M303.4,94.7c2-2.3,3-5.3,3-9.5c0-0.7,0-2,0-3.9c0-2,0-3.3,0-3.9c0-4.3-1-7.6-3-9.5c-2-2.3-4.6-3.3-7.9-3.3c-3.6,0-6.3,1-8.2,3.3c-2,2.3-3,5.3-3,9.5v7.9c0,4.3,1,7.2,3,9.5c2,2.3,4.6,3.3,8.2,3.3C298.7,98,301.7,97,303.4,94.7z"/>
+          <path d="M327.7,106.2c-0.3-0.3-0.7-1-0.7-1.6V58.2c0-0.7,0.3-1.3,0.7-1.6c0.3-0.3,1-0.7,1.6-0.7h7.9c0.7,0,1.3,0.3,1.6,0.7c0.3,0.3,0.7,1,0.7,1.6v3.3c3.6-4.6,8.2-6.6,14.2-6.6c7.3,0,12.5,3,15.2,8.9c1.6-2.6,4-4.6,6.6-6.2c3-1.6,5.9-2.3,9.2-2.3c5.3,0,9.9,2,13.2,5.6c3.3,3.6,5.3,8.9,5.3,16.1v28.3c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-8.2c-0.7,0-1.3-0.3-1.6-0.7c-0.3-0.3-0.7-1-0.7-1.6V77.6c0-4.3-1-7.2-2.6-8.9c-1.6-2-4-2.6-6.9-2.6c-2.6,0-4.6,1-6.6,3c-1.6,2-2.6,4.9-2.6,8.9v27.6c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7H361c-0.7,0-1.3-0.3-1.6-0.7c-0.3-0.3-0.7-1-0.7-1.6V77.9c0-3.9-1-6.9-2.6-8.9c-1.6-2-4-3-6.9-3c-2.6,0-4.6,1-6.6,3c-1.6,2-2.6,4.9-2.6,8.9v27.6c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-8.2C329.1,106.8,328.4,106.8,327.7,106.2z"/>
+          <path d="M425.3,100.9v3.6c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-7.9c-0.7,0-1.3-0.3-1.6-0.7c-0.3-0.3-0.7-1-0.7-1.6V39.5c0-0.7,0.3-1.3,0.7-1.6c0.3-0.3,1-0.7,1.6-0.7h8.6c0.7,0,1.3,0.3,1.6,0.7c0.3,0.3,0.7,1,0.7,1.6v21.7c3.6-4.3,8.6-6.6,15.2-6.6c6.6,0,11.9,2.3,15.5,6.6s5.6,9.9,5.6,16.8c0,0.7,0,2,0,3.3s0,2.3,0,3.3c-0.3,7.2-2.3,12.8-5.6,17.1c-3.6,4.3-8.6,6.2-15.2,6.2C434.2,107.8,428.9,105.5,425.3,100.9z M448.4,84.5c0-0.7,0-1.6,0-3s0-2.3,0-3c-0.3-8.5-4.3-13.1-11.2-13.1c-3.6,0-6.3,1-8.2,3.3c-2,2.3-3,4.9-3,8.2c0,0.7,0,2,0,3.9c0,1.6,0,3,0,3.6c0,3.6,1,6.6,3,8.9c2,2.3,4.6,3.6,8.2,3.6C444.1,97.3,448,93,448.4,84.5z"/>
+          <path d="M469.5,46.7c-0.3-0.3-0.7-1-0.7-1.6v-7.2c0-0.7,0.3-1.3,0.7-1.6c0.3-0.3,1-0.7,1.6-0.7h9.2c0.7,0,1.3,0.3,1.6,0.7c0.3,0.3,0.7,1,0.7,1.6V45c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-9.2C470.5,47.3,469.8,47.3,469.5,46.7z M469.8,106.2c-0.3-0.3-0.7-1-0.7-1.6V58.2c0-0.7,0.3-1.3,0.7-1.6c0.3-0.3,1-0.7,1.6-0.7h8.2c0.7,0,1.3,0.3,1.6,0.7c0.3,0.3,0.7,1,0.7,1.6v46.3c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-8.2C470.8,106.8,470.1,106.8,469.8,106.2z"/>
+          <path d="M491.9,106.2c-0.3-0.3-0.7-1-0.7-1.6V58.2c0-0.7,0.3-1.3,0.7-1.6c0.3-0.3,1-0.7,1.6-0.7h8.2c0.7,0,1.3,0.3,1.6,0.7c0.3,0.3,0.7,1,0.7,1.6v3.9c4-4.9,9.6-7.2,16.5-7.2c5.9,0,10.9,2,14.5,5.9c3.6,3.9,5.3,9.2,5.3,16.1v27.6c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-8.9c-0.7,0-1.3-0.3-1.6-0.7c-0.3-0.3-0.7-1-0.7-1.6V77.6c0-3.9-1-6.9-3-8.9c-2-2-4.6-3.3-7.9-3.3c-3.3,0-5.9,1-8.2,3.3c-2,2.3-3,5.3-3,8.9v26.9c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-8.9C492.9,106.8,492.5,106.8,491.9,106.2z"/>
+          <path d="M554.5,105.8c-2.6-1.3-4.9-3.3-6.6-5.6c-1.6-2.3-2.3-4.9-2.3-7.6c0-4.6,1.6-8.2,5.3-10.8s8.6-4.6,14.8-5.6l13.5-2v-2c0-3-0.7-4.9-2.3-6.2c-1.3-1.3-3.6-2.3-6.9-2.3c-2.3,0-4,0.3-5.3,1.3c-1.3,0.7-2.3,1.6-3.3,2.3c-0.7,0.7-1.3,1.3-1.6,1.6c-0.3,0.7-0.7,1.3-1.3,1.3h-7.2c-0.7,0-1-0.3-1.6-0.7c-0.3-0.3-0.7-1-0.7-1.6c0-1.6,1-3.6,2.3-5.6c1.6-2,4-3.9,7.2-5.3c3.3-1.6,7.3-2.3,11.9-2.3c7.9,0,13.5,1.6,17.1,5.3c3.6,3.6,5.3,7.9,5.3,13.8v30.9c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-8.2c-0.7,0-1.3-0.3-1.6-0.7c-0.3-0.3-0.7-1-0.7-1.6v-3.9c-1.3,2-3.6,3.9-6.3,5.3c-2.6,1.3-5.9,2-9.9,2C560.4,107.8,557.5,107.2,554.5,105.8z M576.2,95c2.3-2.3,3.3-5.9,3.3-10.2v-2l-9.9,1.6c-7.6,1.3-11.2,3.6-11.2,7.6c0,2,1,3.6,2.6,4.9c1.6,1,4,1.6,6.3,1.6C571,98.6,573.9,97.3,576.2,95z"/>
+          <path d="M610.9,102.2c-3-3-4.6-7.6-4.6-13.8V66.1h-7.9c-0.7,0-1.3-0.3-1.6-0.7c-0.3-0.3-0.7-1-0.7-1.6v-5.9c0-0.7,0.3-1.3,0.7-1.6c0.3-0.3,1-0.7,1.6-0.7h7.9V39.1c0-0.7,0.3-1.3,0.7-1.6c0.3-0.3,1-0.7,1.6-0.7h8.2c0.7,0,1.3,0.3,1.6,0.7c0.3,0.3,0.7,1,0.7,1.6v16.4h12.2c0.7,0,1.3,0.3,1.6,0.7c0.3,0.3,0.7,1,0.7,1.6v5.9c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-12.2v21c0,3,0.3,4.9,1.3,6.2s2.6,2.3,4.9,2.3h6.9c0.7,0,1.3,0.3,1.6,0.7c0.3,0.3,0.7,1,0.7,1.6v6.2c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7H624C618.4,106.8,613.8,105.5,610.9,102.2z"/>
+          <path d="M644.1,101.6c-4.3-4.3-6.6-10.2-6.9-18.1v-2.3c0-8.2,2.3-14.8,6.6-19.4c4.3-4.6,10.2-7.2,17.8-7.2c7.9,0,13.8,2.3,18.1,7.2C684,66.4,686,73,686,80.5v2c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-32.6v0.7c0,3.6,1,6.6,3,9.2c2,2.3,4.6,3.6,7.9,3.6c3.6,0,6.9-1.6,9.2-4.6c0.7-0.7,1-1.3,1.3-1.3c0.3,0,1-0.3,1.6-0.3h8.6c0.7,0,1,0.3,1.6,0.3c0.3,0.3,0.7,0.7,0.7,1.3c0,1.6-1,3.3-3,5.6c-2,2-4.6,3.9-7.9,5.6c-3.6,1.6-7.6,2.3-12.2,2.3C654.4,107.8,648.4,105.8,644.1,101.6z M672.5,76.9c0-3.9-1-7.2-3-9.5c-2-2.3-4.6-3.6-7.9-3.6c-3.3,0-5.9,1.3-7.9,3.6c-2,2.3-3,5.6-3,9.2v0.3H672.5z"/>
+          <!-- Icosahedron symbol -->
+          <path d="M140,42.6C140,42.5,140,42.5,140,42.6c0-0.2,0-0.3,0-0.4v-0.1c0,0,0,0,0-0.1V42c0-0.1,0-0.2-0.1-0.3v-0.1c0,0,0-0.1-0.1-0.1c0,0,0-0.1-0.1-0.1v-0.1l-0.1-0.1c0,0,0-0.1-0.1-0.1c0-0.1-0.1-0.1-0.1-0.2l-0.1-0.1c0,0,0-0.1-0.1-0.1c0,0,0,0-0.1-0.1l-0.1-0.1l-0.1-0.1l-0.1-0.1l-0.1-0.1l-0.1-0.1c0,0-0.1,0-0.1-0.1l-0.1-0.1c0,0,0,0-0.1-0.1L71.6,1.5c-1-0.6-2.2-0.6-3.3,0L1.6,39.8c0,0-0.1,0-0.1,0.1c0,0-0.1,0-0.1,0.1c0,0-0.1,0-0.1,0.1l-0.1,0.1l-0.1,0.1L1,40.4l-0.1,0.1l-0.1,0.1c0,0,0,0-0.1,0.1l-0.1,0.1l-0.1,0.1c0,0.1-0.1,0.1-0.1,0.2c0,0,0,0.1-0.1,0.1l-0.1,0.1v0.1c0,0,0,0.1-0.1,0.1c0,0,0,0.1-0.1,0.1v0.1c0,0.1-0.1,0.2-0.1,0.3V42c0,0,0,0,0,0.1v0.1c0,0.1,0,0.2,0,0.3v0.1v76.7c0,0.1,0,0.1,0,0.2c0,0,0,0,0,0.1c0,0,0,0,0,0.1c0,0.2,0.1,0.5,0.1,0.7v0.1c0.1,0.2,0.2,0.5,0.3,0.7c0.1,0.2,0.3,0.4,0.5,0.6l0.1,0.1c0.2,0.2,0.4,0.3,0.6,0.4c0,0,0,0,0.1,0l66.8,38.4c0.1,0,0.1,0.1,0.2,0.1s0.1,0.1,0.2,0.1c0,0,0,0,0.1,0h0.1H69c0.1,0,0.1,0,0.2,0.1c0.1,0,0.1,0,0.2,0h0.1h0.1c0.2,0,0.3,0,0.5,0s0.3,0,0.5,0h0.1h0.1c0.1,0,0.1,0,0.2,0s0.1,0,0.2-0.1h0.1h0.1c0,0,0,0,0.1,0s0.1-0.1,0.2-0.1s0.1-0.1,0.2-0.1l66.8-38.4c0,0,0,0,0.1,0c0.2-0.1,0.4-0.3,0.6-0.4l0.1-0.1c0.4-0.4,0.6-0.7,0.7-1.2v-0.1c0.1-0.2,0.1-0.5,0.1-0.7c0,0,0,0,0-0.1c0,0,0,0,0-0.1c0-0.1,0-0.1,0-0.2L140,42.6L140,42.6z M15.4,44.5L64,38.9L49.2,64.3L36.4,86.4L8.9,45.2L15.4,44.5z M44.3,85.9L70,41.4l27.7,47.9H42.2L44.3,85.9z M98.1,95.8L70,150.7l-28-54.9H98.1z M103.6,86.4L76,39l55,6.3L118,64.8L103.6,86.4z M12.2,62l20.1,30L6.5,112.7V53.3L12.2,62z M104.4,97.6l10.2,8.2l16.3,13.2l-53.1,30.6L104.4,97.6z M107.7,91.9l20.1-30l5.7-8.6v59.3L107.7,91.9z M73.2,32.1V9.9l48.3,27.8L73.2,32.1z M66.8,9.9v22.2l-48.3,5.6L66.8,9.9z M9,119l16.3-13.2l10.2-8.2l15.8,30.9l10.8,21.1L9,119z"/>
+        </g>
+      </svg>
+    </div>
+    <h1 class="anim anim-d2">{{TITLE}}</h1>
+    <p class="subtitle anim anim-d3" style="margin-top: 16px;">{{SUBTITLE}}</p>
+    <p class="meta anim anim-d4" style="margin-top: 40px;">Combinate | {{DATE}}</p>
+  </div>
+
+  <!-- SLIDE: Example content slide (replace with actual content) -->
+  <div class="slide">
+    <div class="content">
+      <p class="category anim anim-d1">Section Name</p>
+      <h2 class="anim anim-d2">Slide Title Goes Here</h2>
+      <div class="grid-3 anim anim-d3">
+        <div class="card">
+          <div class="icon-box blue">
+            <!-- Phosphor: Sparkle -->
+            <svg viewBox="0 0 256 256" fill="currentColor"><path d="M208,144a15.78,15.78,0,0,1-10.42,14.94l-51.65,19-19,51.65a15.92,15.92,0,0,1-29.88,0L78.07,178l-51.65-19a15.92,15.92,0,0,1,0-29.88l51.65-19,19-51.65a15.92,15.92,0,0,1,29.88,0l19,51.65,51.65,19A15.78,15.78,0,0,1,208,144ZM152,48h16V64a8,8,0,0,0,16,0V48h16a8,8,0,0,0,0-16H184V16a8,8,0,0,0-16,0V32H152a8,8,0,0,0,0,16Zm88,32h-8V72a8,8,0,0,0-16,0v8h-8a8,8,0,0,0,0,16h8v8a8,8,0,0,0,16,0V96h8a8,8,0,0,0,0-16Z"/></svg>
+          </div>
+          <h3>Card Title</h3>
+          <p>Description of this card's content goes here.</p>
+        </div>
+        <div class="card">
+          <div class="icon-box emerald">
+            <!-- Phosphor: CheckCircle -->
+            <svg viewBox="0 0 256 256" fill="currentColor"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg>
+          </div>
+          <h3>Card Title</h3>
+          <p>Description of this card's content goes here.</p>
+        </div>
+        <div class="card">
+          <div class="icon-box amber">
+            <!-- Phosphor: Lightning -->
+            <svg viewBox="0 0 256 256" fill="currentColor"><path d="M215.79,118.17a8,8,0,0,0-5-5.66L153.18,90.9l14.66-73.33a8,8,0,0,0-13.69-7l-112,120a8,8,0,0,0,3,12.95l57.63,21.61L88.16,238.43a8,8,0,0,0,13.69,7l112-120A8,8,0,0,0,215.79,118.17Z"/></svg>
+          </div>
+          <h3>Card Title</h3>
+          <p>Description of this card's content goes here.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE: Closing -->
+  <div class="slide center hero">
+    <div class="anim anim-d1" style="margin-bottom: 24px;">
+      <!-- Combinate logomark only (icosahedron) - theme-adaptive -->
+      <svg width="64" height="64" viewBox="0 0 141 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g fill="var(--text)">
+          <path d="M140,41.53v-.65a.36.36,0,0,0-.09-.28v-.09a.09.09,0,0,0-.1-.09.09.09,0,0,0-.09-.09v-.1l-.09-.09a.09.09,0,0,0-.1-.09c0-.1-.09-.1-.09-.19l-.09-.09a.1.1,0,0,0-.1-.1l-.09-.09-.09-.09-.1-.09-.09-.1-.09-.09-.1-.09a.09.09,0,0,1-.09-.1l-.09-.09-.1-.09L71.63.42a3.37,3.37,0,0,0-3.26,0L1.59,38.74a.1.1,0,0,0-.1.1.09.09,0,0,0-.09.09.09.09,0,0,0-.09.09l-.1.1-.09.09L1,39.3l-.1.1-.09.09-.09.09-.1.09-.09.1c0,.09-.09.09-.09.18a.1.1,0,0,1-.1.1l-.09.09v.09s0,.1-.09.1a.09.09,0,0,1-.1.09v.09c0,.09-.09.19-.09.28v77.77c0,.18.09.46.09.65v.09c.1.19.19.47.28.65a2.37,2.37,0,0,0,.47.56l.09.09a2.22,2.22,0,0,0,.56.38h.1L68.37,159.4c.09,0,.09.09.18.09s.1.09.19.09H69c.09,0,.09,0,.19.09h1.68c.09,0,.09,0,.18-.09h.28c.1,0,.1-.09.19-.09s.09-.09.19-.09L138.51,121h.09c.19-.1.37-.28.56-.38l.09-.09a3.19,3.19,0,0,0,.75-1.21v-.09a1.65,1.65,0,0,0,.09-.65v-77ZM15.41,43.4,64,37.81,49.22,63.21,36.42,85.35,8.87,44.14ZM44.27,84.79,70.05,40.33l27.74,47.9H42.21Zm53.8,9.95L70,149.63l-28-54.89Zm5.51-9.39L76,37.91l55,6.32L118,63.77ZM12.23,60.88l20.08,30L6.54,111.58V52.23Zm92.19,35.63,10.18,8.19,16.34,13.21L77.8,148.51Zm3.26-5.67,20.08-30,5.7-8.55v59.25ZM73.22,31V8.79L121.51,36.6ZM66.78,8.79V31L18.49,36.6ZM9,117.91,25.31,104.7l10.18-8.19L51.27,127.4l10.84,21.11Z"/>
+        </g>
+      </svg>
+    </div>
+    <h2 class="anim anim-d2">{{CLOSING_TITLE}}</h2>
+    <p class="subtitle anim anim-d3" style="margin-top: 12px;">{{CLOSING_SUBTITLE}}</p>
+    <div class="anim anim-d4" style="margin-top: 32px; display: flex; gap: 16px; justify-content: center;">
+      <!-- Add CTA links here -->
+    </div>
+    <p class="meta anim anim-d5" style="margin-top: 48px;">combinate.me</p>
+  </div>
+
+  <!-- ==================== END SLIDES ==================== -->
+
+  <!-- Navigation bar -->
+  <div class="nav-bar">
+    <div class="nav-logo">
+      <!-- Combinate horizontal logo (nav size, theme-adaptive) -->
+      <svg height="20" viewBox="0 0 704 162" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g fill="var(--text-secondary)">
+          <path d="M224.9,101.9c-4.3-3.9-6.6-9.5-6.9-16.8v-7.9c0.3-7.2,2.6-12.5,6.9-16.8c4.3-3.9,10.2-5.9,17.5-5.9c5.3,0,9.6,1,13.2,2.6c3.6,2,6.3,3.9,7.9,6.9c1.6,2.6,2.6,5.3,3,7.6c0,0.7,0,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-8.9c-0.7,0-1.3,0-1.6-0.3c-0.3-0.3-0.7-1-1-1.6c-1-2.6-2.3-4.3-4-5.3c-1.6-1-3.6-1.6-6.3-1.6c-3.3,0-5.9,1-7.9,3.3c-2,2-3,5.3-3,9.5v6.9c0.3,8.5,4,12.8,10.9,12.8c2.6,0,4.6-0.7,6.3-1.6c1.6-1,3-3,4-5.6c0.3-0.7,0.7-1.3,1-1.6c0.3-0.3,1-0.3,1.6-0.3h8.9c0.7,0,1.3,0.3,1.6,0.7c0.3,0.3,0.7,1,0.7,1.6c0,2.3-1,4.9-2.6,7.6c-1.6,2.6-4.3,4.9-7.9,6.9c-3.6,2-7.9,3-13.2,3C235.1,107.8,229.2,105.8,224.9,101.9z"/>
+          <path d="M277.3,101.9c-4.3-3.9-6.6-9.5-6.9-16.4v-8.5c0.3-6.9,2.6-12.2,6.9-16.4c4.3-3.9,10.2-5.9,17.8-5.9c7.6,0,13.5,2,17.8,5.9c4.3,3.9,6.6,9.5,6.9,16.4c0,0.7,0,2.3,0,4.3c0,2,0,3.6,0,4.3c-0.3,6.9-2.6,12.5-6.9,16.4c-4.3,3.9-10.2,5.9-17.8,5.9C287.5,107.8,281.6,105.8,277.3,101.9z M303.4,94.7c2-2.3,3-5.3,3-9.5c0-0.7,0-2,0-3.9c0-2,0-3.3,0-3.9c0-4.3-1-7.6-3-9.5c-2-2.3-4.6-3.3-7.9-3.3c-3.6,0-6.3,1-8.2,3.3c-2,2.3-3,5.3-3,9.5v7.9c0,4.3,1,7.2,3,9.5c2,2.3,4.6,3.3,8.2,3.3C298.7,98,301.7,97,303.4,94.7z"/>
+          <path d="M327.7,106.2c-0.3-0.3-0.7-1-0.7-1.6V58.2c0-0.7,0.3-1.3,0.7-1.6c0.3-0.3,1-0.7,1.6-0.7h7.9c0.7,0,1.3,0.3,1.6,0.7c0.3,0.3,0.7,1,0.7,1.6v3.3c3.6-4.6,8.2-6.6,14.2-6.6c7.3,0,12.5,3,15.2,8.9c1.6-2.6,4-4.6,6.6-6.2c3-1.6,5.9-2.3,9.2-2.3c5.3,0,9.9,2,13.2,5.6c3.3,3.6,5.3,8.9,5.3,16.1v28.3c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-8.2c-0.7,0-1.3-0.3-1.6-0.7c-0.3-0.3-0.7-1-0.7-1.6V77.6c0-4.3-1-7.2-2.6-8.9c-1.6-2-4-2.6-6.9-2.6c-2.6,0-4.6,1-6.6,3c-1.6,2-2.6,4.9-2.6,8.9v27.6c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7H361c-0.7,0-1.3-0.3-1.6-0.7c-0.3-0.3-0.7-1-0.7-1.6V77.9c0-3.9-1-6.9-2.6-8.9c-1.6-2-4-3-6.9-3c-2.6,0-4.6,1-6.6,3c-1.6,2-2.6,4.9-2.6,8.9v27.6c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-8.2C329.1,106.8,328.4,106.8,327.7,106.2z"/>
+          <path d="M425.3,100.9v3.6c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-7.9c-0.7,0-1.3-0.3-1.6-0.7c-0.3-0.3-0.7-1-0.7-1.6V39.5c0-0.7,0.3-1.3,0.7-1.6c0.3-0.3,1-0.7,1.6-0.7h8.6c0.7,0,1.3,0.3,1.6,0.7c0.3,0.3,0.7,1,0.7,1.6v21.7c3.6-4.3,8.6-6.6,15.2-6.6c6.6,0,11.9,2.3,15.5,6.6s5.6,9.9,5.6,16.8c0,0.7,0,2,0,3.3s0,2.3,0,3.3c-0.3,7.2-2.3,12.8-5.6,17.1c-3.6,4.3-8.6,6.2-15.2,6.2C434.2,107.8,428.9,105.5,425.3,100.9z M448.4,84.5c0-0.7,0-1.6,0-3s0-2.3,0-3c-0.3-8.5-4.3-13.1-11.2-13.1c-3.6,0-6.3,1-8.2,3.3c-2,2.3-3,4.9-3,8.2c0,0.7,0,2,0,3.9c0,1.6,0,3,0,3.6c0,3.6,1,6.6,3,8.9c2,2.3,4.6,3.6,8.2,3.6C444.1,97.3,448,93,448.4,84.5z"/>
+          <path d="M469.5,46.7c-0.3-0.3-0.7-1-0.7-1.6v-7.2c0-0.7,0.3-1.3,0.7-1.6c0.3-0.3,1-0.7,1.6-0.7h9.2c0.7,0,1.3,0.3,1.6,0.7c0.3,0.3,0.7,1,0.7,1.6V45c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-9.2C470.5,47.3,469.8,47.3,469.5,46.7z M469.8,106.2c-0.3-0.3-0.7-1-0.7-1.6V58.2c0-0.7,0.3-1.3,0.7-1.6c0.3-0.3,1-0.7,1.6-0.7h8.2c0.7,0,1.3,0.3,1.6,0.7c0.3,0.3,0.7,1,0.7,1.6v46.3c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-8.2C470.8,106.8,470.1,106.8,469.8,106.2z"/>
+          <path d="M491.9,106.2c-0.3-0.3-0.7-1-0.7-1.6V58.2c0-0.7,0.3-1.3,0.7-1.6c0.3-0.3,1-0.7,1.6-0.7h8.2c0.7,0,1.3,0.3,1.6,0.7c0.3,0.3,0.7,1,0.7,1.6v3.9c4-4.9,9.6-7.2,16.5-7.2c5.9,0,10.9,2,14.5,5.9c3.6,3.9,5.3,9.2,5.3,16.1v27.6c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-8.9c-0.7,0-1.3-0.3-1.6-0.7c-0.3-0.3-0.7-1-0.7-1.6V77.6c0-3.9-1-6.9-3-8.9c-2-2-4.6-3.3-7.9-3.3c-3.3,0-5.9,1-8.2,3.3c-2,2.3-3,5.3-3,8.9v26.9c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-8.9C492.9,106.8,492.5,106.8,491.9,106.2z"/>
+          <path d="M554.5,105.8c-2.6-1.3-4.9-3.3-6.6-5.6c-1.6-2.3-2.3-4.9-2.3-7.6c0-4.6,1.6-8.2,5.3-10.8s8.6-4.6,14.8-5.6l13.5-2v-2c0-3-0.7-4.9-2.3-6.2c-1.3-1.3-3.6-2.3-6.9-2.3c-2.3,0-4,0.3-5.3,1.3c-1.3,0.7-2.3,1.6-3.3,2.3c-0.7,0.7-1.3,1.3-1.6,1.6c-0.3,0.7-0.7,1.3-1.3,1.3h-7.2c-0.7,0-1-0.3-1.6-0.7c-0.3-0.3-0.7-1-0.7-1.6c0-1.6,1-3.6,2.3-5.6c1.6-2,4-3.9,7.2-5.3c3.3-1.6,7.3-2.3,11.9-2.3c7.9,0,13.5,1.6,17.1,5.3c3.6,3.6,5.3,7.9,5.3,13.8v30.9c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-8.2c-0.7,0-1.3-0.3-1.6-0.7c-0.3-0.3-0.7-1-0.7-1.6v-3.9c-1.3,2-3.6,3.9-6.3,5.3c-2.6,1.3-5.9,2-9.9,2C560.4,107.8,557.5,107.2,554.5,105.8z M576.2,95c2.3-2.3,3.3-5.9,3.3-10.2v-2l-9.9,1.6c-7.6,1.3-11.2,3.6-11.2,7.6c0,2,1,3.6,2.6,4.9c1.6,1,4,1.6,6.3,1.6C571,98.6,573.9,97.3,576.2,95z"/>
+          <path d="M610.9,102.2c-3-3-4.6-7.6-4.6-13.8V66.1h-7.9c-0.7,0-1.3-0.3-1.6-0.7c-0.3-0.3-0.7-1-0.7-1.6v-5.9c0-0.7,0.3-1.3,0.7-1.6c0.3-0.3,1-0.7,1.6-0.7h7.9V39.1c0-0.7,0.3-1.3,0.7-1.6c0.3-0.3,1-0.7,1.6-0.7h8.2c0.7,0,1.3,0.3,1.6,0.7c0.3,0.3,0.7,1,0.7,1.6v16.4h12.2c0.7,0,1.3,0.3,1.6,0.7c0.3,0.3,0.7,1,0.7,1.6v5.9c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-12.2v21c0,3,0.3,4.9,1.3,6.2s2.6,2.3,4.9,2.3h6.9c0.7,0,1.3,0.3,1.6,0.7c0.3,0.3,0.7,1,0.7,1.6v6.2c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7H624C618.4,106.8,613.8,105.5,610.9,102.2z"/>
+          <path d="M644.1,101.6c-4.3-4.3-6.6-10.2-6.9-18.1v-2.3c0-8.2,2.3-14.8,6.6-19.4c4.3-4.6,10.2-7.2,17.8-7.2c7.9,0,13.8,2.3,18.1,7.2C684,66.4,686,73,686,80.5v2c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-32.6v0.7c0,3.6,1,6.6,3,9.2c2,2.3,4.6,3.6,7.9,3.6c3.6,0,6.9-1.6,9.2-4.6c0.7-0.7,1-1.3,1.3-1.3c0.3,0,1-0.3,1.6-0.3h8.6c0.7,0,1,0.3,1.6,0.3c0.3,0.3,0.7,0.7,0.7,1.3c0,1.6-1,3.3-3,5.6c-2,2-4.6,3.9-7.9,5.6c-3.6,1.6-7.6,2.3-12.2,2.3C654.4,107.8,648.4,105.8,644.1,101.6z M672.5,76.9c0-3.9-1-7.2-3-9.5c-2-2.3-4.6-3.6-7.9-3.6c-3.3,0-5.9,1.3-7.9,3.6c-2,2.3-3,5.6-3,9.2v0.3H672.5z"/>
+          <!-- Icosahedron symbol -->
+          <path d="M140,42.6C140,42.5,140,42.5,140,42.6c0-0.2,0-0.3,0-0.4v-0.1c0,0,0,0,0-0.1V42c0-0.1,0-0.2-0.1-0.3v-0.1c0,0,0-0.1-0.1-0.1c0,0,0-0.1-0.1-0.1v-0.1l-0.1-0.1c0,0,0-0.1-0.1-0.1c0-0.1-0.1-0.1-0.1-0.2l-0.1-0.1c0,0,0-0.1-0.1-0.1c0,0,0,0-0.1-0.1l-0.1-0.1l-0.1-0.1l-0.1-0.1l-0.1-0.1l-0.1-0.1c0,0-0.1,0-0.1-0.1l-0.1-0.1c0,0,0,0-0.1-0.1L71.6,1.5c-1-0.6-2.2-0.6-3.3,0L1.6,39.8c0,0-0.1,0-0.1,0.1c0,0-0.1,0-0.1,0.1c0,0-0.1,0-0.1,0.1l-0.1,0.1l-0.1,0.1L1,40.4l-0.1,0.1l-0.1,0.1c0,0,0,0-0.1,0.1l-0.1,0.1l-0.1,0.1c0,0.1-0.1,0.1-0.1,0.2c0,0,0,0.1-0.1,0.1l-0.1,0.1v0.1c0,0,0,0.1-0.1,0.1c0,0,0,0.1-0.1,0.1v0.1c0,0.1-0.1,0.2-0.1,0.3V42c0,0,0,0,0,0.1v0.1c0,0.1,0,0.2,0,0.3v0.1v76.7c0,0.1,0,0.1,0,0.2c0,0,0,0,0,0.1c0,0,0,0,0,0.1c0,0.2,0.1,0.5,0.1,0.7v0.1c0.1,0.2,0.2,0.5,0.3,0.7c0.1,0.2,0.3,0.4,0.5,0.6l0.1,0.1c0.2,0.2,0.4,0.3,0.6,0.4c0,0,0,0,0.1,0l66.8,38.4c0.1,0,0.1,0.1,0.2,0.1s0.1,0.1,0.2,0.1c0,0,0,0,0.1,0h0.1H69c0.1,0,0.1,0,0.2,0.1c0.1,0,0.1,0,0.2,0h0.1h0.1c0.2,0,0.3,0,0.5,0s0.3,0,0.5,0h0.1h0.1c0.1,0,0.1,0,0.2,0s0.1,0,0.2-0.1h0.1h0.1c0,0,0,0,0.1,0s0.1-0.1,0.2-0.1s0.1-0.1,0.2-0.1l66.8-38.4c0,0,0,0,0.1,0c0.2-0.1,0.4-0.3,0.6-0.4l0.1-0.1c0.4-0.4,0.6-0.7,0.7-1.2v-0.1c0.1-0.2,0.1-0.5,0.1-0.7c0,0,0,0,0-0.1c0,0,0,0,0-0.1c0-0.1,0-0.1,0-0.2L140,42.6L140,42.6z M15.4,44.5L64,38.9L49.2,64.3L36.4,86.4L8.9,45.2L15.4,44.5z M44.3,85.9L70,41.4l27.7,47.9H42.2L44.3,85.9z M98.1,95.8L70,150.7l-28-54.9H98.1z M103.6,86.4L76,39l55,6.3L118,64.8L103.6,86.4z M12.2,62l20.1,30L6.5,112.7V53.3L12.2,62z M104.4,97.6l10.2,8.2l16.3,13.2l-53.1,30.6L104.4,97.6z M107.7,91.9l20.1-30l5.7-8.6v59.3L107.7,91.9z M73.2,32.1V9.9l48.3,27.8L73.2,32.1z M66.8,9.9v22.2l-48.3,5.6L66.8,9.9z M9,119l16.3-13.2l10.2-8.2l15.8,30.9l10.8,21.1L9,119z"/>
+        </g>
+      </svg>
+    </div>
+    <div class="theme-toggle" id="themeToggle">
+      <button onclick="setTheme('dark')" title="Dark theme" id="btnDark">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+      </button>
+      <button onclick="setTheme('light')" title="Light theme" id="btnLight">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      </button>
+      <button onclick="setTheme('mixed')" title="Mixed theme" id="btnMixed">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 000 20V2z" fill="currentColor"/></svg>
+      </button>
+    </div>
+    <div class="nav-timer" id="navTimer" onclick="toggleTimer()">
+      <button class="timer-start-btn" id="timerStartBtn" onclick="event.stopPropagation(); toggleTimer();">&#9654; Start</button>
+      <span class="timer-segment" id="timerSegment" style="display:none;"></span>
+      <span class="timer-countdown" id="timerCountdown" style="display:none;"></span>
+    </div>
+    <div class="nav-dots" id="navDots"></div>
+    <div class="nav-right">
+      <span class="nav-counter" id="navCounter"></span>
+      <button class="nav-btn" id="btnPrev" onclick="prevSlide()">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <button class="nav-btn" id="btnNext" onclick="nextSlide()">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Theme: URL param > default (light). Writes to URL on toggle for easy sharing.
+    let currentTheme = 'light';
+    function setTheme(theme) {
+      currentTheme = theme;
+      document.body.className = 'theme-' + theme;
+      document.querySelectorAll('.theme-toggle button').forEach(b => b.classList.remove('active'));
+      document.getElementById('btn' + theme.charAt(0).toUpperCase() + theme.slice(1)).classList.add('active');
+      const url = new URL(window.location);
+      url.searchParams.set('theme', theme);
+      history.replaceState(null, '', url);
+    }
+    const urlTheme = new URLSearchParams(window.location.search).get('theme');
+    setTheme(['dark','light','mixed'].includes(urlTheme) ? urlTheme : 'light');
+
+    // ============================================================
+    // TIMER CONFIG — edit per presentation
+    // ============================================================
+    // agendaSegments: list of agenda items with their durations (in seconds).
+    //   Example for a 60-min meeting:
+    //   [
+    //     { num: 1, name: 'Welcome',     duration: 5 * 60 },
+    //     { num: 2, name: 'Discovery',   duration: 25 * 60 },
+    //     { num: 3, name: 'Solution',    duration: 20 * 60 },
+    //     { num: 4, name: 'Next Steps',  duration: 10 * 60 }
+    //   ]
+    // slideSegmentMap: zero-based segment index for each slide (length must
+    //   match the number of slides). The timer auto-advances when you reach
+    //   a slide whose segment differs from the current one.
+    //   Example for 10 slides mapped to the 4 segments above:
+    //   [0,0, 1,1,1,1, 2,2,2, 3]
+    //
+    // Defaults below = single 30-minute segment covering all slides. The
+    // map is auto-filled at runtime if left empty.
+    const agendaSegments = [
+      { num: 1, name: 'Presentation', duration: 30 * 60 }
+    ];
+    let slideSegmentMap = []; // leave empty to default all slides to segment 0
+    // ============================================================
+
+    let timerRunning = false;
+    let timerPaused = false;
+    let timerInterval = null;
+    let currentSegmentIndex = 0;
+    let segmentTimeRemaining = 0;
+    let timerOvertime = false;
+    let overtimeSeconds = 0;
+
+    let current = 0;
+    const slides = document.querySelectorAll('.slide');
+    const total = slides.length;
+    const dotsContainer = document.getElementById('navDots');
+
+    // Auto-fill slideSegmentMap if not configured
+    if (slideSegmentMap.length !== total) {
+      slideSegmentMap = new Array(total).fill(0);
+    }
+
+    // Build dots
+    for (let i = 0; i < total; i++) {
+      const dot = document.createElement('button');
+      dot.className = 'nav-dot';
+      dot.onclick = () => goToSlide(i);
+      dotsContainer.appendChild(dot);
+    }
+
+    function goToSlide(index) {
+      // Remove active from all
+      slides.forEach(s => s.classList.remove('active'));
+      dotsContainer.querySelectorAll('.nav-dot').forEach(d => d.classList.remove('active'));
+
+      // Activate target
+      current = index;
+      slides[current].classList.add('active');
+      dotsContainer.children[current].classList.add('active');
+
+      // Update counter and progress
+      document.getElementById('navCounter').textContent = `${current + 1} / ${total}`;
+      document.getElementById('progressFill').style.width = `${((current + 1) / total) * 100}%`;
+
+      // Update button states
+      document.getElementById('btnPrev').disabled = current === 0;
+      document.getElementById('btnNext').disabled = current === total - 1;
+
+      // Auto-advance timer to match current slide's segment
+      if (timerRunning) {
+        const slideSegment = slideSegmentMap[current] ?? 0;
+        if (slideSegment !== currentSegmentIndex) {
+          currentSegmentIndex = slideSegment;
+          segmentTimeRemaining = agendaSegments[currentSegmentIndex].duration;
+          timerOvertime = false;
+          overtimeSeconds = 0;
+          timerCountdownEl.innerHTML = '';
+          updateTimerDisplay();
+        }
+      }
+
+      // Update URL hash with slide number (1-indexed for human readability)
+      const url = new URL(window.location);
+      url.hash = current + 1;
+      history.replaceState(null, '', url);
+    }
+
+    function nextSlide() { if (current < total - 1) goToSlide(current + 1); }
+    function prevSlide() { if (current > 0) goToSlide(current - 1); }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+    });
+
+    // Handle browser back/forward for slide navigation
+    window.addEventListener('hashchange', () => {
+      const slideNum = parseInt(window.location.hash.replace('#', ''), 10);
+      if (slideNum >= 1 && slideNum <= total && slideNum - 1 !== current) {
+        goToSlide(slideNum - 1);
+      }
+    });
+
+    // Initial slide: read from URL hash, default to slide 1
+    const hashSlide = parseInt(window.location.hash.replace('#', ''), 10);
+    goToSlide(hashSlide >= 1 && hashSlide <= total ? hashSlide - 1 : 0);
+
+    // Timer
+    const timerEl = document.getElementById('navTimer');
+    const timerStartBtn = document.getElementById('timerStartBtn');
+    const timerSegmentEl = document.getElementById('timerSegment');
+    const timerCountdownEl = document.getElementById('timerCountdown');
+
+    function playDing() {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator(), gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1320, ctx.currentTime + 0.1);
+      gain.gain.setValueAtTime(0.3, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.8);
+      osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.8);
+    }
+    function playExpired() {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      [0, 0.2].forEach((delay, i) => {
+        const osc = ctx.createOscillator(), gain = ctx.createGain();
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(i === 0 ? 660 : 440, ctx.currentTime + delay);
+        gain.gain.setValueAtTime(0.25, ctx.currentTime + delay);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + delay + 0.6);
+        osc.start(ctx.currentTime + delay);
+        osc.stop(ctx.currentTime + delay + 0.6);
+      });
+    }
+    function formatTime(seconds) {
+      const m = Math.floor(seconds / 60);
+      const s = seconds % 60;
+      return m + ':' + (s < 10 ? '0' : '') + s;
+    }
+    function updateTimerDisplay() {
+      const seg = agendaSegments[currentSegmentIndex];
+      const totalSegs = agendaSegments.length;
+      timerSegmentEl.textContent = totalSegs > 1
+        ? seg.num + '/' + totalSegs + ' ' + seg.name
+        : seg.name;
+      timerCountdownEl.textContent = formatTime(segmentTimeRemaining);
+      timerCountdownEl.classList.remove('warning', 'danger');
+      if (segmentTimeRemaining <= 120) timerCountdownEl.classList.add('danger');
+      else if (segmentTimeRemaining <= 300) timerCountdownEl.classList.add('warning');
+      timerEl.classList.toggle('paused', timerPaused);
+    }
+    function tickTimer() {
+      if (timerPaused) return;
+      if (timerOvertime) {
+        overtimeSeconds++;
+        timerCountdownEl.innerHTML = '<span class="timer-overtime-dot"></span>-' + formatTime(overtimeSeconds);
+        timerCountdownEl.classList.remove('warning');
+        timerCountdownEl.classList.add('danger');
+        return;
+      }
+      segmentTimeRemaining--;
+      if (segmentTimeRemaining === 120) playDing();
+      if (segmentTimeRemaining <= 0) {
+        timerOvertime = true;
+        overtimeSeconds = 0;
+        playExpired();
+        timerCountdownEl.innerHTML = '<span class="timer-overtime-dot"></span>-0:00';
+        timerCountdownEl.classList.add('danger');
+        return;
+      }
+      updateTimerDisplay();
+    }
+    function startTimer() {
+      timerRunning = true;
+      timerPaused = false;
+      timerOvertime = false;
+      overtimeSeconds = 0;
+      currentSegmentIndex = slideSegmentMap[current] ?? 0;
+      segmentTimeRemaining = agendaSegments[currentSegmentIndex].duration;
+      timerStartBtn.style.display = 'none';
+      timerSegmentEl.style.display = '';
+      timerCountdownEl.style.display = '';
+      updateTimerDisplay();
+      timerInterval = setInterval(tickTimer, 1000);
+    }
+    function toggleTimer() {
+      if (!timerRunning) { startTimer(); return; }
+      timerPaused = !timerPaused;
+      updateTimerDisplay();
+    }
+  </script>
+</body>
+</html>

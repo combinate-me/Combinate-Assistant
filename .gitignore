@@ -14,3 +14,12 @@ context/me.md
 context/current-priorities.md
 context/insites-instances.md
 .claude/skills
+
+# Credentials and service account keys
+credentials/
+
+# Claude session data
+.claude/projects/
+
+# Generated HTML presentations
+presentations/

@@ -21,8 +21,8 @@ These files contain the full picture. Read them as needed:
 - **Google Workspace** - Email, docs, collaboration
 - **Figma** - Design
 - **Slack** - Team messaging (MCP connected)
-- **Teamwork.com** - Project management (API connected via `.claude/skills/integrations/teamwork/SKILL.md`)
-- **Zendesk** - Customer support tickets (API connected via `.claude/skills/integrations/zendesk/SKILL.md`)
+- **Teamwork.com** - Project management (API connected via `.claude/skills/combinate/teamwork/SKILL.md`)
+- **Zendesk** - Customer support tickets (API connected via `.claude/skills/combinate/zendesk/SKILL.md`)
 - **Bark.com** - Lead generation
 
 Some MCP servers are connected. Check available tools before attempting integrations.
@@ -31,10 +31,10 @@ Some MCP servers are connected. Check available tools before attempting integrat
 
 These integrations are used every day and should be loaded proactively when relevant:
 
-- **Teamwork** - Read tasks, read comments, create tasks. Skill: `.claude/skills/integrations/teamwork/SKILL.md`. Trigger on any mention of tasks, projects, deadlines, assignments, or Teamwork. API key in `.env`.
+- **Teamwork** - Read tasks, read comments, create tasks. Skill: `.claude/skills/combinate/teamwork/SKILL.md`. Trigger on any mention of tasks, projects, deadlines, assignments, or Teamwork. API key in `.env`.
 - **Insites** - Platform entry point. Skill: `.claude/skills/insites/SKILL.md`. Routes to module sub-skills. API key in `.env`.
 - **CRM** - Contacts, companies, log email activities. Skill: `.claude/skills/insites/crm/SKILL.md`. Trigger on any CRM lookup, contact search, or email logging.
-- **Combinate** - Client context, Google Drive folders, cross-system lookups. Skill: `.claude/skills/client-workflows/combinate/SKILL.md`. Trigger when a client or project is mentioned and context needs to be gathered.
+- **Combinate** - Client context, Google Drive folders, cross-system lookups. Skill: `.claude/skills/combinate/SKILL.md`. Trigger when a client or project is mentioned and context needs to be gathered.
 
 ## Skills
 
@@ -44,65 +44,26 @@ Skills live in `.claude/skills/`. Each skill is a folder with a `SKILL.md` file 
 
 Skills are built organically. When you notice a recurring request, suggest turning it into a skill.
 
-### Daily Operations
+#### Active Skills
 
-Used every day. Load proactively when the trigger phrase appears.
+- **pre-meeting-presentation** - Builds a branded HTML presentation before any client or prospect meeting. Gathers context from Teamwork, Calendar, Gmail, CRM, Drive, and Slack. Exports to PDF. Skill: `.claude/skills/combinate/pre-meeting-presentation/SKILL.md`
+- **post-meeting-followup** - Full workflow for creating follow-up docs, spreadsheets, and client emails after client meetings. Skill: `.claude/skills/combinate/post-meeting-followup/SKILL.md`
+- **combinate** - Combinate-specific client context workflows: Google Drive folder lookup, cross-system context gathering, client TLA and custom CRM fields. Skill: `.claude/skills/combinate/SKILL.md`
+- **zendesk** - Read and reply to support tickets, add internal notes, search and update ticket status. Skill: `.claude/skills/combinate/zendesk/SKILL.md`
+- **create-user-guide** - Creates or extends client-facing User Guide Google Docs for delivered projects. Gathers context from Teamwork custom item (PCD, GitHub, Figma, Lucidchart, Slack channel, master project sheet), Insites instance, Gmail, and more. Logs time on the Teamwork task on completion. Skill: `.claude/skills/combinate/create-user-guide/SKILL.md`
+- **teamwork-timelog-report** - Extracts Teamwork time entries for a team member over a date range and writes them to a new tab in a Google Sheet. Skill: `.claude/skills/combinate/teamwork-timelog-report/SKILL.md`
+- **pcd-summary** - Reads a Project Centric Document (PCD) as a PDF attachment or Google Doc link and produces a structured summary covering team, tech stack, features, integrations, user flows, admin portals, and major changes. Skill: `.claude/skills/combinate/pcd-summary/SKILL.md`
+- **task-test-criteria** - Analyzes a Teamwork task and its comment thread, then produces a structured QA document covering: (1) the issue explained, (2) fixes made, and (3) test criteria. Posts the result as a comment on the task with relevant team members notified. Skill: `.claude/skills/combinate/task-test-criteria/SKILL.md`
 
-- **daily-task-brief** - What's on my plate today: pulls tasks from Teamwork, calendar events, and unread Slack. Skill: `.claude/skills/daily-operations/daily-task-brief/SKILL.md`
-- **eod-report** - End of day summary: completed tasks, open items, blockers. Skill: `combinate-plugins/plugins/combinate-plugin-skills/.claude-plugin/skills/01-General/eod-report/SKILL.md`
-
-### Client Workflows
-
-Multi-step workflows anchored to a Teamwork task and a client.
-
-- **combinate** - Gather full client context from CRM, Teamwork, Calendar, Drive, Slack, Gmail in parallel. Skill: `.claude/skills/client-workflows/combinate/SKILL.md`
-- **pre-meeting-presentation** - Build a branded HTML presentation before any client or prospect meeting. Skill: `.claude/skills/client-workflows/pre-meeting-presentation/SKILL.md`
-- **post-meeting-followup** - Create follow-up docs, spreadsheets, and client emails after meetings. Skill: `combinate-plugins/plugins/combinate-plugin-skills/.claude-plugin/skills/02-Sales/post-meeting-followup/SKILL.md`
-- **create-user-guide** - Create or extend client-facing User Guide Google Docs for delivered projects. Skill: `.claude/skills/client-workflows/create-user-guide/SKILL.md`
-
-### Integrations
-
-Tool connectors. Load the relevant one when working with that platform.
-
-- **teamwork** - Read tasks, comments, create tasks. Skill: `.claude/skills/integrations/teamwork/SKILL.md`
-- **zendesk** - Read and reply to support tickets, add internal notes. Skill: `.claude/skills/integrations/zendesk/SKILL.md`
-- **slack** - Send messages, read channels, search. Skill: `.claude/skills/integrations/slack/SKILL.md`
-
-### Insites Platform
-
-Module sub-skills. Load the relevant module when working with a specific area of Insites.
+**Insites module sub-skills** (load the relevant one when working with a specific module):
 
 - **insites** - Main entry point, shared auth, module routing. Skill: `.claude/skills/insites/SKILL.md`
+- **insites-globals** - Tasks, task comments, activities, attachments (cross-module). Skill: `.claude/skills/insites/globals/SKILL.md`
 - **insites-crm** - Contacts, companies, log email as activity. Skill: `.claude/skills/insites/crm/SKILL.md`
 - **insites-pipelines** - Sales pipelines, stages, opportunities. Skill: `.claude/skills/insites/pipelines/SKILL.md`
 - **insites-data** - Databases and database items. Skill: `.claude/skills/insites/data/SKILL.md`
 - **insites-events** - Events and sub-resources. Skill: `.claude/skills/insites/events/SKILL.md`
-- **insites-globals** - Tasks, task comments, activities, attachments (cross-module). Skill: `.claude/skills/insites/globals/SKILL.md`
 - **insites-cms** - CMS developer skill: pages, partials, layouts, GraphQL, Liquid, assets, background jobs. Skill: `.claude/skills/insites/cms/SKILL.md`
-
-### Developer Tools
-
-Technical skills for building, testing, and designing.
-
-- **frontend-design** - Production-grade frontend design and implementation. Skill: `.claude/skills/developer-tools/frontend-design/SKILL.md`
-- **webapp-testing** - Web application testing workflows. Skill: `.claude/skills/developer-tools/webapp-testing/SKILL.md`
-- **web-artifacts-builder** - Build multi-component React/Tailwind HTML artifacts. Skill: `.claude/skills/developer-tools/web-artifacts-builder/SKILL.md`
-- **pdf** - Read, combine, split, convert, and process PDF files. Skill: `.claude/skills/developer-tools/pdf/SKILL.md`
-
-### Repository
-
-Git and GitHub management for the assistant codebase.
-
-- **skill-sharing** - All-in-one: check status, pull latest, push changes as a PR, or update remote URL after a rename. Skill: `combinate-plugins/plugins/combinate-plugin-skills/.claude-plugin/skills/01-General/skill-sharing/SKILL.md`
-
-### Productivity
-
-General-purpose skills and utilities.
-
-- **branding** - Apply Combinate brand guidelines to client-facing content. Skill: `.claude/skills/productivity/branding/SKILL.md`
-- **grill-me** - Interview relentlessly about a plan or design until reaching shared understanding. Skill: `.claude/skills/productivity/grill-me/SKILL.md`
-- **skill-creator** - Create, improve, and evaluate skills. Skill: `.claude/skills/productivity/skill-creator/SKILL.md`
-- **setup** - First-time onboarding for new team members. Skill: `.claude/skills/productivity/setup/SKILL.md`
 
 ### Skills to Build (Backlog)
 
@@ -116,7 +77,7 @@ These workflows came up during onboarding as candidates for future skills:
 
 ## Client Context
 
-When a client or project is mentioned, proactively gather full context before responding. Use the **combinate** skill (`.claude/skills/client-workflows/combinate/SKILL.md`) which covers the full workflow for multi-source context gathering.
+When a client or project is mentioned, proactively gather full context before responding. Use the **combinate** skill (`.claude/skills/combinate/SKILL.md`) which covers the full workflow for multi-source context gathering.
 
 The common identifier across all sources is the **company name and TLA** (three-letter abbreviation, e.g., IEC for International Eucharistic Congress).
 
@@ -126,7 +87,7 @@ Pull context from these sources in parallel:
 2. **Google Drive** - Look up the client's folder via the `google_drive_url` custom field in the Insites CRM.
 3. **Insites CRM** - Look up the company record for contacts, notes, and activity history. Skill: `.claude/skills/insites/crm/SKILL.md`.
 4. **Slack** - Search for the client name or TLA across channels for internal conversations.
-5. **Teamwork** - Find the relevant project and open tasks. Skill: `.claude/skills/integrations/teamwork/SKILL.md`.
+5. **Teamwork** - Find the relevant project and open tasks. Skill: `.claude/skills/combinate/teamwork/SKILL.md`.
 6. **Gmail** - Search for emails to/from the client domain or by company name.
 
 Do not ask me to provide context that can be gathered from these sources directly. Pull first, ask only if something is genuinely missing or ambiguous.
@@ -153,7 +114,7 @@ All Google Docs created for client work must use the **Combinate branded templat
 - **Template ID:** `12TovrIc6MuTjl0dvRycqR56HWssYISNvdnrI_4CwW8U`
 - Use `createDocumentFromTemplate` - never `createDocument` for client-facing docs
 - Replace `"Document Title"` and `"Document Subtitle"` placeholders in the cover
-- See `combinate-plugins/plugins/combinate-plugin-skills/.claude-plugin/skills/02-Sales/post-meeting-followup/SKILL.md` for the full document creation workflow including how to clear sample content and apply heading styles
+- See `.claude/skills/combinate/post-meeting-followup/SKILL.md` for the full document creation workflow including how to clear sample content and apply heading styles
 
 ## Google Drive File Structure
 

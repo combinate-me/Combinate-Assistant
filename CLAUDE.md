@@ -59,6 +59,7 @@ Multi-step workflows anchored to a Teamwork task and a client.
 - **pre-meeting-presentation** - Build a branded HTML presentation before any client or prospect meeting. Skill: `.claude/skills/client-workflows/pre-meeting-presentation/SKILL.md`
 - **post-meeting-followup** - Create follow-up docs, spreadsheets, and client emails after meetings. Skill: `combinate-plugins/plugins/combinate-plugin-skills/.claude-plugin/skills/02-Sales/post-meeting-followup/SKILL.md`
 - **create-user-guide** - Create or extend client-facing User Guide Google Docs for delivered projects. Skill: `.claude/skills/client-workflows/create-user-guide/SKILL.md`
+- **task-test-criteria** - Reads a Teamwork task and its full comment thread, synthesises a structured QA document (issue explanation, fixes made, test criteria), and posts it as a formatted comment on the task. Trigger on any request to generate test criteria, a QA checklist, or a test plan from a Teamwork task link. Skill: `.claude/skills/combinate/task-test-criteria/SKILL.md`
 
 ### Integrations
 

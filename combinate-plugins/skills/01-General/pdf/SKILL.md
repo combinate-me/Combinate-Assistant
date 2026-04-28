@@ -2,6 +2,8 @@
 name: pdf
 description: Use this skill whenever the user wants to do anything with PDF files. This includes reading or extracting text/tables from PDFs, combining or merging multiple PDFs into one, splitting PDFs apart, rotating pages, adding watermarks, creating new PDFs, filling PDF forms, encrypting/decrypting PDFs, extracting images, and OCR on scanned PDFs to make them searchable. If the user mentions a .pdf file or asks to produce one, use this skill. v1.0.0
 license: Proprietary. LICENSE.txt has complete terms
+metadata:
+  version: 1.0.0
 ---
 
 # PDF Processing Guide
@@ -9,6 +11,16 @@ license: Proprietary. LICENSE.txt has complete terms
 ## Overview
 
 This guide covers essential PDF processing operations using Python libraries and command-line tools. For advanced features, JavaScript libraries, and detailed examples, see REFERENCE.md. If you need to fill out a PDF form, read FORMS.md and follow its instructions.
+
+## When to Use
+
+- Reading or extracting text and tables from a PDF file
+- Merging, splitting, or rotating PDF pages
+- Creating a new PDF document from scratch
+- Adding watermarks, passwords, or metadata to a PDF
+- OCR on a scanned PDF to make it searchable
+- Filling out a PDF form
+- Extracting images from a PDF
 
 ## Quick Start
 

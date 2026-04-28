@@ -3,6 +3,7 @@ name: pre-meeting-presentation
 description: Builds a branded HTML presentation for any client meeting before it happens - prospect meetings, existing client meetings, project updates, or any other. Triggers on phrases like "help me prepare for my [client] meeting", "build a presentation for [meeting name]", "create slides for the [client] call", "pre-meeting prep for [client]", "I have a meeting with [client]". Gathers context from Teamwork task, Google Calendar, Gmail, Insites CRM, Drive, and Slack. Outputs a full-screen HTML slideshow (dark brand theme, large fonts, Phosphor icons, Mermaid diagrams) and exports a PDF. Requires Teamwork task ID, meeting name, and client/contact name. v1.0.0
 metadata:
   version: 1.0.0
+  category: 01-General
 ---
 
 # Skill: Pre-Meeting Presentation

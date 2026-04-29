@@ -4,6 +4,7 @@ description: Combinate-specific workflows layered on top of Insites. Use this sk
 metadata:
   version: 1.0.0
   category: 02-Sales
+model: claude-sonnet-4-6
 ---
 
 # Skill: Combinate
@@ -78,7 +79,7 @@ source "/Users/shanemcgeorge/Claude/Combinate EA/.env" && curl -s \
   -u "$TEAMWORK_API_KEY:x" \
   "https://pm.cbo.me/projects/api/v3/customitems/ITEM_ID/records.json" | python3 -c "
 import sys, json
-FIELD_UUID = '9f5d6c76-b4e2-4f91-a838-fa0c1475bff0'
+FIELD_UUID = '8e1e4829-43b3-4a41-ae5c-8db6793d53a0'
 data = json.load(sys.stdin)
 for r in data.get('customItemRecords', []):
     name = r.get('name', '')

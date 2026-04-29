@@ -15,3 +15,12 @@ context/current-priorities.md
 context/insites-instances.md
 .claude/skills
 templates/zendesk-queue-responses.md
+
+# Credentials and service account keys
+credentials/
+
+# Claude session data
+.claude/projects/
+
+# Generated HTML presentations
+presentations/

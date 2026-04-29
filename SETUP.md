@@ -78,7 +78,7 @@ Now you will download the Combinate Assistant files to your computer.
 2. A search box will appear at the top of the screen. Type **Git: Clone** and click the result that says **Git: Clone**
 3. Another box will appear asking for a URL. Paste the following and press **Enter**:
    ```
-   https://github.com/combinate-me/Combinate-Assistant.git
+   https://github.com/combinate-me/Executive-Assistant.git
    ```
 4. A window will open asking where to save the folder. Choose a location you can find easily, such as your **Documents** folder. Click **Select Repository Location** (or **Select as Repository Destination** on Windows)
 5. VS Code will download the files - this takes about 30 seconds

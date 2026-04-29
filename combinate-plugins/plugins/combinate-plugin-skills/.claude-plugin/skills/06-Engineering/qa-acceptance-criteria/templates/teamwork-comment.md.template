@@ -1,0 +1,69 @@
+<!--
+  Teamwork PM-comment template for QA acceptance-criteria delivery.
+  Replace {placeholders}. Post via the `teamwork` skill's create-comment API.
+  Tone follows feedback memory: feedback_teamwork_pm_comment_format.
+
+  IMPORTANT: paste this as HTML when the API requires it (Teamwork v3 supports
+  `body` plain-text or `htmlBody` HTML). The `htmlBody` version is below the markdown.
+-->
+
+# Markdown version
+
+**Dev QA: User stories / test criteria — DOCUMENT ATTACHED**
+
+The full user-stories + acceptance-criteria document is attached. It maps every page and flow in **{WB}** to the tests asserted in `tests/{wb}.spec.ts`.
+
+#### Sections in the document
+
+{numbered list of all sections — copy headings from the doc}
+
+Each section contains:
+
+- A "**As a X I want Y so that Z**" user story
+- A bulleted list of acceptance criteria mapped to assertions in `tests/{wb}.spec.ts`
+
+#### Coverage summary
+
+- {N} page sections + {M} cross-cutting sections
+- {C} acceptance criteria total
+- {T} Playwright tests generated, {P} passing on the latest run
+- {S} criteria flagged `(manual QA)` — see doc footnotes
+
+#### Attached evidence
+
+- **{filename}** — the full document (client-friendly version: `{filename-client}` if shared with client).
+
+---
+
+# HTML version (for Teamwork v3 `htmlBody`)
+
+```html
+<p><strong>Dev QA: User stories / test criteria - DOCUMENT ATTACHED</strong></p>
+<p>The full user-stories + acceptance-criteria document is attached. It maps every page and flow in <strong>{WB}</strong> to the tests asserted in <code>tests/{wb}.spec.ts</code>.</p>
+
+<h4>Sections in the document</h4>
+<ol>
+  <li>{Section 1}</li>
+  <li>{Section 2}</li>
+  <!-- ... -->
+</ol>
+
+<p>Each section contains:</p>
+<ul>
+  <li>A "As a X I want Y so that Z" user story</li>
+  <li>A bulleted list of acceptance criteria mapped to assertions in <code>tests/{wb}.spec.ts</code></li>
+</ul>
+
+<h4>Coverage summary</h4>
+<ul>
+  <li>{N} page sections + {M} cross-cutting sections</li>
+  <li>{C} acceptance criteria total</li>
+  <li>{T} Playwright tests generated, {P} passing on the latest run</li>
+  <li>{S} criteria flagged <code>(manual QA)</code></li>
+</ul>
+
+<h4>Attached evidence</h4>
+<ul>
+  <li><strong>{filename}</strong> - the full document.</li>
+</ul>
+```

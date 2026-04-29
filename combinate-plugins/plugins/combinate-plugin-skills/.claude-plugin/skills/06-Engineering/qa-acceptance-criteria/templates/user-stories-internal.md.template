@@ -1,0 +1,112 @@
+# {PROJECT} — {WB} User Stories & Test Criteria
+
+This document captures user stories and acceptance criteria for every page and flow delivered in {WB}. The intent is that this feeds into the automated Playwright suite at `tests/{wb}.spec.ts` and the manual QA checklist.
+
+> **Workblock context**
+> - Branch: `{branch}`
+> - Teamwork parent: {parent_task_url}
+> - Commits in scope: {commit_count} since {prior_marker}
+> - Staging: {staging_url}
+
+---
+
+## 1. {Page Name}
+
+**As a {persona}** I want {capability} so that {value}.
+
+Acceptance Criteria:
+- {criterion}
+- {criterion}
+- ...
+
+---
+
+## 2. {Page Name}
+
+**As a {persona}** I want {capability} so that {value}.
+
+Acceptance Criteria:
+- {criterion}
+- ...
+
+---
+
+<!-- Repeat per in-scope page / flow -->
+
+---
+
+## {N}. Navigation
+
+**As a visitor** I want to move between pages using the menu so I can explore the site.
+
+Acceptance Criteria:
+- {criterion}
+- ...
+
+## {N+1}. Responsive
+
+**As a mobile visitor** I want every page to be usable on a phone so I can browse on the go.
+
+Acceptance Criteria at ≤ 768px:
+- {criterion}
+- ...
+
+## {N+2}. Metadata / SEO
+
+**As a search crawler** I want clear metadata on every page so I can index and rank the site correctly.
+
+Acceptance Criteria:
+- Every page has a unique `<title>`
+- Every page has a `<meta name="description">`
+- Every page emits `og:title`, `og:description`, `og:type`, `og:site_name`, `og:url`, `og:image`
+- Every page has a `<link rel="canonical">`
+- Staging has `<meta name="robots" content="noindex, nofollow">`
+
+## {N+3}. Accessibility (WCAG 2.1 AA)
+
+**As a screen-reader user** I want to navigate every page without obstacles so I can use the site independently.
+
+Acceptance Criteria:
+- Every page has exactly 1 `<h1>`
+- Heading levels do not skip
+- All interactive landmarks have unique accessible names
+- All images have an `alt` attribute (empty for decorative)
+- Form inputs have associated labels
+- Color contrast ≥ 4.5:1 body / 3:1 large text
+- Hidden pre-hydration content uses `inert`, not `aria-hidden`
+
+## {N+4}. Performance (Lighthouse)
+
+**As a visitor** I want pages to load quickly so I don't bounce before content renders.
+
+Acceptance Criteria (mobile):
+- Performance score ≥ 70 (target 90)
+- Accessibility score ≥ 95
+- Best Practices score ≥ 95
+- SEO score ≥ 90
+- Above-the-fold images use `fetchPriority="high"`
+- Below-the-fold images use `loading="lazy"`
+- Main JS bundle uses `defer`
+- Fonts are preloaded with `rel="preload" as="style"`
+
+## {N+5}. Console / Network Health
+
+**As a developer** I want clean runtime signals so production issues are easy to spot.
+
+Acceptance Criteria:
+- Zero JS errors on any critical-path page
+- Zero failed HTTP requests on any critical-path page
+- Deprecation warnings are documented in this report
+
+---
+
+### Files
+
+- Playwright spec: `tests/{wb}.spec.ts`
+- Doc source: `docs/qa/user-stories-{WB}.md`
+
+### How to run
+
+```bash
+npx playwright test tests/{wb}.spec.ts --reporter=list
+```

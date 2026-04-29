@@ -43,6 +43,11 @@
       "name": "skill-sharing",
       "path": "./skills/01-General/skill-sharing",
       "category": "01-General"
+    },
+    {
+      "name": "qa-acceptance-criteria",
+      "path": "./skills/06-Engineering/qa-acceptance-criteria",
+      "category": "06-Engineering"
     }
   ]
 }

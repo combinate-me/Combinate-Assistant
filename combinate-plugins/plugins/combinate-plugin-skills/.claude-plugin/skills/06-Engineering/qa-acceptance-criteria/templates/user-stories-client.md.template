@@ -1,0 +1,89 @@
+# {PROJECT} — {WB} Acceptance Criteria
+
+This document captures the user stories and acceptance criteria for the work delivered in {WB}. It defines what "done" means for sign-off and what each page or flow must do for a real user.
+
+---
+
+## 1. {Page Name}
+
+**As a {persona}** I want {capability} so that {value}.
+
+Acceptance Criteria:
+- {criterion in plain English — see references/output-formats.md soften rules}
+- ...
+
+---
+
+## 2. {Page Name}
+
+**As a {persona}** I want {capability} so that {value}.
+
+Acceptance Criteria:
+- {criterion}
+- ...
+
+---
+
+<!-- Repeat per in-scope page / flow -->
+
+---
+
+## {N}. Navigation
+
+**As a visitor** I want to move between pages using the menu so I can explore the site.
+
+Acceptance Criteria:
+- The navigation menu opens from the sidebar and closes again
+- The menu lists all the main pages and each link goes to the right URL
+- The site logo always returns to the home page
+- The menu is usable with a keyboard, including Escape to close it
+- Screen readers announce the menu's purpose
+
+## {N+1}. Responsive
+
+**As a mobile visitor** I want every page to be usable on a phone so I can browse on the go.
+
+Acceptance Criteria on phones (≤ 768px):
+- Page layouts collapse to a single column where applicable
+- Touch targets are large enough to tap reliably
+- The mobile menu opens and closes
+- No horizontal scrolling
+
+## {N+2}. Metadata / SEO
+
+**As a search crawler** I want clear metadata on every page so I can index and rank the site correctly.
+
+Acceptance Criteria:
+- Every page exposes a unique title and description for search engines and link previews
+- Every page declares its canonical URL
+- The staging site is excluded from search indexes
+- Production publishes correct preview metadata for social sharing
+
+## {N+3}. Accessibility
+
+**As a screen-reader user** I want to navigate every page without obstacles so I can use the site independently.
+
+Acceptance Criteria:
+- The site follows WCAG 2.1 AA standards for headings, landmarks, alt text, labels, contrast, and keyboard focus
+- The Marketplace, Artists, Exhibitions, Contact and About pages pass an automated accessibility scan with no critical violations
+- Animations and pre-hydration content respect screen-reader expectations
+
+## {N+4}. Performance
+
+**As a visitor** I want pages to load quickly so I don't bounce before content renders.
+
+Acceptance Criteria (mobile):
+- Performance ≥ 70 (target 90)
+- Accessibility ≥ 95
+- Best Practices ≥ 95
+- SEO ≥ 90
+- Above-the-fold images load with priority; below-the-fold images lazy-load
+- Fonts are preloaded so headings don't shift after page load
+
+## {N+5}. Console / Network Health
+
+**As a developer** I want clean runtime signals so production issues are easy to spot.
+
+Acceptance Criteria:
+- The site is free of runtime errors and broken requests on the critical-path pages, verified by automated checks
+- Any deprecation warnings are noted and tracked

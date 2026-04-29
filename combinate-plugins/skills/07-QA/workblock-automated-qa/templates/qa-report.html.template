@@ -1,0 +1,57 @@
+<!--
+  qa-report.html template — actual HTML rendering happens in scripts/aggregate.mjs.
+  This file is documentation of the rendered shape. The aggregator inlines all CSS
+  so the report is self-contained and emailable / zip-attachable.
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>QA Report — {project} · {workblock}</title>
+  <style>
+    /* Self-contained styling — no external CSS */
+    body { font-family: system-ui, sans-serif; max-width: 1100px; margin: 32px auto; padding: 0 16px; color: #111; }
+    .badge { display: inline-block; padding: 4px 12px; border-radius: 4px; color: white; font-weight: 600; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+    .card { padding: 16px; border: 1px solid #ddd; border-radius: 6px; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th, td { padding: 8px 10px; border: 1px solid #e1e1e1; }
+    td.PASS { background: #e8f5e8; }
+    td.WARN { background: #fff5e0; }
+    td.FAIL { background: #fde8e8; }
+    .issue { padding: 12px; border-left: 4px solid #c0292a; background: #fff7f7; margin: 8px 0; border-radius: 4px; }
+    .issue.warn { border-color: #c97a00; background: #fffaf0; }
+  </style>
+</head>
+<body>
+
+<h1>QA Report — {project} · {workblock}</h1>
+<p>
+  <span class="badge" style="background:#1a8917;">{verdict}</span>
+  &nbsp; {startedAt} → {finishedAt} ({duration_min} min) · {baseUrl} · mode={mode}
+</p>
+
+<h2>Suites</h2>
+<div class="grid">
+  <!-- One card per suite -->
+</div>
+
+<h2>Page × Suite matrix</h2>
+<table>
+  <thead><tr><th>Page</th><th>console</th><th>meta</th><th>nav</th><th>axe</th><th>screenshots</th><th>lighthouse</th><th>w3c</th><th>playwright</th></tr></thead>
+  <tbody>
+    <!-- One row per page -->
+  </tbody>
+</table>
+
+<h2>Issues to action</h2>
+<!-- One .issue block per finding, severity-coloured -->
+
+<details>
+  <summary>Configuration used</summary>
+  <pre>{qa-config.json}</pre>
+</details>
+
+</body>
+</html>

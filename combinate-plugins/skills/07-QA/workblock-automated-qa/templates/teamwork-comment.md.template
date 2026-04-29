@@ -1,0 +1,87 @@
+<!--
+  Teamwork PM-comment template for an automated-QA run.
+  Replace {placeholders}. Post via the Teamwork v1 API with `content-type: HTML`
+  per the saved feedback memory `feedback_teamwork_pm_comment_format`.
+-->
+
+# Markdown version
+
+**Dev QA: Automated test run — {VERDICT}**
+
+The full QA suite has been run against `{baseUrl}` for **{workblock}**.
+
+#### Suite verdicts
+
+| Suite | Result |
+|---|---|
+| console | {verdict} ({N} errors, {M} failed requests) |
+| meta | {verdict} |
+| nav | {verdict} ({pass}/{total} links) |
+| axe | {verdict} ({crit} critical, {ser} serious, {mod} moderate) |
+| screenshots | {verdict} ({captures} captures) |
+| lighthouse | {verdict} (mobile + desktop) |
+| w3c | {verdict} |
+| playwright | {verdict} ({pass}/{total} tests) |
+
+#### Critical-path pages
+
+- **{page}**: {verdict}
+
+#### Issues to action
+
+1. **{suite} / {page}** — {title}
+   {detail}
+
+#### Coverage
+
+- {N} pages tested
+- {M} viewports for screenshots
+- {T} Playwright tests run, {P} passing
+- {S} criteria flagged manual QA — see acceptance-criteria doc
+
+#### Attached evidence
+
+- **summary.md** — text summary
+- **report.html** — full self-contained report (separate file)
+- Raw artefacts under `{outputDir}/`
+
+---
+
+# HTML version (for Teamwork v1 API `content-type: HTML`)
+
+```html
+<p><strong>Dev QA: Automated test run - {VERDICT}</strong></p>
+<p>The full QA suite has been run against <code>{baseUrl}</code> for <strong>{workblock}</strong>.</p>
+
+<h4>Suite verdicts</h4>
+<table>
+  <thead><tr><th>Suite</th><th>Result</th></tr></thead>
+  <tbody>
+    <tr><td>console</td><td>{verdict}</td></tr>
+    <!-- ... one per suite -->
+  </tbody>
+</table>
+
+<h4>Critical-path pages</h4>
+<ul>
+  <li><strong>{page}</strong>: {verdict}</li>
+</ul>
+
+<h4>Issues to action</h4>
+<ol>
+  <li><strong>{suite} / {page}</strong> - {title}<br>{detail}</li>
+</ol>
+
+<h4>Attached evidence</h4>
+<ul>
+  <li><strong>summary.md</strong> - text summary</li>
+  <li><strong>report.html</strong> - full self-contained report</li>
+</ul>
+```
+
+# Notes for the agent
+
+- Pull the verdict, counts, and issues from `{outputDir}/summary.json` produced by `aggregate.mjs`.
+- Attach `summary.md` by default; only attach `report.html` if the user explicitly asks (it's larger).
+- Post on the workblock parent task or the explicit `config.teamwork.taskId`.
+- Use the same prefix convention as other Claude-authored comments: `(I added this comment as a suggestion from Claude)`.

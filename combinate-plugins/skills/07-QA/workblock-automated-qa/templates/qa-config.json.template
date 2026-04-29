@@ -1,0 +1,75 @@
+{
+  "project": "{Project Name}",
+  "workblock": "{WB0X or release tag}",
+  "baseUrl": "https://{staging-or-prod-url}",
+  "outputDir": "/tmp/{project}-qa/{workblock}",
+  "mode": "dev",
+
+  "suites": ["console", "meta", "nav", "axe", "screenshots", "lighthouse", "w3c", "playwright"],
+
+  "pages": [
+    { "name": "home", "path": "/", "criticalPath": true },
+    { "name": "about", "path": "/about-us" }
+  ],
+
+  "viewports": [
+    { "name": "desktop", "width": 1440, "height": 900 },
+    { "name": "tablet",  "width": 768,  "height": 1024 },
+    { "name": "mobile",  "width": 390,  "height": 844 }
+  ],
+
+  "navigation": {
+    "menuToggleSelector": ".menu-toggle",
+    "menuPanelSelector": ".menu-panel",
+    "logoLabel": "{accessible name of logo link, e.g. \"Migration Galleries home\"}",
+    "menuLinks": [
+      { "label": "HOME", "expectedPath": "/" }
+    ],
+    "footerLinks": [
+      { "label": "Privacy", "expectedPath": "/privacy-policy" }
+    ],
+    "backButtons": [
+      { "from": "/{detail-route}", "expectedPath": "/{listing-route}" }
+    ]
+  },
+
+  "thresholds": {
+    "lighthouse": { "performance": 70, "accessibility": 95, "bestPractices": 95, "seo": 90, "warnBand": 10 },
+    "axe":        { "maxCritical": 0, "maxSerious": 0, "maxModerate": 5 },
+    "console":    { "maxErrors": 0, "maxFailedRequests": 0, "maxWarnings": 10, "ignorePatterns": [] },
+    "screenshots":{ "diffPercentWarn": 1, "diffPercentFail": 5 },
+    "playwright": { "maxFailing": 0 },
+    "w3c":        { "maxErrors": 0, "maxWarnings": 5 }
+  },
+
+  "userAgent": {
+    "desktop": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Safari/605.1.15",
+    "mobile":  "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Mobile/15E148 Safari/604.1"
+  },
+
+  "lighthouse": {
+    "chromePath": "auto",
+    "categories": ["performance", "accessibility", "best-practices", "seo"]
+  },
+
+  "screenshots": {
+    "diffAgainst": null,
+    "fullPage": true
+  },
+
+  "playwrightSpec": "tests/{wb-lower}.spec.ts",
+
+  "auth": {
+    "storageState": null
+  },
+
+  "teamwork": {
+    "taskId": null,
+    "attach": "summary"
+  },
+
+  "ci": {
+    "strict": false,
+    "skipSlowSuites": false
+  }
+}

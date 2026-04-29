@@ -1,0 +1,91 @@
+{
+  "project": "Migration Galleries",
+  "workblock": "WB02",
+  "baseUrl": "https://mig-web-dev.staging.oregon.platform-os.com",
+  "outputDir": "/tmp/mig-qa/WB02",
+  "mode": "dev",
+
+  "suites": ["console", "meta", "nav", "axe", "screenshots", "lighthouse", "w3c", "playwright"],
+
+  "pages": [
+    { "name": "home",              "path": "/",                                 "criticalPath": true },
+    { "name": "about",             "path": "/about-us" },
+    { "name": "artists",           "path": "/artists" },
+    { "name": "artist-detail",     "path": "/artists/aurora-hayes" },
+    { "name": "exhibitions",       "path": "/exhibitions" },
+    { "name": "exhibition-detail", "path": "/exhibitions/gallery-35" },
+    { "name": "marketplace",       "path": "/marketplace",                      "criticalPath": true },
+    { "name": "artwork-detail",    "path": "/marketplace/celestial-bloom",      "criticalPath": true },
+    { "name": "contact",           "path": "/contact",                          "criticalPath": true },
+    { "name": "contact-thank-you", "path": "/contact/thank-you" },
+    { "name": "lease-enquiry",     "path": "/lease-enquiry" },
+    { "name": "glossary",          "path": "/glossary" }
+  ],
+
+  "viewports": [
+    { "name": "desktop", "width": 1440, "height": 900 },
+    { "name": "tablet",  "width": 768,  "height": 1024 },
+    { "name": "mobile",  "width": 390,  "height": 844 }
+  ],
+
+  "navigation": {
+    "menuToggleSelector": ".mig-menu-toggle",
+    "menuPanelSelector":  ".mig-menu-panel",
+    "logoLabel": "Migration Galleries home",
+    "menuLinks": [
+      { "label": "HOME",        "expectedPath": "/" },
+      { "label": "ARTISTS",     "expectedPath": "/artists" },
+      { "label": "MARKETPLACE", "expectedPath": "/marketplace" },
+      { "label": "EXHIBITIONS", "expectedPath": "/exhibitions" },
+      { "label": "ABOUT US",    "expectedPath": "/about-us" },
+      { "label": "CONTACT",     "expectedPath": "/contact" }
+    ],
+    "footerLinks": [
+      { "label": "Privacy",  "expectedPath": "/privacy-policy" },
+      { "label": "T & C's",  "expectedPath": "/terms-and-conditions" },
+      { "label": "Glossary", "expectedPath": "/glossary" }
+    ],
+    "backButtons": [
+      { "from": "/artists/aurora-hayes",          "expectedPath": "/artists" },
+      { "from": "/exhibitions/gallery-35",        "expectedPath": "/exhibitions" },
+      { "from": "/marketplace/celestial-bloom",   "expectedPath": "/marketplace" }
+    ]
+  },
+
+  "thresholds": {
+    "lighthouse": { "performance": 70, "accessibility": 95, "bestPractices": 95, "seo": 90, "warnBand": 10 },
+    "axe":        { "maxCritical": 0, "maxSerious": 0, "maxModerate": 5 },
+    "console":    { "maxErrors": 0, "maxFailedRequests": 0, "maxWarnings": 10,
+                    "ignorePatterns": ["Marker.*deprecated"] },
+    "screenshots":{ "diffPercentWarn": 1, "diffPercentFail": 5 },
+    "playwright": { "maxFailing": 0 },
+    "w3c":        { "maxErrors": 0, "maxWarnings": 5 }
+  },
+
+  "userAgent": {
+    "desktop": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Safari/605.1.15",
+    "mobile":  "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Mobile/15E148 Safari/604.1"
+  },
+
+  "lighthouse": {
+    "chromePath": "auto",
+    "categories": ["performance", "accessibility", "best-practices", "seo"]
+  },
+
+  "screenshots": {
+    "diffAgainst": null,
+    "fullPage": true
+  },
+
+  "playwrightSpec": "tests/wb02.spec.ts",
+
+  "teamwork": {
+    "taskId": 26124187,
+    "attach": "summary"
+  },
+
+  "ci": {
+    "strict": false,
+    "skipSlowSuites": false
+  }
+}

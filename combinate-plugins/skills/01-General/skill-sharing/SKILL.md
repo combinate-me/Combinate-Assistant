@@ -431,7 +431,7 @@ source .env && curl -s -X POST \
     \"base\": \"master\",
     \"body\": \"## Summary\n\nSubmitted by NAME.\n\nSkill: \`SKILLNAME\`\n\n## Changes\n\nSee diff for details.\n\n---\n_Submitted via sync-and-push skill_\"
   }" \
-  "https://api.github.com/repos/combinate-me/Combinate-Assistant/pulls" | python -c "
+  "https://api.github.com/repos/combinate-me/Executive-Assistant/pulls" | python -c "
 import sys, json
 data = json.load(sys.stdin)
 if 'html_url' in data:
@@ -638,6 +638,6 @@ COMMIT_LOG
 - Never auto-resolve merge conflicts — always list and ask
 - Python is invoked as `python` (not `python3`)
 - Working directory: `/Users/cmb-jim/CMB Projects/Combinate-Assistant`
-- Remote: `origin` → `combinate-me/Combinate-Assistant`
+- Remote: `origin` → `combinate-me/Executive-Assistant`
 - Jim's Slack user ID: `UE0U3PBGT`
 - Slack channel: `#executive-assistant` (`C0ARB20T3DM`)

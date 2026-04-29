@@ -637,7 +637,7 @@ COMMIT_LOG
 - Never discard local changes without explicit user confirmation
 - Never auto-resolve merge conflicts — always list and ask
 - Python is invoked as `python` (not `python3`)
-- Working directory: `/Users/cmb-jim/CMB Projects/Combinate-Assistant`
+- Working directory: local clone of `combinate-me/Executive-Assistant`
 - Remote: `origin` → `combinate-me/Executive-Assistant`
 - Jim's Slack user ID: `UE0U3PBGT`
 - Slack channel: `#executive-assistant` (`C0ARB20T3DM`)

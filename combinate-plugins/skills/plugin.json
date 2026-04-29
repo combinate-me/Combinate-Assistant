@@ -1,0 +1,113 @@
+{
+  "name": "combinate-skills",
+  "version": "1.0.0",
+  "description": "Combinate shared skills: client workflows, daily operations, design, QA, and support",
+  "author": "Combinate",
+  "skills": [
+    {
+      "name": "combinate-presentation",
+      "path": "./01-General/combinate-presentation",
+      "category": "01-General"
+    },
+    {
+      "name": "deployment-plan",
+      "path": "./01-General/deployment-plan",
+      "category": "01-General"
+    },
+    {
+      "name": "droplr",
+      "path": "./01-General/droplr",
+      "category": "01-General"
+    },
+    {
+      "name": "eod-report",
+      "path": "./01-General/eod-report",
+      "category": "01-General"
+    },
+    {
+      "name": "grill-me",
+      "path": "./01-General/grill-me",
+      "category": "01-General"
+    },
+    {
+      "name": "pdf",
+      "path": "./01-General/pdf",
+      "category": "01-General"
+    },
+    {
+      "name": "pre-meeting-presentation",
+      "path": "./01-General/pre-meeting-presentation",
+      "category": "01-General"
+    },
+    {
+      "name": "qa-acceptance-criteria",
+      "path": "./01-General/qa-acceptance-criteria",
+      "category": "01-General"
+    },
+    {
+      "name": "research",
+      "path": "./01-General/research",
+      "category": "01-General"
+    },
+    {
+      "name": "skill-creator",
+      "path": "./01-General/skill-creator",
+      "category": "01-General"
+    },
+    {
+      "name": "skill-sharing",
+      "path": "./01-General/skill-sharing",
+      "category": "01-General"
+    },
+    {
+      "name": "slack",
+      "path": "./01-General/slack",
+      "category": "01-General"
+    },
+    {
+      "name": "teamwork",
+      "path": "./01-General/teamwork",
+      "category": "01-General"
+    },
+    {
+      "name": "token-efficiency",
+      "path": "./01-General/token-efficiency",
+      "category": "01-General"
+    },
+    {
+      "name": "client-context",
+      "path": "./02-Sales/client-context",
+      "category": "02-Sales"
+    },
+    {
+      "name": "post-meeting-followup",
+      "path": "./02-Sales/post-meeting-followup",
+      "category": "02-Sales"
+    },
+    {
+      "name": "branding",
+      "path": "./05-Design/branding",
+      "category": "05-Design"
+    },
+    {
+      "name": "figma-staging-compare",
+      "path": "./07-QA/figma-staging-compare",
+      "category": "07-QA"
+    },
+    {
+      "name": "wcag-audit",
+      "path": "./07-QA/wcag-audit",
+      "category": "07-QA"
+    },
+    {
+      "name": "workblock-automated-qa",
+      "path": "./07-QA/workblock-automated-qa",
+      "category": "07-QA"
+    },
+    {
+      "name": "zendesk",
+      "path": "./08-Support/zendesk",
+      "category": "08-Support"
+    }
+  ]
+}

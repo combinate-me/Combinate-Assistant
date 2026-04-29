@@ -1,6 +1,7 @@
 ---
 name: insites-crm
 description: Insites CRM module. Use for looking up contacts and companies, searching the CRM, adding/updating records, and logging emails as activities. Trigger on any mention of CRM contacts, companies, client records, or logging emails to the CRM. v1.0.0
+model: claude-sonnet-4-6
 ---
 
 # Insites: CRM Module

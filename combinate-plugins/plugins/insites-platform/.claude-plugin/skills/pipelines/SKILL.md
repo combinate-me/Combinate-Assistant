@@ -1,6 +1,7 @@
 ---
 name: insites-pipelines
 description: Insites Pipelines module. Use for managing sales pipelines, pipeline stages, opportunities, and related contacts. Trigger on any mention of pipelines, sales pipeline, opportunities, deals, or pipeline stages in Insites. v1.0.0
+model: claude-sonnet-4-6
 ---
 
 # Insites: Pipelines Module

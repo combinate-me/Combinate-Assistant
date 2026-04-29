@@ -2,6 +2,7 @@
 name: webapp-testing
 description: Toolkit for interacting with and testing local web applications using Playwright. Supports verifying frontend functionality, debugging UI behavior, capturing browser screenshots, and viewing browser logs. v1.0.0
 license: Complete terms in LICENSE.txt
+model: claude-sonnet-4-6
 ---
 
 # Web Application Testing

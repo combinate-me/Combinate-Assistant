@@ -24,3 +24,11 @@ credentials/
 
 # Generated HTML presentations
 presentations/
+
+# Personal working files - not shared
+decisions/
+projects/
+scripts/
+
+# MCP server / tool logs
+*.log

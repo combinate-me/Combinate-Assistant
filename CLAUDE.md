@@ -46,6 +46,7 @@ Skills are built organically. When you notice a recurring request, suggest turni
 
 #### Active Skills
 
+- **daily-task-brief** - Sends a teammate's daily task summary to their Slack DM. Pulls overdue and due-today tasks from Teamwork, plus Developers column tasks from the Support Board. Trigger on "what's on my plate today", "daily task brief", "send my tasks to Slack", "task brief for [name]". Skill: `combinate-plugins/skills/01-General/daily-task-brief/SKILL.md`
 - **grill-me** - Stress-tests a plan or design by interviewing the user relentlessly, resolving each branch of the decision tree one dependency at a time. Trigger on "grill me" or requests to pressure-test architecture, process, or strategy. Skill: `combinate-plugins/skills/01-General/grill-me/SKILL.md`
 - **eod-report** - End-of-day or midday standup. Pulls today's Teamwork timelogs, checks task statuses, asks about blockers, and posts a structured digest. Trigger on "eod report", "end of day", "log my day", "daily wrap-up". Skill: `combinate-plugins/skills/01-General/eod-report/SKILL.md`
 - **deployment-plan** - Generates a structured deployment plan for a feature or release, covering steps, rollback, and comms. Skill: `combinate-plugins/skills/01-General/deployment-plan/SKILL.md`

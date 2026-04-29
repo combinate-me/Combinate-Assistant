@@ -60,6 +60,11 @@
       "category": "01-General"
     },
     {
+      "name": "daily-task-brief",
+      "path": "./01-General/daily-task-brief",
+      "category": "01-General"
+    },
+    {
       "name": "slack",
       "path": "./01-General/slack",
       "category": "01-General"

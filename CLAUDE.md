@@ -51,6 +51,9 @@ Skills are built organically. When you notice a recurring request, suggest turni
 - **deployment-plan** - Generates a structured deployment plan for a feature or release, covering steps, rollback, and comms. Skill: `combinate-plugins/skills/01-General/deployment-plan/SKILL.md`
 - **token-efficiency** - Guides the user on reducing Claude token usage and optimising prompts for cost and speed. Skill: `combinate-plugins/skills/01-General/token-efficiency/SKILL.md`
 - **droplr** - Share files and screenshots via Droplr. Trigger on any request to share, upload, or get a shareable link. Skill: `combinate-plugins/skills/01-General/droplr/SKILL.md`
+- **pull-from-repo** - Fetches and merges the latest changes from the remote GitHub repository. Posts a completion notice to #executive-assistant. Skill: `combinate-plugins/skills/01-General/pull-from-repo/SKILL.md`
+- **push-to-repo** - Stages changes, creates a PR, and notifies #executive-assistant. Skill: `combinate-plugins/skills/01-General/push-to-repo/SKILL.md`
+- **rename-remote** - Updates the git remote URL when the GitHub repo is renamed. Skill: `combinate-plugins/skills/01-General/rename-remote/SKILL.md`
 - **pre-meeting-presentation** - Builds a branded HTML presentation before any client or prospect meeting. Gathers context from Teamwork, Calendar, Gmail, CRM, Drive, and Slack. Exports to PDF. Skill: `combinate-plugins/skills/01-General/pre-meeting-presentation/SKILL.md`
 - **post-meeting-followup** - Full workflow for creating follow-up docs, spreadsheets, and client emails after client meetings. Skill: `combinate-plugins/skills/02-Sales/post-meeting-followup/SKILL.md`
 - **combinate** - Combinate-specific client context workflows: Google Drive folder lookup, cross-system context gathering, client TLA and custom CRM fields. Skill: `combinate-plugins/skills/02-Sales/client-context/SKILL.md`

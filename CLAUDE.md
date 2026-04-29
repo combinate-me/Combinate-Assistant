@@ -46,6 +46,11 @@ Skills are built organically. When you notice a recurring request, suggest turni
 
 #### Active Skills
 
+- **grill-me** - Stress-tests a plan or design by interviewing the user relentlessly, resolving each branch of the decision tree one dependency at a time. Trigger on "grill me" or requests to pressure-test architecture, process, or strategy. Skill: `combinate-plugins/skills/01-General/grill-me/SKILL.md`
+- **eod-report** - End-of-day or midday standup. Pulls today's Teamwork timelogs, checks task statuses, asks about blockers, and posts a structured digest. Trigger on "eod report", "end of day", "log my day", "daily wrap-up". Skill: `combinate-plugins/skills/01-General/eod-report/SKILL.md`
+- **deployment-plan** - Generates a structured deployment plan for a feature or release, covering steps, rollback, and comms. Skill: `combinate-plugins/skills/01-General/deployment-plan/SKILL.md`
+- **token-efficiency** - Guides the user on reducing Claude token usage and optimising prompts for cost and speed. Skill: `combinate-plugins/skills/01-General/token-efficiency/SKILL.md`
+- **droplr** - Share files and screenshots via Droplr. Trigger on any request to share, upload, or get a shareable link. Skill: `combinate-plugins/skills/01-General/droplr/SKILL.md`
 - **pre-meeting-presentation** - Builds a branded HTML presentation before any client or prospect meeting. Gathers context from Teamwork, Calendar, Gmail, CRM, Drive, and Slack. Exports to PDF. Skill: `combinate-plugins/skills/01-General/pre-meeting-presentation/SKILL.md`
 - **post-meeting-followup** - Full workflow for creating follow-up docs, spreadsheets, and client emails after client meetings. Skill: `combinate-plugins/skills/02-Sales/post-meeting-followup/SKILL.md`
 - **combinate** - Combinate-specific client context workflows: Google Drive folder lookup, cross-system context gathering, client TLA and custom CRM fields. Skill: `combinate-plugins/skills/02-Sales/client-context/SKILL.md`

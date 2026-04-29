@@ -75,7 +75,7 @@ Fetch the HTML via WebFetch. If the page is JS-driven, flag at the top of the re
 > ⚠️ **Dynamic page** — WebFetch captures initial HTML only. JS-revealed content (hidden steps, loaded data, open states) is verified via source files instead. For pixel-accurate visual QA of a specific state, re-run with a viewport width: `/qa-design [figma-url] [staging-url] 375px`
 
 ### Step 3 — Load context (run in parallel)
-1. Read the style guide memory at `/Users/combinate-ivy/.claude/memory/reference_app_portal_v131_style_guide.md` — this is the **source of truth**. Figma can be wrong relative to it.
+1. Read the style guide at `.claude-plugin/skills/07-QA/figma-staging-compare/references/style-guide.md` — this is the **source of truth**. Figma can be wrong relative to it.
 2. Fetch Figma design context:
    - **Standard mode**: call `get_design_context` with the single fileKey + nodeId.
    - **Dual mode**: call `get_design_context` for both desktop and mobile nodes in parallel. Label results clearly as **Desktop Figma** and **Mobile Figma**.

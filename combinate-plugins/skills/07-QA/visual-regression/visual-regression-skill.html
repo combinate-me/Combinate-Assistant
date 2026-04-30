@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visual Regression Testing - Combinate Presentation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cmb-blue: #1E43FF;
+      --cmb-black: #181818;
+      --cmb-grey: #4E4E4E;
+      --cmb-light-grey: #D1D1D1;
+      --cmb-ghost-white: #EFF2F9;
+      --cmb-emerald: #10b981;
+      --cmb-amber: #f59e0b;
+      --cmb-red: #ef4444;
+    }
+
+    body.theme-dark {
+      --bg: #0a0a0f;
+      --bg-card: rgba(255,255,255,0.04);
+      --bg-card-hover: rgba(255,255,255,0.06);
+      --border: rgba(255,255,255,0.08);
+      --border-accent: rgba(30,67,255,0.3);
+      --text: #ffffff;
+      --text-secondary: rgba(255,255,255,0.5);
+      --text-muted: rgba(255,255,255,0.3);
+      --text-faint: rgba(255,255,255,0.15);
+      --nav-bg: rgba(10,10,15,0.85);
+    }
+
+    body.theme-light {
+      --bg: #f4f2ee;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f8f8f6;
+      --border: #d4d0c8;
+      --border-accent: rgba(30,67,255,0.3);
+      --text: #181818;
+      --text-secondary: #4E4E4E;
+      --text-muted: #6b7280;
+      --text-faint: #9ca3af;
+      --nav-bg: rgba(244,242,238,0.92);
+    }
+
+    body.theme-mixed {
+      --bg: #f4f2ee;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f8f8f6;
+      --border: #d4d0c8;
+      --border-accent: rgba(30,67,255,0.3);
+      --text: #181818;
+      --text-secondary: #4E4E4E;
+      --text-muted: #6b7280;
+      --text-faint: #9ca3af;
+      --nav-bg: rgba(10,10,15,0.85);
+    }
+    body.theme-mixed .slide.hero {
+      --bg: #0a0a0f;
+      --bg-card: rgba(255,255,255,0.04);
+      --border: rgba(255,255,255,0.08);
+      --text: #ffffff;
+      --text-secondary: rgba(255,255,255,0.5);
+      --text-muted: rgba(255,255,255,0.3);
+      --text-faint: rgba(255,255,255,0.15);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', 'Helvetica Neue', Helvetica, system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3, h4 { font-family: 'Inter', 'Helvetica Neue', Helvetica, sans-serif; font-weight: 700; line-height: 1.2; }
+    h1 { font-size: 56px; }
+    h2 { font-size: 40px; margin-bottom: 32px; }
+    h3 { font-size: 18px; margin-bottom: 8px; }
+    h4 { font-size: 15px; }
+
+    .category {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--cmb-blue);
+      margin-bottom: 16px;
+    }
+
+    .subtitle { font-size: 20px; color: var(--text-secondary); max-width: 600px; }
+    .meta { font-size: 13px; color: var(--text-faint); }
+
+    .slide {
+      display: none;
+      width: 100vw;
+      height: 100vh;
+      position: absolute;
+      top: 0; left: 0;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 56px 72px;
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+    .slide.active { display: flex; }
+    .slide.center { text-align: center; }
+    .slide .content {
+      max-width: 960px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    .slide.center .content { align-items: center; }
+    .slide .content .category,
+    .slide .content h2 { align-self: flex-start; }
+    .slide.center .content .category,
+    .slide.center .content h2 { align-self: center; }
+
+    body.theme-dark .slide.hero::before,
+    body.theme-mixed .slide.hero::before {
+      content: '';
+      position: absolute;
+      top: -20%; right: -10%;
+      width: 60%; height: 80%;
+      background: radial-gradient(ellipse at center, rgba(30,67,255,0.15) 0%, transparent 70%);
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .slide.hero > * { position: relative; z-index: 1; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .slide.active .anim {
+      opacity: 0;
+      animation: fadeUp 0.5s ease-out forwards;
+    }
+    .anim-d1 { animation-delay: 0.1s !important; }
+    .anim-d2 { animation-delay: 0.2s !important; }
+    .anim-d3 { animation-delay: 0.3s !important; }
+    .anim-d4 { animation-delay: 0.4s !important; }
+    .anim-d5 { animation-delay: 0.5s !important; }
+    .anim-d6 { animation-delay: 0.6s !important; }
+    .anim-d7 { animation-delay: 0.7s !important; }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      transition: border-color 0.2s;
+    }
+    .card:hover { border-color: var(--border-accent); }
+    .card p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+
+    .step-card { display: flex; align-items: flex-start; gap: 16px; }
+    .step-number {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(30,67,255,0.12);
+      color: var(--cmb-blue);
+      font-weight: 700;
+      font-size: 15px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .step-card h4 { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+    .step-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+
+    .icon-box {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      margin-bottom: 16px;
+    }
+    .icon-box svg { width: 20px; height: 20px; }
+    .icon-box.blue { background: rgba(30,67,255,0.12); color: var(--cmb-blue); }
+    .icon-box.emerald { background: rgba(16,185,129,0.12); color: var(--cmb-emerald); }
+    .icon-box.amber { background: rgba(245,158,11,0.12); color: var(--cmb-amber); }
+    .icon-box.red { background: rgba(239,68,68,0.12); color: var(--cmb-red); }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+    .highlight-box {
+      background: rgba(30,67,255,0.06);
+      border: 1px solid rgba(30,67,255,0.2);
+      border-radius: 16px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .highlight-box h4 { color: var(--cmb-blue); font-size: 14px; margin-bottom: 4px; }
+    .highlight-box p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+
+    .icon-list { list-style: none; }
+    .icon-list li {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 14px; color: var(--text-secondary);
+      padding: 5px 0;
+      line-height: 1.5;
+    }
+    .check-icon { width: 16px; height: 16px; color: var(--cmb-emerald); flex-shrink: 0; margin-top: 2px; }
+    .blue-icon { width: 16px; height: 16px; color: var(--cmb-blue); flex-shrink: 0; margin-top: 2px; }
+
+    .code-block {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 13px;
+      color: var(--cmb-blue);
+      margin-top: 8px;
+      line-height: 1.7;
+      overflow: hidden;
+    }
+    .code-block .comment { color: var(--text-muted); }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+
+    .file-row {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .file-row:last-child { border-bottom: none; }
+    .file-name { font-size: 13px; font-family: 'Consolas', 'Monaco', monospace; color: var(--cmb-blue); font-weight: 600; flex-shrink: 0; min-width: 200px; }
+    .file-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .badge-blue { background: rgba(30,67,255,0.12); color: var(--cmb-blue); }
+    .badge-amber { background: rgba(245,158,11,0.12); color: var(--cmb-amber); }
+
+    .progress-bar-track {
+      position: fixed; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--bg-card); z-index: 100;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--cmb-blue);
+      transition: width 0.3s ease;
+    }
+
+    .nav-bar {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      height: 48px;
+      background: var(--nav-bg, rgba(10,10,15,0.85));
+      backdrop-filter: blur(12px);
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center;
+      padding: 0 24px;
+      z-index: 100;
+    }
+
+    .nav-logo { height: 20px; }
+    .nav-logo svg { height: 20px; width: auto; }
+
+    .theme-toggle {
+      display: flex; align-items: center; gap: 2px;
+      background: var(--bg-card, rgba(255,255,255,0.04));
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 2px;
+      margin-left: 12px;
+    }
+    .theme-toggle button {
+      width: 24px; height: 22px;
+      border: none; border-radius: 4px;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+      font-size: 11px; padding: 0;
+    }
+    .theme-toggle button.active { background: var(--cmb-blue); color: #fff; }
+    .theme-toggle button:hover:not(.active) { color: var(--text); }
+
+    .nav-dots {
+      position: absolute; left: 50%; transform: translateX(-50%);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .nav-dot {
+      width: 6px; height: 6px;
+      border-radius: 3px;
+      background: var(--text-faint);
+      border: none; cursor: pointer;
+      transition: all 0.3s; padding: 0;
+    }
+    .nav-dot.active { width: 20px; background: var(--cmb-blue); }
+    .nav-dot:hover:not(.active) { background: var(--text-muted); }
+
+    .nav-right {
+      margin-left: auto;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .nav-counter { font-size: 12px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+    .nav-btn {
+      width: 28px; height: 28px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    .nav-btn:hover { color: var(--text); border-color: var(--text-muted); }
+    .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .nav-btn svg { width: 14px; height: 14px; }
+  </style>
+</head>
+<body>
+  <div class="progress-bar-track">
+    <div id="progressFill" class="progress-bar-fill" style="width: 0%"></div>
+  </div>
+
+  <!-- SLIDE 1: Title -->
+  <div class="slide center hero">
+    <div class="anim anim-d1" style="margin-bottom: 40px;">
+      <svg width="320" height="74" viewBox="0 0 704 162" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g fill="var(--text)">
+          <path d="M224.9,101.9c-4.3-3.9-6.6-9.5-6.9-16.8v-7.9c0.3-7.2,2.6-12.5,6.9-16.8c4.3-3.9,10.2-5.9,17.5-5.9c5.3,0,9.6,1,13.2,2.6c3.6,2,6.3,3.9,7.9,6.9c1.6,2.6,2.6,5.3,3,7.6c0,0.7,0,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-8.9c-0.7,0-1.3,0-1.6-0.3c-0.3-0.3-0.7-1-1-1.6c-1-2.6-2.3-4.3-4-5.3c-1.6-1-3.6-1.6-6.3-1.6c-3.3,0-5.9,1-7.9,3.3c-2,2-3,5.3-3,9.5v6.9c0.3,8.5,4,12.8,10.9,12.8c2.6,0,4.6-0.7,6.3-1.6c1.6-1,3-3,4-5.6c0.3-0.7,0.7-1.3,1-1.6c0.3-0.3,1-0.3,1.6-0.3h8.9c0.7,0,1.3,0.3,1.6,0.7c0.3,0.3,0.7,1,0.7,1.6c0,2.3-1,4.9-2.6,7.6c-1.6,2.6-4.3,4.9-7.9,6.9c-3.6,2-7.9,3-13.2,3C235.1,107.8,229.2,105.8,224.9,101.9z"/><path d="M277.3,101.9c-4.3-3.9-6.6-9.5-6.9-16.4v-8.5c0.3-6.9,2.6-12.2,6.9-16.4c4.3-3.9,10.2-5.9,17.8-5.9c7.6,0,13.5,2,17.8,5.9c4.3,3.9,6.6,9.5,6.9,16.4c0,0.7,0,2.3,0,4.3c0,2,0,3.6,0,4.3c-0.3,6.9-2.6,12.5-6.9,16.4c-4.3,3.9-10.2,5.9-17.8,5.9C287.5,107.8,281.6,105.8,277.3,101.9z M303.4,94.7c2-2.3,3-5.3,3-9.5c0-0.7,0-2,0-3.9c0-2,0-3.3,0-3.9c0-4.3-1-7.6-3-9.5c-2-2.3-4.6-3.3-7.9-3.3c-3.6,0-6.3,1-8.2,3.3c-2,2.3-3,5.3-3,9.5v7.9c0,4.3,1,7.2,3,9.5c2,2.3,4.6,3.3,8.2,3.3C298.7,98,301.7,97,303.4,94.7z"/><path d="M327.7,106.2c-0.3-0.3-0.7-1-0.7-1.6V58.2c0-0.7,0.3-1.3,0.7-1.6c0.3-0.3,1-0.7,1.6-0.7h7.9c0.7,0,1.3,0.3,1.6,0.7c0.3,0.3,0.7,1,0.7,1.6v3.3c3.6-4.6,8.2-6.6,14.2-6.6c7.3,0,12.5,3,15.2,8.9c1.6-2.6,4-4.6,6.6-6.2c3-1.6,5.9-2.3,9.2-2.3c5.3,0,9.9,2,13.2,5.6c3.3,3.6,5.3,8.9,5.3,16.1v28.3c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-8.2c-0.7,0-1.3-0.3-1.6-0.7c-0.3-0.3-0.7-1-0.7-1.6V77.6c0-4.3-1-7.2-2.6-8.9c-1.6-2-4-2.6-6.9-2.6c-2.6,0-4.6,1-6.6,3c-1.6,2-2.6,4.9-2.6,8.9v27.6c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7H361c-0.7,0-1.3-0.3-1.6-0.7c-0.3-0.3-0.7-1-0.7-1.6V77.9c0-3.9-1-6.9-2.6-8.9c-1.6-2-4-3-6.9-3c-2.6,0-4.6,1-6.6,3c-1.6,2-2.6,4.9-2.6,8.9v27.6c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-8.2C329.1,106.8,328.4,106.8,327.7,106.2z"/><path d="M425.3,100.9v3.6c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-7.9c-0.7,0-1.3-0.3-1.6-0.7c-0.3-0.3-0.7-1-0.7-1.6V39.5c0-0.7,0.3-1.3,0.7-1.6c0.3-0.3,1-0.7,1.6-0.7h8.6c0.7,0,1.3,0.3,1.6,0.7c0.3,0.3,0.7,1,0.7,1.6v21.7c3.6-4.3,8.6-6.6,15.2-6.6c6.6,0,11.9,2.3,15.5,6.6s5.6,9.9,5.6,16.8c0,0.7,0,2,0,3.3s0,2.3,0,3.3c-0.3,7.2-2.3,12.8-5.6,17.1c-3.6,4.3-8.6,6.2-15.2,6.2C434.2,107.8,428.9,105.5,425.3,100.9z M448.4,84.5c0-0.7,0-1.6,0-3s0-2.3,0-3c-0.3-8.5-4.3-13.1-11.2-13.1c-3.6,0-6.3,1-8.2,3.3c-2,2.3-3,4.9-3,8.2c0,0.7,0,2,0,3.9c0,1.6,0,3,0,3.6c0,3.6,1,6.6,3,8.9c2,2.3,4.6,3.6,8.2,3.6C444.1,97.3,448,93,448.4,84.5z"/><path d="M469.5,46.7c-0.3-0.3-0.7-1-0.7-1.6v-7.2c0-0.7,0.3-1.3,0.7-1.6c0.3-0.3,1-0.7,1.6-0.7h9.2c0.7,0,1.3,0.3,1.6,0.7c0.3,0.3,0.7,1,0.7,1.6V45c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-9.2C470.5,47.3,469.8,47.3,469.5,46.7z M469.8,106.2c-0.3-0.3-0.7-1-0.7-1.6V58.2c0-0.7,0.3-1.3,0.7-1.6c0.3-0.3,1-0.7,1.6-0.7h8.2c0.7,0,1.3,0.3,1.6,0.7c0.3,0.3,0.7,1,0.7,1.6v46.3c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-8.2C470.8,106.8,470.1,106.8,469.8,106.2z"/><path d="M491.9,106.2c-0.3-0.3-0.7-1-0.7-1.6V58.2c0-0.7,0.3-1.3,0.7-1.6c0.3-0.3,1-0.7,1.6-0.7h8.2c0.7,0,1.3,0.3,1.6,0.7c0.3,0.3,0.7,1,0.7,1.6v3.9c4-4.9,9.6-7.2,16.5-7.2c5.9,0,10.9,2,14.5,5.9c3.6,3.9,5.3,9.2,5.3,16.1v27.6c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-8.9c-0.7,0-1.3-0.3-1.6-0.7c-0.3-0.3-0.7-1-0.7-1.6V77.6c0-3.9-1-6.9-3-8.9c-2-2-4.6-3.3-7.9-3.3c-3.3,0-5.9,1-8.2,3.3c-2,2.3-3,5.3-3,8.9v26.9c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-8.9C492.9,106.8,492.5,106.8,491.9,106.2z"/><path d="M554.5,105.8c-2.6-1.3-4.9-3.3-6.6-5.6c-1.6-2.3-2.3-4.9-2.3-7.6c0-4.6,1.6-8.2,5.3-10.8s8.6-4.6,14.8-5.6l13.5-2v-2c0-3-0.7-4.9-2.3-6.2c-1.3-1.3-3.6-2.3-6.9-2.3c-2.3,0-4,0.3-5.3,1.3c-1.3,0.7-2.3,1.6-3.3,2.3c-0.7,0.7-1.3,1.3-1.6,1.6c-0.3,0.7-0.7,1.3-1.3,1.3h-7.2c-0.7,0-1-0.3-1.6-0.7c-0.3-0.3-0.7-1-0.7-1.6c0-1.6,1-3.6,2.3-5.6c1.6-2,4-3.9,7.2-5.3c3.3-1.6,7.3-2.3,11.9-2.3c7.9,0,13.5,1.6,17.1,5.3c3.6,3.6,5.3,7.9,5.3,13.8v30.9c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-8.2c-0.7,0-1.3-0.3-1.6-0.7c-0.3-0.3-0.7-1-0.7-1.6v-3.9c-1.3,2-3.6,3.9-6.3,5.3c-2.6,1.3-5.9,2-9.9,2C560.4,107.8,557.5,107.2,554.5,105.8z M576.2,95c2.3-2.3,3.3-5.9,3.3-10.2v-2l-9.9,1.6c-7.6,1.3-11.2,3.6-11.2,7.6c0,2,1,3.6,2.6,4.9c1.6,1,4,1.6,6.3,1.6C571,98.6,573.9,97.3,576.2,95z"/><path d="M610.9,102.2c-3-3-4.6-7.6-4.6-13.8V66.1h-7.9c-0.7,0-1.3-0.3-1.6-0.7c-0.3-0.3-0.7-1-0.7-1.6v-5.9c0-0.7,0.3-1.3,0.7-1.6c0.3-0.3,1-0.7,1.6-0.7h7.9V39.1c0-0.7,0.3-1.3,0.7-1.6c0.3-0.3,1-0.7,1.6-0.7h8.2c0.7,0,1.3,0.3,1.6,0.7c0.3,0.3,0.7,1,0.7,1.6v16.4h12.2c0.7,0,1.3,0.3,1.6,0.7c0.3,0.3,0.7,1,0.7,1.6v5.9c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-12.2v21c0,3,0.3,4.9,1.3,6.2s2.6,2.3,4.9,2.3h6.9c0.7,0,1.3,0.3,1.6,0.7c0.3,0.3,0.7,1,0.7,1.6v6.2c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7H624C618.4,106.8,613.8,105.5,610.9,102.2z"/><path d="M644.1,101.6c-4.3-4.3-6.6-10.2-6.9-18.1v-2.3c0-8.2,2.3-14.8,6.6-19.4c4.3-4.6,10.2-7.2,17.8-7.2c7.9,0,13.8,2.3,18.1,7.2C684,66.4,686,73,686,80.5v2c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-32.6v0.7c0,3.6,1,6.6,3,9.2c2,2.3,4.6,3.6,7.9,3.6c3.6,0,6.9-1.6,9.2-4.6c0.7-0.7,1-1.3,1.3-1.3c0.3,0,1-0.3,1.6-0.3h8.6c0.7,0,1,0.3,1.6,0.3c0.3,0.3,0.7,0.7,0.7,1.3c0,1.6-1,3.3-3,5.6c-2,2-4.6,3.9-7.9,5.6c-3.6,1.6-7.6,2.3-12.2,2.3C654.4,107.8,648.4,105.8,644.1,101.6z M672.5,76.9c0-3.9-1-7.2-3-9.5c-2-2.3-4.6-3.6-7.9-3.6c-3.3,0-5.9,1.3-7.9,3.6c-2,2.3-3,5.6-3,9.2v0.3H672.5z"/>
+          <path d="M140,42.6C140,42.5,140,42.5,140,42.6c0-0.2,0-0.3,0-0.4v-0.1c0,0,0,0,0-0.1V42c0-0.1,0-0.2-0.1-0.3v-0.1c0,0,0-0.1-0.1-0.1c0,0,0-0.1-0.1-0.1v-0.1l-0.1-0.1c0,0,0-0.1-0.1-0.1c0-0.1-0.1-0.1-0.1-0.2l-0.1-0.1c0,0,0-0.1-0.1-0.1c0,0,0,0-0.1-0.1l-0.1-0.1l-0.1-0.1l-0.1-0.1l-0.1-0.1l-0.1-0.1c0,0-0.1,0-0.1-0.1l-0.1-0.1c0,0,0,0-0.1-0.1L71.6,1.5c-1-0.6-2.2-0.6-3.3,0L1.6,39.8c0,0-0.1,0-0.1,0.1c0,0-0.1,0-0.1,0.1c0,0-0.1,0-0.1,0.1l-0.1,0.1l-0.1,0.1L1,40.4l-0.1,0.1l-0.1,0.1c0,0,0,0-0.1,0.1l-0.1,0.1l-0.1,0.1c0,0.1-0.1,0.1-0.1,0.2c0,0,0,0.1-0.1,0.1l-0.1,0.1v0.1c0,0,0,0.1-0.1,0.1c0,0,0,0.1-0.1,0.1v0.1c0,0.1-0.1,0.2-0.1,0.3V42c0,0,0,0,0,0.1v0.1c0,0.1,0,0.2,0,0.3v0.1v76.7c0,0.1,0,0.1,0,0.2c0,0,0,0,0,0.1c0,0,0,0,0,0.1c0,0.2,0.1,0.5,0.1,0.7v0.1c0.1,0.2,0.2,0.5,0.3,0.7c0.1,0.2,0.3,0.4,0.5,0.6l0.1,0.1c0.2,0.2,0.4,0.3,0.6,0.4c0,0,0,0,0.1,0l66.8,38.4c0.1,0,0.1,0.1,0.2,0.1s0.1,0.1,0.2,0.1c0,0,0,0,0.1,0h0.1H69c0.1,0,0.1,0,0.2,0.1c0.1,0,0.1,0,0.2,0h0.1h0.1c0.2,0,0.3,0,0.5,0s0.3,0,0.5,0h0.1h0.1c0.1,0,0.1,0,0.2,0s0.1,0,0.2-0.1h0.1h0.1c0,0,0,0,0.1,0s0.1-0.1,0.2-0.1s0.1-0.1,0.2-0.1l66.8-38.4c0,0,0,0,0.1,0c0.2-0.1,0.4-0.3,0.6-0.4l0.1-0.1c0.4-0.4,0.6-0.7,0.7-1.2v-0.1c0.1-0.2,0.1-0.5,0.1-0.7c0,0,0,0,0-0.1c0,0,0,0,0-0.1c0-0.1,0-0.1,0-0.2L140,42.6L140,42.6z M15.4,44.5L64,38.9L49.2,64.3L36.4,86.4L8.9,45.2L15.4,44.5z M44.3,85.9L70,41.4l27.7,47.9H42.2L44.3,85.9z M98.1,95.8L70,150.7l-28-54.9H98.1z M103.6,86.4L76,39l55,6.3L118,64.8L103.6,86.4z M12.2,62l20.1,30L6.5,112.7V53.3L12.2,62z M104.4,97.6l10.2,8.2l16.3,13.2l-53.1,30.6L104.4,97.6z M107.7,91.9l20.1-30l5.7-8.6v59.3L107.7,91.9z M73.2,32.1V9.9l48.3,27.8L73.2,32.1z M66.8,9.9v22.2l-48.3,5.6L66.8,9.9z M9,119l16.3-13.2l10.2-8.2l15.8,30.9l10.8,21.1L9,119z"/>
+        </g>
+      </svg>
+    </div>
+    <h1 class="anim anim-d2">Visual Regression Testing</h1>
+    <p class="subtitle anim anim-d3" style="margin-top: 16px;">Automated visual comparison between staging environments</p>
+    <p class="meta anim anim-d4" style="margin-top: 40px;">Combinate | April 2026</p>
+  </div>
+
+  <!-- SLIDE 2: What It Does -->
+  <div class="slide">
+    <div class="content">
+      <p class="category anim anim-d1">Overview</p>
+      <h2 class="anim anim-d2">What It Does</h2>
+      <div class="grid-3 anim anim-d3">
+        <div class="card">
+          <div class="icon-box blue">
+            <svg viewBox="0 0 256 256" fill="currentColor"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm88,104a87.47,87.47,0,0,1-5.46,30.17L183.41,135.4A15.89,15.89,0,0,0,184,131V117.57l19.8-19.8A87.57,87.57,0,0,1,216,128ZM40.44,99.64,60,119.2v11.4a16,16,0,0,0,4.69,11.31l9,9A16,16,0,0,0,85,155.2v12.08l-9.45,26.3A88,88,0,0,1,40.44,99.64ZM128,216a87.85,87.85,0,0,1-44.79-12.22L92,177.33A16.08,16.08,0,0,0,93.06,172V162a16,16,0,0,0-4.69-11.31l-9-9A16,16,0,0,0,68,137.6V113.7L44.56,90.26A88,88,0,0,1,170.36,42.4l-14,22.38A16,16,0,0,0,153,78.26v9.5a16,16,0,0,0,6.11,12.57l14.1,10.58A15.94,15.94,0,0,0,183,114h3.1l23.21,23.21A88.07,88.07,0,0,1,128,216Z"/></svg>
+          </div>
+          <h3>Crawl All Pages</h3>
+          <p>Automatically finds and visits every public page — up to 100 pages per run, at desktop and mobile.</p>
+        </div>
+        <div class="card">
+          <div class="icon-box emerald">
+            <svg viewBox="0 0 256 256" fill="currentColor"><path d="M230,117.37l-55.49-8.07-24.82-50.3a8,8,0,0,0-14.34,0l-24.83,50.3L55,117.37a8,8,0,0,0-4.43,13.64l40.17,39.15L81.6,221.28a8,8,0,0,0,11.6,8.43L128,211.13l34.8,18.58a8,8,0,0,0,11.6-8.43l-9.15-51.12,40.18-39.15A8,8,0,0,0,230,117.37Z"/></svg>
+          </div>
+          <h3>Registration Testing</h3>
+          <p>Automates the full sign-up form, screenshots every step, and validates post-registration behaviour.</p>
+        </div>
+        <div class="card">
+          <div class="icon-box amber">
+            <svg viewBox="0 0 256 256" fill="currentColor"><path d="M141.66,133.66l-40,40a8,8,0,0,1-11.32-11.32L116.69,136H24a8,8,0,0,1,0-16h92.69L90.34,93.66a8,8,0,0,1,11.32-11.32l40,40A8,8,0,0,1,141.66,133.66ZM192,32H160a8,8,0,0,0,0,16h32V208H160a8,8,0,0,0,0,16h32a16,16,0,0,0,16-16V48A16,16,0,0,0,192,32Z"/></svg>
+          </div>
+          <h3>Portal Page Testing</h3>
+          <p>Logs in with test accounts and crawls all authenticated pages behind the login gate.</p>
+        </div>
+        <div class="card">
+          <div class="icon-box blue">
+            <svg viewBox="0 0 256 256" fill="currentColor"><path d="M208,56H180.28L166.65,35.56A8,8,0,0,0,160,32H96a8,8,0,0,0-6.65,3.56L75.71,56H48A24,24,0,0,0,24,80V192a24,24,0,0,0,24,24H208a24,24,0,0,0,24-24V80A24,24,0,0,0,208,56Zm8,136a8,8,0,0,1-8,8H48a8,8,0,0,1-8-8V80a8,8,0,0,1,8-8H80a8,8,0,0,0,6.66-3.56L100.28,48h55.43l13.63,20.44A8,8,0,0,0,176,72h32a8,8,0,0,1,8,8ZM128,88a44,44,0,1,0,44,44A44.05,44.05,0,0,0,128,88Zm0,72a28,28,0,1,1,28-28A28,28,0,0,1,128,160Z"/></svg>
+          </div>
+          <h3>Screenshot Everything</h3>
+          <p>Full-page screenshots at desktop (1440px) and mobile (375px) on both environments for every page.</p>
+        </div>
+        <div class="card">
+          <div class="icon-box emerald">
+            <svg viewBox="0 0 256 256" fill="currentColor"><path d="M224,200h-8V40a8,8,0,0,0-8-8H152a8,8,0,0,0-8,8V88H96a8,8,0,0,0-8,8v48H48a8,8,0,0,0-8,8v48H32a8,8,0,0,0,0,16H224a8,8,0,0,0,0-16ZM160,48h40V200H160Zm-56,56h40V200H104ZM56,160H88v40H56Z"/></svg>
+          </div>
+          <h3>Pixel-Diff Report</h3>
+          <p>Compares every screenshot pair and produces a branded 2-tab HTML report with diff bars and 404 detection.</p>
+        </div>
+        <div class="card">
+          <div class="icon-box red">
+            <svg viewBox="0 0 256 256" fill="currentColor"><path d="M236.8,188.09,149.35,36.22a24.76,24.76,0,0,0-42.7,0L19.2,188.09a23.51,23.51,0,0,0,0,23.72A24.35,24.35,0,0,0,40.55,224h174.9a24.35,24.35,0,0,0,21.33-12.19A23.51,23.51,0,0,0,236.8,188.09ZM120,144V104a8,8,0,0,1,16,0v40a8,8,0,0,1-16,0Zm20,36a12,12,0,1,1-12-12A12,12,0,0,1,140,180Z"/></svg>
+          </div>
+          <h3>Functional QA</h3>
+          <p>Checks broken links, broken images, JS console errors, form validation, and HTTP status on every page.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: When to Use It -->
+  <div class="slide">
+    <div class="content">
+      <p class="category anim anim-d1">Use Cases</p>
+      <h2 class="anim anim-d2">When to Use It</h2>
+      <div class="two-col anim anim-d3">
+        <ul class="icon-list">
+          <li>
+            <svg class="check-icon" viewBox="0 0 256 256" fill="currentColor"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg>
+            <span>Comparing two staging environments before a client review (e.g. v110 vs v111)</span>
+          </li>
+          <li>
+            <svg class="check-icon" viewBox="0 0 256 256" fill="currentColor"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg>
+            <span>Checking staging vs production before a go-live</span>
+          </li>
+          <li>
+            <svg class="check-icon" viewBox="0 0 256 256" fill="currentColor"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg>
+            <span>After a large deployment to catch unintended visual changes</span>
+          </li>
+          <li>
+            <svg class="check-icon" viewBox="0 0 256 256" fill="currentColor"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg>
+            <span>Any time you need to quickly check what visually changed between two versions</span>
+          </li>
+        </ul>
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div class="highlight-box">
+            <div>
+              <h4>Staging vs Staging</h4>
+              <p>Most common use. Compare two sprint versions side by side before QA sign-off.</p>
+            </div>
+          </div>
+          <div class="highlight-box">
+            <div>
+              <h4>Staging vs Production</h4>
+              <p>Final check before go-live. Confirms only intended changes are deployed.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: How to Trigger It -->
+  <div class="slide">
+    <div class="content">
+      <p class="category anim anim-d1">Getting Started</p>
+      <h2 class="anim anim-d2">How to Trigger It</h2>
+      <div class="anim anim-d3" style="display: flex; flex-direction: column; gap: 20px;">
+        <p style="font-size: 15px; color: var(--text-secondary);">Type the slash command in Claude Code with two URLs:</p>
+        <div class="code-block">
+          <span class="comment"># Basic — previous URL and new URL</span><br>
+          /visual-regression [previous-url] [new-url]<br><br>
+          <span class="comment"># With a custom output folder</span><br>
+          /visual-regression [previous-url] [new-url] [output-dir]
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div class="card" style="padding: 14px 20px;">
+            <p style="font-size: 13px; font-family: 'Consolas', monospace; color: var(--text);">/visual-regression https://site-v110.staging.com https://site-v111.staging.com</p>
+          </div>
+          <div class="card" style="padding: 14px 20px;">
+            <p style="font-size: 13px; font-family: 'Consolas', monospace; color: var(--text);">/visual-regression https://staging.mysite.com https://mysite.com /tmp/regression-prod</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: Prerequisites -->
+  <div class="slide">
+    <div class="content">
+      <p class="category anim anim-d1">Setup</p>
+      <h2 class="anim anim-d2">Prerequisites</h2>
+      <div class="anim anim-d3" style="display: flex; flex-direction: column; gap: 20px;">
+        <p style="font-size: 15px; color: var(--text-secondary);">Run these once per machine. You only need to do this one time.</p>
+        <div class="code-block">
+          pip3 install playwright Pillow<br>
+          python3 -m playwright install chromium
+        </div>
+        <div class="highlight-box">
+          <svg style="width: 20px; height: 20px; color: var(--cmb-blue); flex-shrink: 0; margin-top: 2px;" viewBox="0 0 256 256" fill="currentColor"><path d="M236,128a108,108,0,1,1-108-108A108.12,108.12,0,0,1,236,128Zm-108,88a88,88,0,1,0-88-88A88.1,88.1,0,0,0,128,216Zm0-144a12,12,0,1,0,12,12A12,12,0,0,0,128,72Zm0,40a8,8,0,0,0-8,8v56a8,8,0,0,0,16,0V120A8,8,0,0,0,128,112Z"/></svg>
+          <div>
+            <h4>Already set up?</h4>
+            <p>If someone on your machine has already run these commands, you can skip this step and go straight to running the skill.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: The Workflow -->
+  <div class="slide">
+    <div class="content">
+      <p class="category anim anim-d1">How It Works</p>
+      <h2 class="anim anim-d2">The Workflow</h2>
+      <div class="grid-2 anim anim-d3" style="gap: 12px;">
+        <div class="card step-card">
+          <div class="step-number">1</div>
+          <div><h4>Parse Arguments</h4><p>Reads the two URLs and optional output directory from your command.</p></div>
+        </div>
+        <div class="card step-card">
+          <div class="step-number">2</div>
+          <div><h4>Crawl Public Pages</h4><p>Spiders all public pages, screenshots at desktop and mobile on both environments.</p></div>
+        </div>
+        <div class="card step-card">
+          <div class="step-number">3</div>
+          <div><h4>Registration Flow</h4><p>Automates the sign-up form on both environments, screenshots every step, saves credentials.</p></div>
+        </div>
+        <div class="card step-card">
+          <div class="step-number">4</div>
+          <div><h4>Sign-in Flow</h4><p>Tests valid and invalid login states. Confirms redirect behaviour after login.</p></div>
+        </div>
+        <div class="card step-card">
+          <div class="step-number">5</div>
+          <div><h4>Portal Pages</h4><p>Logs in with test accounts and crawls all authenticated pages behind the login gate.</p></div>
+        </div>
+        <div class="card step-card">
+          <div class="step-number">6</div>
+          <div><h4>Functional QA Sweep</h4><p>Checks broken links, images, JS errors, form validation, and HTTP status on all pages.</p></div>
+        </div>
+        <div class="card step-card">
+          <div class="step-number">7</div>
+          <div><h4>Pixel-Diff</h4><p>Compares every screenshot pair across all sections and calculates percentage change.</p></div>
+        </div>
+        <div class="card step-card">
+          <div class="step-number">8</div>
+          <div><h4>Generate Report</h4><p>Builds a branded 2-tab HTML report and opens it. All screenshots are in one folder.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: Coverage Goals -->
+  <div class="slide">
+    <div class="content">
+      <p class="category anim anim-d1">Test Coverage</p>
+      <h2 class="anim anim-d2">What Gets Tested</h2>
+      <div class="two-col anim anim-d3">
+        <ul class="icon-list">
+          <li>
+            <svg class="check-icon" viewBox="0 0 256 256" fill="currentColor"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg>
+            <span><strong>Public pages</strong> — Home, About, Features, Products, News, FAQs, Contact</span>
+          </li>
+          <li>
+            <svg class="check-icon" viewBox="0 0 256 256" fill="currentColor"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg>
+            <span><strong>Sign-up flow</strong> — every step of the registration form, including error states</span>
+          </li>
+          <li>
+            <svg class="check-icon" viewBox="0 0 256 256" fill="currentColor"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg>
+            <span><strong>Sign-in flow</strong> — valid login, invalid credentials, post-login redirect</span>
+          </li>
+          <li>
+            <svg class="check-icon" viewBox="0 0 256 256" fill="currentColor"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg>
+            <span><strong>Portal / dashboard pages</strong> — My Details, Order History, Overview, Company</span>
+          </li>
+          <li>
+            <svg class="check-icon" viewBox="0 0 256 256" fill="currentColor"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg>
+            <span><strong>System pages</strong> — Privacy Policy, Terms, Forgot Password</span>
+          </li>
+          <li>
+            <svg class="check-icon" viewBox="0 0 256 256" fill="currentColor"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg>
+            <span><strong>Error &amp; confirmation pages</strong> — 404, thank you pages, post-form redirects</span>
+          </li>
+        </ul>
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div class="highlight-box">
+            <svg style="width:20px;height:20px;color:var(--cmb-blue);flex-shrink:0;margin-top:2px;" viewBox="0 0 256 256" fill="currentColor"><path d="M141.66,133.66l-40,40a8,8,0,0,1-11.32-11.32L116.69,136H24a8,8,0,0,1,0-16h92.69L90.34,93.66a8,8,0,0,1,11.32-11.32l40,40A8,8,0,0,1,141.66,133.66ZM192,32H160a8,8,0,0,0,0,16h32V208H160a8,8,0,0,0,0,16h32a16,16,0,0,0,16-16V48A16,16,0,0,0,192,32Z"/></svg>
+            <div>
+              <h4>New: Authenticated Coverage</h4>
+              <p>The tool now registers test accounts and logs in automatically — no manual setup required for portal pages.</p>
+            </div>
+          </div>
+          <div class="highlight-box">
+            <svg style="width:20px;height:20px;color:var(--cmb-blue);flex-shrink:0;margin-top:2px;" viewBox="0 0 256 256" fill="currentColor"><path d="M236.8,188.09,149.35,36.22a24.76,24.76,0,0,0-42.7,0L19.2,188.09a23.51,23.51,0,0,0,0,23.72A24.35,24.35,0,0,0,40.55,224h174.9a24.35,24.35,0,0,0,21.33-12.19A23.51,23.51,0,0,0,236.8,188.09ZM120,144V104a8,8,0,0,1,16,0v40a8,8,0,0,1-16,0Zm20,36a12,12,0,1,1-12-12A12,12,0,0,1,140,180Z"/></svg>
+            <div>
+              <h4>Flags Pages Unique to Each Env</h4>
+              <p>Reports which pages exist only on old, and which are new on the candidate environment.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: Functional QA -->
+  <div class="slide">
+    <div class="content">
+      <p class="category anim anim-d1">Quality Assurance</p>
+      <h2 class="anim anim-d2">Functional QA Sweep</h2>
+      <div class="grid-2 anim anim-d3">
+        <div class="card">
+          <div class="icon-box blue">
+            <svg viewBox="0 0 256 256" fill="currentColor"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm88,104a87.47,87.47,0,0,1-5.46,30.17L183.41,135.4A15.89,15.89,0,0,0,184,131V117.57l19.8-19.8A87.57,87.57,0,0,1,216,128ZM40.44,99.64,60,119.2v11.4a16,16,0,0,0,4.69,11.31l9,9A16,16,0,0,0,85,155.2v12.08l-9.45,26.3A88,88,0,0,1,40.44,99.64ZM128,216a87.85,87.85,0,0,1-44.79-12.22L92,177.33A16.08,16.08,0,0,0,93.06,172V162a16,16,0,0,0-4.69-11.31l-9-9A16,16,0,0,0,68,137.6V113.7L44.56,90.26A88,88,0,0,1,170.36,42.4l-14,22.38A16,16,0,0,0,153,78.26v9.5a16,16,0,0,0,6.11,12.57l14.1,10.58A15.94,15.94,0,0,0,183,114h3.1l23.21,23.21A88.07,88.07,0,0,1,128,216Z"/></svg>
+          </div>
+          <h3>Links &amp; Navigation</h3>
+          <p>All internal links, nav menus, and footer links checked for 404s and broken paths.</p>
+        </div>
+        <div class="card">
+          <div class="icon-box emerald">
+            <svg viewBox="0 0 256 256" fill="currentColor"><path d="M208,56H180.28L166.65,35.56A8,8,0,0,0,160,32H96a8,8,0,0,0-6.65,3.56L75.71,56H48A24,24,0,0,0,24,80V192a24,24,0,0,0,24,24H208a24,24,0,0,0,24-24V80A24,24,0,0,0,208,56Zm8,136a8,8,0,0,1-8,8H48a8,8,0,0,1-8-8V80a8,8,0,0,1,8-8H80a8,8,0,0,0,6.66-3.56L100.28,48h55.43l13.63,20.44A8,8,0,0,0,176,72h32a8,8,0,0,1,8,8ZM128,88a44,44,0,1,0,44,44A44.05,44.05,0,0,0,128,88Zm0,72a28,28,0,1,1,28-28A28,28,0,0,1,128,160Z"/></svg>
+          </div>
+          <h3>Broken Images</h3>
+          <p>Every image src is verified. Broken or missing images are flagged in the QA report.</p>
+        </div>
+        <div class="card">
+          <div class="icon-box amber">
+            <svg viewBox="0 0 256 256" fill="currentColor"><path d="M224,48H32a8,8,0,0,0-8,8V192a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A8,8,0,0,0,224,48ZM40,112H80v32H40Zm56,0H216v32H96Zm120-16H40V64H216ZM40,160H80v32H40Zm56,0H216v32H96Z"/></svg>
+          </div>
+          <h3>Form Validation</h3>
+          <p>Required fields, invalid inputs, and error messages all tested. Empty submissions are screenshotted.</p>
+        </div>
+        <div class="card">
+          <div class="icon-box red">
+            <svg viewBox="0 0 256 256" fill="currentColor"><path d="M236.8,188.09,149.35,36.22a24.76,24.76,0,0,0-42.7,0L19.2,188.09a23.51,23.51,0,0,0,0,23.72A24.35,24.35,0,0,0,40.55,224h174.9a24.35,24.35,0,0,0,21.33-12.19A23.51,23.51,0,0,0,236.8,188.09ZM120,144V104a8,8,0,0,1,16,0v40a8,8,0,0,1-16,0Zm20,36a12,12,0,1,1-12-12A12,12,0,0,1,140,180Z"/></svg>
+          </div>
+          <h3>JS Console Errors</h3>
+          <p>JavaScript errors thrown during page load are captured and listed per page in the QA tab.</p>
+        </div>
+        <div class="card">
+          <div class="icon-box blue">
+            <svg viewBox="0 0 256 256" fill="currentColor"><path d="M224,200h-8V40a8,8,0,0,0-8-8H152a8,8,0,0,0-8,8V88H96a8,8,0,0,0-8,8v48H48a8,8,0,0,0-8,8v48H32a8,8,0,0,0,0,16H224a8,8,0,0,0,0-16ZM160,48h40V200H160Zm-56,56h40V200H104ZM56,160H88v40H56Z"/></svg>
+          </div>
+          <h3>HTTP Status Sweep</h3>
+          <p>Every crawled URL is checked for 4xx and 5xx responses on both environments.</p>
+        </div>
+        <div class="card">
+          <div class="icon-box emerald">
+            <svg viewBox="0 0 256 256" fill="currentColor"><path d="M215.79,118.17a8,8,0,0,0-5-5.66L153.18,90.9l14.66-73.33a8,8,0,0,0-13.69-7l-112,120a8,8,0,0,0,3,12.95l57.63,21.61L88.16,238.43a8,8,0,0,0,13.69,7l112-120A8,8,0,0,0,215.79,118.17Z"/></svg>
+          </div>
+          <h3>Page Performance</h3>
+          <p>Load times are recorded per page. Pages that become 2x slower on the new env are flagged.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: What the Report Shows -->
+  <div class="slide">
+    <div class="content">
+      <p class="category anim anim-d1">Output</p>
+      <h2 class="anim anim-d2">What the Report Shows</h2>
+      <div class="two-col anim anim-d3">
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div class="card">
+            <div class="icon-box blue">
+              <svg viewBox="0 0 256 256" fill="currentColor"><path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,160H40V56H216V200ZM80,84A12,12,0,1,1,68,72,12,12,0,0,1,80,84Zm40,0a12,12,0,1,1-12-12A12,12,0,0,1,120,84Zm40,0a12,12,0,1,1-12-12A12,12,0,0,1,160,84Z"/></svg>
+            </div>
+            <h3>Tab 1 — Regression Report</h3>
+            <p>One combined table. Rows grouped by section: Public Pages, Sign-up Flow, Sign-in Flow, Portal Pages. Each row shows HTTP status, URLs, diff bars, and screenshot links.</p>
+          </div>
+          <div class="card">
+            <div class="icon-box red">
+              <svg viewBox="0 0 256 256" fill="currentColor"><path d="M236.8,188.09,149.35,36.22a24.76,24.76,0,0,0-42.7,0L19.2,188.09a23.51,23.51,0,0,0,0,23.72A24.35,24.35,0,0,0,40.55,224h174.9a24.35,24.35,0,0,0,21.33-12.19A23.51,23.51,0,0,0,236.8,188.09ZM120,144V104a8,8,0,0,1,16,0v40a8,8,0,0,1-16,0Zm20,36a12,12,0,1,1-12-12A12,12,0,0,1,140,180Z"/></svg>
+            </div>
+            <h3>Tab 2 — Functional QA</h3>
+            <p>Structured findings table with Severity, Area, Affects, and Finding columns. Covers broken links, images, JS errors, form issues, and 404s.</p>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <p style="font-size: 14px; font-weight: 600; color: var(--text);">Table columns (Regression tab):</p>
+          <ul class="icon-list">
+            <li><svg class="blue-icon" viewBox="0 0 256 256" fill="currentColor"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg><span>Previous env — HTTP badge + page URL</span></li>
+            <li><svg class="blue-icon" viewBox="0 0 256 256" fill="currentColor"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg><span>New env — HTTP badge + page URL</span></li>
+            <li><svg class="blue-icon" viewBox="0 0 256 256" fill="currentColor"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg><span>Status badge (Changed / Same / 404)</span></li>
+            <li><svg class="blue-icon" viewBox="0 0 256 256" fill="currentColor"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg><span>Diff bars — desktop % and mobile %</span></li>
+            <li><svg class="blue-icon" viewBox="0 0 256 256" fill="currentColor"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg><span>Screenshot links — Diff, Old, New (D + M)</span></li>
+          </ul>
+          <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">All screenshots in one folder. Zip and share — no broken links.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: Output Files -->
+  <div class="slide">
+    <div class="content">
+      <p class="category anim anim-d1">Output</p>
+      <h2 class="anim anim-d2">Output Files</h2>
+      <div class="anim anim-d3" style="display: flex; flex-direction: column; gap: 0;">
+        <div class="file-row">
+          <span class="file-name">report.html</span>
+          <span class="file-desc">Full branded 2-tab report — Regression Report + Functional QA. Open this first.</span>
+        </div>
+        <div class="file-row">
+          <span class="file-name">credentials.json</span>
+          <span class="file-desc">Test account emails and password for both environments. Reused on re-runs to avoid duplicate registrations.</span>
+        </div>
+        <div class="file-row">
+          <span class="file-name">results.json</span>
+          <span class="file-desc">Raw diff data for public pages (path, slug, diff percentages).</span>
+        </div>
+        <div class="file-row">
+          <span class="file-name">results_signup.json</span>
+          <span class="file-desc">Sign-up flow step data — diff % per step at desktop and mobile.</span>
+        </div>
+        <div class="file-row">
+          <span class="file-name">results_auth.json</span>
+          <span class="file-desc">Portal pages diff data — authenticated pages only, compared after login.</span>
+        </div>
+        <div class="file-row">
+          <span class="file-name">results_qa.json</span>
+          <span class="file-desc">Functional QA findings — broken links, images, JS errors, form validation, HTTP status, performance.</span>
+        </div>
+        <div class="file-row">
+          <span class="file-name">old/new/diff_*.png</span>
+          <span class="file-desc">All screenshots (public, sign-up, portal) at desktop and mobile — in one flat folder, ready to zip and share.</span>
+        </div>
+      </div>
+      <p class="anim anim-d4" style="font-size: 13px; color: var(--text-muted); margin-top: 16px;">All files are saved to one flat folder: <span style="font-family: monospace; color: var(--cmb-blue);">output/regression/[date-label]/</span> — zip the folder and share it with no broken links.</p>
+    </div>
+  </div>
+
+  <!-- SLIDE 11: Tips & Best Practices -->
+  <div class="slide">
+    <div class="content">
+      <p class="category anim anim-d1">Best Practices</p>
+      <h2 class="anim anim-d2">Tips for Better Results</h2>
+      <div class="grid-2 anim anim-d3">
+        <div class="card">
+          <div class="icon-box blue">
+            <!-- Phosphor: Database -->
+            <svg viewBox="0 0 256 256" fill="currentColor"><path d="M128,24C74.17,24,32,48.6,32,80v96c0,31.4,42.17,56,96,56s96-24.6,96-56V80C224,48.6,181.83,24,128,24Zm80,104c0,9.62-7.88,19.43-21.61,26.92C170.91,163.35,150.19,168,128,168s-42.91-4.65-58.39-13.08C55.88,147.43,48,137.62,48,128V111.36c17.06,15,46.23,24.64,80,24.64s62.94-9.68,80-24.64Zm-21.61,74.92C170.91,211.35,150.19,216,128,216s-42.91-4.65-58.39-13.08C55.88,195.43,48,185.62,48,176V159.36c17.06,15,46.23,24.64,80,24.64s62.94-9.68,80-24.64V176C208,185.62,200.12,195.43,186.39,202.92ZM186.39,106.92C170.91,115.35,150.19,120,128,120s-42.91-4.65-58.39-13.08C55.88,99.43,48,89.62,48,80c0-18.91,35.82-40,80-40s80,21.09,80,40C208,89.62,200.12,99.43,186.39,106.92Z"/></svg>
+          </div>
+          <h3>Match seed data first</h3>
+          <p>Confirm both environments are seeded from the same data snapshot before running. Different products or content cause false positives.</p>
+        </div>
+        <div class="card">
+          <div class="icon-box emerald">
+            <!-- Phosphor: ArrowCounterClockwise -->
+            <svg viewBox="0 0 256 256" fill="currentColor"><path d="M224,128a96,96,0,1,1-96-96A95.38,95.38,0,0,1,184.35,60l7.29-7.29a16,16,0,0,1,22.63,22.63L192,97.37A16,16,0,0,1,169.37,97.37L147.54,75.54a16,16,0,0,1,22.63-22.63l3.41,3.41A72,72,0,1,0,200,128a8,8,0,0,1,16,0Z"/></svg>
+          </div>
+          <h3>Re-run flaky diffs</h3>
+          <p>Dynamic content (carousels, timestamps, live data) causes noise. Re-screenshot any page with an unexpectedly high diff before flagging it as changed.</p>
+        </div>
+        <div class="card">
+          <div class="icon-box amber">
+            <!-- Phosphor: Key -->
+            <svg viewBox="0 0 256 256" fill="currentColor"><path d="M152,32a88,88,0,1,0,85.37,66.17L240,96a16,16,0,0,0-11.31-4.69H224V80a16,16,0,0,0-16-16H196.69A88.08,88.08,0,0,0,152,32Zm0,16a72.08,72.08,0,0,1,68.51,50.13A8,8,0,0,0,228,104h-4v16a8,8,0,0,0,8,8h-8v16a8,8,0,0,1-8,8H204a8,8,0,0,1-8-8v-8a8,8,0,0,0-8-8H176a8,8,0,0,0-8,8v4.11A72,72,0,1,1,152,48Z"/></svg>
+          </div>
+          <h3>Note credentials in Teamwork</h3>
+          <p>If the project requires admin activation of test accounts, save the test emails in a Teamwork task comment so the team can activate them in the admin panel.</p>
+        </div>
+        <div class="card">
+          <div class="icon-box red">
+            <!-- Phosphor: SortDescending -->
+            <svg viewBox="0 0 256 256" fill="currentColor"><path d="M231.39,123.06A8,8,0,0,0,224,120H32a8,8,0,0,0-5.66,13.66l96,96a8,8,0,0,0,11.32,0l96-96A8,8,0,0,0,231.39,123.06ZM128,212.69,51.31,136H204.69ZM32,80H224a8,8,0,0,0,0-16H32a8,8,0,0,0,0,16Zm48-48H224a8,8,0,0,0,0-16H80a8,8,0,0,0,0,16Z"/></svg>
+          </div>
+          <h3>Review highest diffs first</h3>
+          <p>Sort the report by diff percentage. Pages sharing the same template (e.g. product filter variants) will all appear — focus on the highest % first to cut through the noise.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 12: Benefits -->
+  <div class="slide">
+    <div class="content">
+      <p class="category anim anim-d1">Why Use It</p>
+      <h2 class="anim anim-d2">Benefits for the Team</h2>
+      <div class="grid-2 anim anim-d3">
+        <div class="card">
+          <div class="icon-box blue">
+            <!-- Phosphor: Lightning -->
+            <svg viewBox="0 0 256 256" fill="currentColor"><path d="M215.79,118.17a8,8,0,0,0-5-5.66L153.18,90.9l14.66-73.33a8,8,0,0,0-13.69-7l-112,120a8,8,0,0,0,3,12.95l57.63,21.61L88.16,238.43a8,8,0,0,0,13.69,7l112-120A8,8,0,0,0,215.79,118.17Z"/></svg>
+          </div>
+          <h3>Full-Coverage QA in One Run</h3>
+          <p>Public pages, sign-up flow, portal pages, and functional QA all run automatically. No manual side-by-side comparison needed.</p>
+        </div>
+        <div class="card">
+          <div class="icon-box emerald">
+            <!-- Phosphor: UserCircle -->
+            <svg viewBox="0 0 256 256" fill="currentColor"><path d="M172,120a44,44,0,1,1-44-44A44.05,44.05,0,0,1,172,120Zm60,8A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88.09,88.09,0,1,0-91.47,87.93,83.54,83.54,0,0,0-27.17,21.5,87.92,87.92,0,0,0,77.28,0,83.54,83.54,0,0,0-27.17-21.5A88,88,0,0,0,216,128Z"/></svg>
+          </div>
+          <h3>Authenticated Pages Tested</h3>
+          <p>Registers a test account, logs in, and crawls the full portal. Account pages, order history, and dashboard views are all compared.</p>
+        </div>
+        <div class="card">
+          <div class="icon-box amber">
+            <!-- Phosphor: MagnifyingGlass -->
+            <svg viewBox="0 0 256 256" fill="currentColor"><path d="M229.66,218.34l-50.06-50.07a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.31-11.31ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"/></svg>
+          </div>
+          <h3>Functional Issues Surfaced</h3>
+          <p>Broken links, missing images, JS console errors, and form validation failures are flagged — not just visual differences.</p>
+        </div>
+        <div class="card">
+          <div class="icon-box red">
+            <!-- Phosphor: Warning -->
+            <svg viewBox="0 0 256 256" fill="currentColor"><path d="M236.8,188.09,149.35,36a24.76,24.76,0,0,0-42.7,0L19.2,188.09a23.51,23.51,0,0,0,0,23.72A24.35,24.35,0,0,0,40.55,224h174.9a24.35,24.35,0,0,0,21.33-12.19A23.51,23.51,0,0,0,236.8,188.09ZM120,104a8,8,0,0,1,16,0v40a8,8,0,0,1-16,0Zm8,88a12,12,0,1,1,12-12A12,12,0,0,1,128,192Z"/></svg>
+          </div>
+          <h3>404s and HTTP Errors Caught</h3>
+          <p>Every URL is checked on both environments. Pages that are 404 on one side but live on the other are immediately flagged in the report.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 13: Closing -->
+  <div class="slide center hero">
+    <div class="anim anim-d1" style="margin-bottom: 24px;">
+      <svg width="64" height="64" viewBox="0 0 141 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g fill="var(--text)">
+          <path d="M140,41.53v-.65a.36.36,0,0,0-.09-.28v-.09a.09.09,0,0,0-.1-.09.09.09,0,0,0-.09-.09v-.1l-.09-.09a.09.09,0,0,0-.1-.09c0-.1-.09-.1-.09-.19l-.09-.09a.1.1,0,0,0-.1-.1l-.09-.09-.09-.09-.1-.09-.09-.1-.09-.09-.1-.09a.09.09,0,0,1-.09-.1l-.09-.09-.1-.09L71.63.42a3.37,3.37,0,0,0-3.26,0L1.59,38.74a.1.1,0,0,0-.1.1.09.09,0,0,0-.09.09.09.09,0,0,0-.09.09l-.1.1-.09.09L1,39.3l-.1.1-.09.09-.09.09-.1.09-.09.1c0,.09-.09.09-.09.18a.1.1,0,0,1-.1.1l-.09.09v.09s0,.1-.09.1a.09.09,0,0,1-.1.09v.09c0,.09-.09.19-.09.28v77.77c0,.18.09.46.09.65v.09c.1.19.19.47.28.65a2.37,2.37,0,0,0,.47.56l.09.09a2.22,2.22,0,0,0,.56.38h.1L68.37,159.4c.09,0,.09.09.18.09s.1.09.19.09H69c.09,0,.09,0,.19.09h1.68c.09,0,.09,0,.18-.09h.28c.1,0,.1-.09.19-.09s.09-.09.19-.09L138.51,121h.09c.19-.1.37-.28.56-.38l.09-.09a3.19,3.19,0,0,0,.75-1.21v-.09a1.65,1.65,0,0,0,.09-.65v-77ZM15.41,43.4,64,37.81,49.22,63.21,36.42,85.35,8.87,44.14ZM44.27,84.79,70.05,40.33l27.74,47.9H42.21Zm53.8,9.95L70,149.63l-28-54.89Zm5.51-9.39L76,37.91l55,6.32L118,63.77ZM12.23,60.88l20.08,30L6.54,111.58V52.23Zm92.19,35.63,10.18,8.19,16.34,13.21L77.8,148.51Zm3.26-5.67,20.08-30,5.7-8.55v59.25ZM73.22,31V8.79L121.51,36.6ZM66.78,8.79V31L18.49,36.6ZM9,117.91,25.31,104.7l10.18-8.19L51.27,127.4l10.84,21.11Z"/>
+        </g>
+      </svg>
+    </div>
+    <h2 class="anim anim-d2">Ready to Use</h2>
+    <p class="subtitle anim anim-d3" style="margin-top: 12px;">Run <span style="font-family: 'Consolas', monospace; color: var(--cmb-blue); font-size: 18px;">/visual-regression</span> with two URLs to get started.</p>
+    <p class="meta anim anim-d4" style="margin-top: 48px;">combinate.me</p>
+  </div>
+
+  <!-- Navigation bar -->
+  <div class="nav-bar">
+    <div class="nav-logo">
+      <svg height="20" viewBox="0 0 704 162" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g fill="var(--text-secondary)">
+          <path d="M224.9,101.9c-4.3-3.9-6.6-9.5-6.9-16.8v-7.9c0.3-7.2,2.6-12.5,6.9-16.8c4.3-3.9,10.2-5.9,17.5-5.9c5.3,0,9.6,1,13.2,2.6c3.6,2,6.3,3.9,7.9,6.9c1.6,2.6,2.6,5.3,3,7.6c0,0.7,0,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-8.9c-0.7,0-1.3,0-1.6-0.3c-0.3-0.3-0.7-1-1-1.6c-1-2.6-2.3-4.3-4-5.3c-1.6-1-3.6-1.6-6.3-1.6c-3.3,0-5.9,1-7.9,3.3c-2,2-3,5.3-3,9.5v6.9c0.3,8.5,4,12.8,10.9,12.8c2.6,0,4.6-0.7,6.3-1.6c1.6-1,3-3,4-5.6c0.3-0.7,0.7-1.3,1-1.6c0.3-0.3,1-0.3,1.6-0.3h8.9c0.7,0,1.3,0.3,1.6,0.7c0.3,0.3,0.7,1,0.7,1.6c0,2.3-1,4.9-2.6,7.6c-1.6,2.6-4.3,4.9-7.9,6.9c-3.6,2-7.9,3-13.2,3C235.1,107.8,229.2,105.8,224.9,101.9z"/><path d="M277.3,101.9c-4.3-3.9-6.6-9.5-6.9-16.4v-8.5c0.3-6.9,2.6-12.2,6.9-16.4c4.3-3.9,10.2-5.9,17.8-5.9c7.6,0,13.5,2,17.8,5.9c4.3,3.9,6.6,9.5,6.9,16.4c0,0.7,0,2.3,0,4.3c0,2,0,3.6,0,4.3c-0.3,6.9-2.6,12.5-6.9,16.4c-4.3,3.9-10.2,5.9-17.8,5.9C287.5,107.8,281.6,105.8,277.3,101.9z M303.4,94.7c2-2.3,3-5.3,3-9.5c0-0.7,0-2,0-3.9c0-2,0-3.3,0-3.9c0-4.3-1-7.6-3-9.5c-2-2.3-4.6-3.3-7.9-3.3c-3.6,0-6.3,1-8.2,3.3c-2,2.3-3,5.3-3,9.5v7.9c0,4.3,1,7.2,3,9.5c2,2.3,4.6,3.3,8.2,3.3C298.7,98,301.7,97,303.4,94.7z"/><path d="M327.7,106.2c-0.3-0.3-0.7-1-0.7-1.6V58.2c0-0.7,0.3-1.3,0.7-1.6c0.3-0.3,1-0.7,1.6-0.7h7.9c0.7,0,1.3,0.3,1.6,0.7c0.3,0.3,0.7,1,0.7,1.6v3.3c3.6-4.6,8.2-6.6,14.2-6.6c7.3,0,12.5,3,15.2,8.9c1.6-2.6,4-4.6,6.6-6.2c3-1.6,5.9-2.3,9.2-2.3c5.3,0,9.9,2,13.2,5.6c3.3,3.6,5.3,8.9,5.3,16.1v28.3c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-8.2c-0.7,0-1.3-0.3-1.6-0.7c-0.3-0.3-0.7-1-0.7-1.6V77.6c0-4.3-1-7.2-2.6-8.9c-1.6-2-4-2.6-6.9-2.6c-2.6,0-4.6,1-6.6,3c-1.6,2-2.6,4.9-2.6,8.9v27.6c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7H361c-0.7,0-1.3-0.3-1.6-0.7c-0.3-0.3-0.7-1-0.7-1.6V77.9c0-3.9-1-6.9-2.6-8.9c-1.6-2-4-3-6.9-3c-2.6,0-4.6,1-6.6,3c-1.6,2-2.6,4.9-2.6,8.9v27.6c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-8.2C329.1,106.8,328.4,106.8,327.7,106.2z"/><path d="M425.3,100.9v3.6c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-7.9c-0.7,0-1.3-0.3-1.6-0.7c-0.3-0.3-0.7-1-0.7-1.6V39.5c0-0.7,0.3-1.3,0.7-1.6c0.3-0.3,1-0.7,1.6-0.7h8.6c0.7,0,1.3,0.3,1.6,0.7c0.3,0.3,0.7,1,0.7,1.6v21.7c3.6-4.3,8.6-6.6,15.2-6.6c6.6,0,11.9,2.3,15.5,6.6s5.6,9.9,5.6,16.8c0,0.7,0,2,0,3.3s0,2.3,0,3.3c-0.3,7.2-2.3,12.8-5.6,17.1c-3.6,4.3-8.6,6.2-15.2,6.2C434.2,107.8,428.9,105.5,425.3,100.9z M448.4,84.5c0-0.7,0-1.6,0-3s0-2.3,0-3c-0.3-8.5-4.3-13.1-11.2-13.1c-3.6,0-6.3,1-8.2,3.3c-2,2.3-3,4.9-3,8.2c0,0.7,0,2,0,3.9c0,1.6,0,3,0,3.6c0,3.6,1,6.6,3,8.9c2,2.3,4.6,3.6,8.2,3.6C444.1,97.3,448,93,448.4,84.5z"/><path d="M469.5,46.7c-0.3-0.3-0.7-1-0.7-1.6v-7.2c0-0.7,0.3-1.3,0.7-1.6c0.3-0.3,1-0.7,1.6-0.7h9.2c0.7,0,1.3,0.3,1.6,0.7c0.3,0.3,0.7,1,0.7,1.6V45c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-9.2C470.5,47.3,469.8,47.3,469.5,46.7z M469.8,106.2c-0.3-0.3-0.7-1-0.7-1.6V58.2c0-0.7,0.3-1.3,0.7-1.6c0.3-0.3,1-0.7,1.6-0.7h8.2c0.7,0,1.3,0.3,1.6,0.7c0.3,0.3,0.7,1,0.7,1.6v46.3c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-8.2C470.8,106.8,470.1,106.8,469.8,106.2z"/><path d="M491.9,106.2c-0.3-0.3-0.7-1-0.7-1.6V58.2c0-0.7,0.3-1.3,0.7-1.6c0.3-0.3,1-0.7,1.6-0.7h8.2c0.7,0,1.3,0.3,1.6,0.7c0.3,0.3,0.7,1,0.7,1.6v3.9c4-4.9,9.6-7.2,16.5-7.2c5.9,0,10.9,2,14.5,5.9c3.6,3.9,5.3,9.2,5.3,16.1v27.6c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-8.9c-0.7,0-1.3-0.3-1.6-0.7c-0.3-0.3-0.7-1-0.7-1.6V77.6c0-3.9-1-6.9-3-8.9c-2-2-4.6-3.3-7.9-3.3c-3.3,0-5.9,1-8.2,3.3c-2,2.3-3,5.3-3,8.9v26.9c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-8.9C492.9,106.8,492.5,106.8,491.9,106.2z"/><path d="M554.5,105.8c-2.6-1.3-4.9-3.3-6.6-5.6c-1.6-2.3-2.3-4.9-2.3-7.6c0-4.6,1.6-8.2,5.3-10.8s8.6-4.6,14.8-5.6l13.5-2v-2c0-3-0.7-4.9-2.3-6.2c-1.3-1.3-3.6-2.3-6.9-2.3c-2.3,0-4,0.3-5.3,1.3c-1.3,0.7-2.3,1.6-3.3,2.3c-0.7,0.7-1.3,1.3-1.6,1.6c-0.3,0.7-0.7,1.3-1.3,1.3h-7.2c-0.7,0-1-0.3-1.6-0.7c-0.3-0.3-0.7-1-0.7-1.6c0-1.6,1-3.6,2.3-5.6c1.6-2,4-3.9,7.2-5.3c3.3-1.6,7.3-2.3,11.9-2.3c7.9,0,13.5,1.6,17.1,5.3c3.6,3.6,5.3,7.9,5.3,13.8v30.9c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-8.2c-0.7,0-1.3-0.3-1.6-0.7c-0.3-0.3-0.7-1-0.7-1.6v-3.9c-1.3,2-3.6,3.9-6.3,5.3c-2.6,1.3-5.9,2-9.9,2C560.4,107.8,557.5,107.2,554.5,105.8z M576.2,95c2.3-2.3,3.3-5.9,3.3-10.2v-2l-9.9,1.6c-7.6,1.3-11.2,3.6-11.2,7.6c0,2,1,3.6,2.6,4.9c1.6,1,4,1.6,6.3,1.6C571,98.6,573.9,97.3,576.2,95z"/><path d="M610.9,102.2c-3-3-4.6-7.6-4.6-13.8V66.1h-7.9c-0.7,0-1.3-0.3-1.6-0.7c-0.3-0.3-0.7-1-0.7-1.6v-5.9c0-0.7,0.3-1.3,0.7-1.6c0.3-0.3,1-0.7,1.6-0.7h7.9V39.1c0-0.7,0.3-1.3,0.7-1.6c0.3-0.3,1-0.7,1.6-0.7h8.2c0.7,0,1.3,0.3,1.6,0.7c0.3,0.3,0.7,1,0.7,1.6v16.4h12.2c0.7,0,1.3,0.3,1.6,0.7c0.3,0.3,0.7,1,0.7,1.6v5.9c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-12.2v21c0,3,0.3,4.9,1.3,6.2s2.6,2.3,4.9,2.3h6.9c0.7,0,1.3,0.3,1.6,0.7c0.3,0.3,0.7,1,0.7,1.6v6.2c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7H624C618.4,106.8,613.8,105.5,610.9,102.2z"/><path d="M644.1,101.6c-4.3-4.3-6.6-10.2-6.9-18.1v-2.3c0-8.2,2.3-14.8,6.6-19.4c4.3-4.6,10.2-7.2,17.8-7.2c7.9,0,13.8,2.3,18.1,7.2C684,66.4,686,73,686,80.5v2c0,0.7-0.3,1.3-0.7,1.6c-0.3,0.3-1,0.7-1.6,0.7h-32.6v0.7c0,3.6,1,6.6,3,9.2c2,2.3,4.6,3.6,7.9,3.6c3.6,0,6.9-1.6,9.2-4.6c0.7-0.7,1-1.3,1.3-1.3c0.3,0,1-0.3,1.6-0.3h8.6c0.7,0,1,0.3,1.6,0.3c0.3,0.3,0.7,0.7,0.7,1.3c0,1.6-1,3.3-3,5.6c-2,2-4.6,3.9-7.9,5.6c-3.6,1.6-7.6,2.3-12.2,2.3C654.4,107.8,648.4,105.8,644.1,101.6z M672.5,76.9c0-3.9-1-7.2-3-9.5c-2-2.3-4.6-3.6-7.9-3.6c-3.3,0-5.9,1.3-7.9,3.6c-2,2.3-3,5.6-3,9.2v0.3H672.5z"/>
+          <path d="M140,42.6C140,42.5,140,42.5,140,42.6c0-0.2,0-0.3,0-0.4v-0.1c0,0,0,0,0-0.1V42c0-0.1,0-0.2-0.1-0.3v-0.1c0,0,0-0.1-0.1-0.1c0,0,0-0.1-0.1-0.1v-0.1l-0.1-0.1c0,0,0-0.1-0.1-0.1c0-0.1-0.1-0.1-0.1-0.2l-0.1-0.1c0,0,0-0.1-0.1-0.1c0,0,0,0-0.1-0.1l-0.1-0.1l-0.1-0.1l-0.1-0.1l-0.1-0.1l-0.1-0.1c0,0-0.1,0-0.1-0.1l-0.1-0.1c0,0,0,0-0.1-0.1L71.6,1.5c-1-0.6-2.2-0.6-3.3,0L1.6,39.8c0,0-0.1,0-0.1,0.1c0,0-0.1,0-0.1,0.1c0,0-0.1,0-0.1,0.1l-0.1,0.1l-0.1,0.1L1,40.4l-0.1,0.1l-0.1,0.1c0,0,0,0-0.1,0.1l-0.1,0.1l-0.1,0.1c0,0.1-0.1,0.1-0.1,0.2c0,0,0,0.1-0.1,0.1l-0.1,0.1v0.1c0,0,0,0.1-0.1,0.1c0,0,0,0.1-0.1,0.1v0.1c0,0.1-0.1,0.2-0.1,0.3V42c0,0,0,0,0,0.1v0.1c0,0.1,0,0.2,0,0.3v0.1v76.7c0,0.1,0,0.1,0,0.2c0,0,0,0,0,0.1c0,0,0,0,0,0.1c0,0.2,0.1,0.5,0.1,0.7v0.1c0.1,0.2,0.2,0.5,0.3,0.7c0.1,0.2,0.3,0.4,0.5,0.6l0.1,0.1c0.2,0.2,0.4,0.3,0.6,0.4c0,0,0,0,0.1,0l66.8,38.4c0.1,0,0.1,0.1,0.2,0.1s0.1,0.1,0.2,0.1c0,0,0,0,0.1,0h0.1H69c0.1,0,0.1,0,0.2,0.1c0.1,0,0.1,0,0.2,0h0.1h0.1c0.2,0,0.3,0,0.5,0s0.3,0,0.5,0h0.1h0.1c0.1,0,0.1,0,0.2,0s0.1,0,0.2-0.1h0.1h0.1c0,0,0,0,0.1,0s0.1-0.1,0.2-0.1s0.1-0.1,0.2-0.1l66.8-38.4c0,0,0,0,0.1,0c0.2-0.1,0.4-0.3,0.6-0.4l0.1-0.1c0.4-0.4,0.6-0.7,0.7-1.2v-0.1c0.1-0.2,0.1-0.5,0.1-0.7c0,0,0,0,0-0.1c0,0,0,0,0-0.1c0-0.1,0-0.1,0-0.2L140,42.6L140,42.6z M15.4,44.5L64,38.9L49.2,64.3L36.4,86.4L8.9,45.2L15.4,44.5z M44.3,85.9L70,41.4l27.7,47.9H42.2L44.3,85.9z M98.1,95.8L70,150.7l-28-54.9H98.1z M103.6,86.4L76,39l55,6.3L118,64.8L103.6,86.4z M12.2,62l20.1,30L6.5,112.7V53.3L12.2,62z M104.4,97.6l10.2,8.2l16.3,13.2l-53.1,30.6L104.4,97.6z M107.7,91.9l20.1-30l5.7-8.6v59.3L107.7,91.9z M73.2,32.1V9.9l48.3,27.8L73.2,32.1z M66.8,9.9v22.2l-48.3,5.6L66.8,9.9z M9,119l16.3-13.2l10.2-8.2l15.8,30.9l10.8,21.1L9,119z"/>
+        </g>
+      </svg>
+    </div>
+    <div class="theme-toggle" id="themeToggle">
+      <button onclick="setTheme('dark')" title="Dark theme" id="btnDark">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+      </button>
+      <button onclick="setTheme('light')" title="Light theme" id="btnLight">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      </button>
+      <button onclick="setTheme('mixed')" title="Mixed theme" id="btnMixed">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 000 20V2z" fill="currentColor"/></svg>
+      </button>
+    </div>
+    <div class="nav-dots" id="navDots"></div>
+    <div class="nav-right">
+      <span class="nav-counter" id="navCounter"></span>
+      <button class="nav-btn" id="btnPrev" onclick="prevSlide()">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <button class="nav-btn" id="btnNext" onclick="nextSlide()">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    let currentTheme = 'mixed';
+    function setTheme(theme) {
+      currentTheme = theme;
+      document.body.className = 'theme-' + theme;
+      document.querySelectorAll('.theme-toggle button').forEach(b => b.classList.remove('active'));
+      document.getElementById('btn' + theme.charAt(0).toUpperCase() + theme.slice(1)).classList.add('active');
+      const url = new URL(window.location);
+      url.searchParams.set('theme', theme);
+      history.replaceState(null, '', url);
+    }
+    const urlTheme = new URLSearchParams(window.location.search).get('theme');
+    setTheme(['dark','light','mixed'].includes(urlTheme) ? urlTheme : 'mixed');
+
+    let current = 0;
+    const slides = document.querySelectorAll('.slide');
+    const total = slides.length;
+    const dotsContainer = document.getElementById('navDots');
+
+    for (let i = 0; i < total; i++) {
+      const dot = document.createElement('button');
+      dot.className = 'nav-dot';
+      dot.onclick = () => goToSlide(i);
+      dotsContainer.appendChild(dot);
+    }
+
+    function goToSlide(index) {
+      slides.forEach(s => s.classList.remove('active'));
+      dotsContainer.querySelectorAll('.nav-dot').forEach(d => d.classList.remove('active'));
+      current = index;
+      slides[current].classList.add('active');
+      dotsContainer.children[current].classList.add('active');
+      document.getElementById('navCounter').textContent = `${current + 1} / ${total}`;
+      document.getElementById('progressFill').style.width = `${((current + 1) / total) * 100}%`;
+      document.getElementById('btnPrev').disabled = current === 0;
+      document.getElementById('btnNext').disabled = current === total - 1;
+      const url = new URL(window.location);
+      url.hash = current + 1;
+      history.replaceState(null, '', url);
+    }
+
+    function nextSlide() { if (current < total - 1) goToSlide(current + 1); }
+    function prevSlide() { if (current > 0) goToSlide(current - 1); }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+    });
+
+    window.addEventListener('hashchange', () => {
+      const slideNum = parseInt(window.location.hash.replace('#', ''), 10);
+      if (slideNum >= 1 && slideNum <= total && slideNum - 1 !== current) goToSlide(slideNum - 1);
+    });
+
+    const hashSlide = parseInt(window.location.hash.replace('#', ''), 10);
+    goToSlide(hashSlide >= 1 && hashSlide <= total ? hashSlide - 1 : 0);
+  </script>
+</body>
+</html>

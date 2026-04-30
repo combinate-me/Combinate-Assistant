@@ -13,6 +13,7 @@ Central reference for all brand assets, guidelines, and source files.
 ## What's in This Folder
 
 - `brand-guidelines.md` - Full brand rules: colours, typography, logo usage, imagery, templates
+- `CMB - Presentation Template - External v2.0.pptx` - **Official client presentation template** (use this for all client-facing decks)
 - `Logo/` - Exported logo files in EPS, JPG, PNG, and SVG formats
 
 ## Logo Assets

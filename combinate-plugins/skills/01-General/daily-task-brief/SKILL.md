@@ -149,8 +149,7 @@ lines = []
 lines.append('*Overdue*')
 if tw['overdue']:
     for t in tw['overdue']:
-        due = datetime.strptime(t['due-date'], '%Y%m%d').strftime('%Y-%m-%d')
-        lines.append(f\"• <{site}/app/tasks/{t['id']}|{t['content']}> (Due: {due})\")
+        lines.append(f\"• <{site}/app/tasks/{t['id']}|{t['content']}> \")
 else:
     lines.append('N/A')
 
@@ -205,7 +204,7 @@ A Slack DM to the target teammate with this structure:
 
 ```
 *Overdue*
-• [Task name](link) (Due: YYYY-MM-DD)
+• [Task name](link)
 ...
 
 *Due Today*

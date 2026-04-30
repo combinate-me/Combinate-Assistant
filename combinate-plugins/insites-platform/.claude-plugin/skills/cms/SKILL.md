@@ -1,6 +1,8 @@
 ---
 name: insites-cms
 description: Insites CMS developer skill. Use when building or modifying pages, partials, layouts, or templates in an Insites application. Covers architecture, file structure, GraphQL data access, Liquid templating, assets, partials, layouts, and background jobs. Trigger on any development task involving Insites pages, templates, queries, or application code. v1.0.0
+metadata:
+  version: 1.0.0
 ---
 
 # Insites: CMS Developer Skill

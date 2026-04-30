@@ -1,6 +1,8 @@
 ---
 name: insites-globals
 description: Insites Globals covers tasks, task comments, activities, and attachments - cross-module features that can be linked to records in any Insites module (CRM contacts/companies, pipeline opportunities, events, etc.). Read this skill when working with tasks, activities, or attachments in Insites. v1.0.0
+metadata:
+  version: 1.0.0
 ---
 
 # Insites Globals

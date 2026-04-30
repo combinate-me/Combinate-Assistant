@@ -1,8 +1,8 @@
 ---
 name: skill-sharing
-description: All-in-one GitHub repository skill. Handles checking sync status, pulling the latest changes, pushing work as a pull request, and updating the remote URL after a repository rename. Trigger on: "do I have the latest", "am I up to date", "check repo status", "pull latest changes", "pull latest skills", "sync with github", "push this to the repository", "push to repo", "create a PR", "create a pull request", "push my changes", "submit this for review", "the repository was renamed", "update the remote URL", "repo was renamed", "the GitHub repo has a new name", or "update remote after rename". v1.1.0
+description: All-in-one GitHub repository skill. Handles checking sync status, pulling the latest changes, pushing work as a pull request, and updating the remote URL after a repository rename. Trigger on: "do I have the latest", "am I up to date", "check repo status", "pull latest changes", "pull latest skills", "sync with github", "push this to the repository", "push to repo", "create a PR", "create a pull request", "push my changes", "submit this for review", "the repository was renamed", "update the remote URL", "repo was renamed", "the GitHub repo has a new name", or "update remote after rename". v1.2.0
 metadata:
-  version: 1.1.0
+  version: 1.2.0
   category: 01-General
 ---
 
@@ -359,7 +359,7 @@ Rules:
 - Field order must be exactly: `name` → `description` → `metadata`
 - `metadata` always contains `version` then `category`, in that order
 - `category` is taken from what the author declared — never overridden
-- If `version` is missing, default to `1.0.0`
+- If `version` is missing, ask: **"What version is this skill? (e.g. `1.0.0`)"** — do not default silently. Wait for the answer before continuing.
 - If `description` is missing, use whatever is in the skill body's first paragraph, or ask the user
 - Do not add or remove any other fields
 
@@ -400,6 +400,86 @@ print('Frontmatter updated.')
 ```
 
 Tell the user: **"Frontmatter updated — added `category: CATEGORY_VALUE` to [skill-name]/SKILL.md."**
+
+### C3.6 — Version check against master
+
+Fetch the master copy of the skill and compare versions. Do this automatically — no need to ask the user first.
+
+**Step 1 — Fetch latest master state**
+
+```bash
+git fetch origin
+```
+
+**Step 2 — Check if master has this skill**
+
+```bash
+git show origin/master:RELATIVE_PATH_TO_SKILL_MD 2>/dev/null
+```
+
+Where `RELATIVE_PATH_TO_SKILL_MD` is the path relative to the repo root (e.g. `.claude-plugin/skills/01-General/check-repo-status/SKILL.md`).
+
+- If the command returns nothing (exit code non-zero or empty output) → the skill is new on this branch. No version conflict. Proceed to C4.
+- If the command returns content → extract the `version` value from the master frontmatter and continue to Step 3.
+
+**Step 3 — Extract master version**
+
+```bash
+git show origin/master:RELATIVE_PATH_TO_SKILL_MD | python -c "
+import sys, re
+content = sys.stdin.read()
+fm = re.match(r'^---\n(.*?)\n---', content, re.DOTALL)
+if fm:
+    ver = re.search(r'version:\s*(.+)', fm.group(1))
+    print(ver.group(1).strip() if ver else 'none')
+else:
+    print('none')
+"
+```
+
+Save the result as `MASTER_VERSION`.
+
+**Step 4 — Compare versions**
+
+Read the local version from the frontmatter (as standardised in C3.5). Save it as `LOCAL_VERSION`.
+
+If `LOCAL_VERSION` is missing or empty at this point — ask:
+
+**"What version is this skill? (e.g. `1.0.0`)"**
+
+Wait for the answer. Write it into the frontmatter using the C3.5 python script before continuing.
+
+Compare using semver ordering (`MAJOR.MINOR.PATCH`):
+
+```bash
+python -c "
+from functools import cmp_to_key
+
+def semver_cmp(a, b):
+    a_parts = [int(x) for x in a.split('.')]
+    b_parts = [int(x) for x in b.split('.')]
+    for i in range(max(len(a_parts), len(b_parts))):
+        av = a_parts[i] if i < len(a_parts) else 0
+        bv = b_parts[i] if i < len(b_parts) else 0
+        if av < bv: print(-1); exit()
+        if av > bv: print(1); exit()
+    print(0)
+
+semver_cmp('LOCAL_VERSION', 'MASTER_VERSION')
+"
+```
+
+Apply the result:
+
+| Result | Meaning | Action |
+|--------|---------|--------|
+| `LOCAL_VERSION` missing | No version in the skill's frontmatter | Ask: **"What version is this skill? (e.g. `1.0.0`)"** Wait for the answer. Write it into the frontmatter, then continue the comparison. |
+| `MASTER_VERSION` = `none` | Skill exists in master but has no version | Proceed. The author's version is used as-is. |
+| `LOCAL_VERSION` > `MASTER_VERSION` | Author bumped the version | Proceed. Version bump is valid. |
+| `LOCAL_VERSION` = `MASTER_VERSION` | Version unchanged | Proceed. Same version is acceptable if the skill already exists in master. |
+| `LOCAL_VERSION` < `MASTER_VERSION` | Author's version is behind master | **Stop and flag:** <br> **"The version in master for [skill-name] is `MASTER_VERSION`, which is higher than your version `LOCAL_VERSION`. You need to update the version in your `SKILL.md` before pushing. What version would you like to use?"** <br> Wait for the answer, update the frontmatter using the C3.5 python script, then proceed to C4. |
+
+---
 
 ### C4 — Create branch and commit
 

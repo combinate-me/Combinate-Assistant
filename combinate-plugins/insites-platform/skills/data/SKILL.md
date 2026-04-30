@@ -2,6 +2,8 @@
 name: data
 description: Insites Data module. Use for listing databases and reading or writing database items (records). Trigger on any mention of Insites databases, database records, or data stored in Insites. v1.0.0
 model: claude-haiku-4-5-20251001
+metadata:
+  version: 1.0.0
 ---
 
 # Insites: Data Module

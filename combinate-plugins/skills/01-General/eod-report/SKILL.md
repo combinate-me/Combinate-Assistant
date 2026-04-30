@@ -9,7 +9,10 @@ model: claude-haiku-4-5-20251001
 
 # Skill: EOD Report
 
-Generate a Combinate team member's end-of-day or midday standup digest from Teamwork timelogs and post it as an HTML comment on the recurring EOD/Midday Teamwork task.
+Generate a Combinate team member's end-of-day or midday standup digest from Teamwork timelogs. The skill produces two outputs from a single run:
+
+1. **Slack DM** — a quick mrkdwn digest of today's deliverables and meetings, sent to your own Slack DM as a personal record
+2. **Teamwork comment** — a structured HTML comment posted to the recurring EOD/Midday Teamwork task, using the team's standard template
 
 ## Configuration
 
@@ -20,8 +23,11 @@ Reads from `.env` (cwd-relative — same pattern as the teamwork skill):
 | `TEAMWORK_API_KEY` | Teamwork API auth |
 | `TEAMWORK_SITE` | Teamwork instance URL (e.g. `https://pm.cbo.me`) |
 | `TEAMWORK_USER_ID` | Your Teamwork user ID — fetches your timelogs |
+| `SLACK_BOT_TOKEN` | Slack Bot User OAuth token — sends the digest DM |
+| `SLACK_USER_ID` | Your Slack user ID — destination for the digest DM |
 
 Find your Teamwork user ID by calling `GET $TEAMWORK_SITE/me.json` once and saving the `person.id` to `.env`.
+Find your Slack user ID via Slack profile menu → "Copy member ID" and save as `SLACK_USER_ID`.
 
 The skill also relies on the **droplr** skill being installed (same plugin) for the time logs screenshot. Droplr requires `DROPLR_EMAIL` and `DROPLR_PASSWORD` in `.env` and macOS Screen Recording + Accessibility permissions — see `combinate-plugins/skills/01-General/droplr/SKILL.md` for setup.
 
@@ -149,7 +155,43 @@ Capture the `https://cbo.d.pr/i/<code>` URL from stdout. Save as `SCREENSHOT_URL
 
 ---
 
-## Step 6 — Build the HTML comment
+## Step 6 — Build both outputs
+
+Build two formats from the same data:
+
+### 6a. Slack DM (mrkdwn)
+
+A quick personal digest. Sent to the user's own Slack DM as a record of the day. Use Slack's mrkdwn syntax — note that Slack uses `<URL|text>` for links, NOT markdown `[text](url)`.
+
+```
+*EOD Standup - [Full Name] - [Day, DD Mon YYYY]*
+⠀
+*Deliverables*
+• *[Project Name]*
+  • <[TASK_URL]|[TASK_NAME]> `[STATUS]`
+  • <[TASK_URL]|[TASK_NAME]> `[STATUS]`
+• *[Project Name]*
+  • <[TASK_URL]|[TASK_NAME]> `[STATUS]`
+
+*Meetings*
+• <[MEETING_URL]|[MEETING_NAME]>
+• <[MEETING_URL]|[MEETING_NAME]>
+
+*Time logs:* <[SCREENSHOT_URL]|screenshot>
+```
+
+Rules:
+
+- Header line uses Slack `*bold*` mrkdwn (single asterisk, not double)
+- Blank line after the header — use the Braille blank character `⠀` (U+2800), since Slack collapses regular blank lines
+- `*Deliverables*` and `*Meetings*` are bold section labels
+- Project names are bolded second-level bullets
+- Tasks are indented third-level bullets
+- Status in backticks: `completed`, `in progress`, `blocked`, `to do`, `done - for qa`
+- If Section 3 content was provided in Step 4, append a `*Notes*` block after Meetings
+- Omit `*Time logs:*` line if no screenshot was captured
+
+### 6b. Teamwork HTML comment
 
 Match the team's standard EOD template format. Build the HTML body using these rules:
 
@@ -158,7 +200,7 @@ Match the team's standard EOD template format. Build the HTML body using these r
 - Section 2 **deliverables**: `<ul>` of `<li><a href="URL">TASK_NAME</a> — <code>STATUS</code></li>` — group by Teamwork project name with project name as a sub-bullet
 - Section 3: user-provided content, or omit the body entirely if blank (keep the heading)
 - Section 4 **meetings**: `<ul>` of `<li><a href="URL">TASK_NAME</a></li>` — no status, no grouping
-- Section 5: `<a href="SCREENSHOT_URL">View time logs screenshot</a>`
+- Section 5: `<a href="SCREENSHOT_URL">View time logs screenshot</a>`, or `<em>[Screenshot to be uploaded]</em>` if the screenshot was skipped
 
 Template (with placeholders). Spacing is intentionally tight — `<ul>` blocks provide their own vertical rhythm, so use single `<br/>` only after numbered text lines that aren't immediately followed by a list.
 
@@ -181,7 +223,7 @@ Where `[DELIVERABLES_BLOCK]` is, for each project group:
 <ul>
   <li><strong>PROJECT_NAME</strong>
     <ul>
-      <li><a href="TASK_URL">TASK_NAME</a> — <code>STATUS</code></li>
+      <li><a href="TASK_URL">TASK_NAME</a> &mdash; <code>STATUS</code></li>
       ...
     </ul>
   </li>
@@ -199,17 +241,47 @@ And `[MEETINGS_BLOCK]` is:
 
 ---
 
-## Step 7 — Confirm before posting
+## Step 7 — Confirm before sending
 
-Show the rendered HTML (and a plain-text preview if helpful) and ask:
+Show both rendered previews (Slack mrkdwn and Teamwork HTML) and ask:
 
-> "Here's your EOD comment for task [EOD_TASK_ID]. Anything to change before I post it?"
+> "Here's your EOD digest. The Slack DM goes to your own DM, and the Teamwork comment goes to task [EOD_TASK_ID]. Anything to change before I send both?"
 
 Apply any edits, then proceed.
 
 ---
 
-## Step 8 — Post the comment to the EOD Teamwork task
+## Step 8 — Send the Slack DM
+
+Use `chat.postMessage` with the bot token, posting to the user's Slack user ID (Slack treats a user ID as a DM channel).
+
+```bash
+set -a && source .env && set +a
+python3 << EOF
+import json, urllib.request, os
+
+text = """[FULL SLACK MRKDWN BODY FROM STEP 6a]"""
+url = "https://slack.com/api/chat.postMessage"
+payload = json.dumps({
+    "channel": os.environ['SLACK_USER_ID'],
+    "text": text
+}).encode()
+req = urllib.request.Request(url, data=payload, headers={
+    "Authorization": f"Bearer {os.environ['SLACK_BOT_TOKEN']}",
+    "Content-Type": "application/json; charset=utf-8"
+}, method="POST")
+with urllib.request.urlopen(req) as resp:
+    data = json.loads(resp.read())
+    if data.get('ok'):
+        print("Slack DM sent.")
+    else:
+        print("Slack error:", data.get('error'))
+EOF
+```
+
+---
+
+## Step 9 — Post the comment to the EOD Teamwork task
 
 Same auth pattern as the deployment-plan skill — Python with `urllib` so the HTML body is JSON-escaped cleanly without shell quoting issues.
 
@@ -218,7 +290,7 @@ set -a && source .env && set +a
 python3 << EOF
 import json, urllib.request, base64, os
 
-body = """[FULL HTML BODY FROM STEP 6 — keep all newlines and tags as-is]"""
+body = """[FULL HTML BODY FROM STEP 6b — keep all newlines and tags as-is]"""
 task_id = "[EOD_TASK_ID]"
 api_key = os.environ['TEAMWORK_API_KEY']
 site = os.environ['TEAMWORK_SITE']
@@ -240,9 +312,11 @@ EOF
 
 ---
 
-## Step 9 — Confirm to the user
+## Step 10 — Confirm to the user
 
-> "EOD comment posted to task [EOD_TASK_ID]: $TEAMWORK_SITE/app/tasks/[EOD_TASK_ID]"
+> "EOD digest sent. Slack DM delivered, and Teamwork comment posted to: $TEAMWORK_SITE/app/tasks/[EOD_TASK_ID]"
+
+If only one of the two sends succeeded, report which succeeded and which failed, with the error message for the failure.
 
 ---
 
@@ -252,8 +326,10 @@ EOF
 |-----------|--------|
 | No timelogs today | Note "No time logged today" and ask if the user wants to continue (likely abort) |
 | Task fetch fails | Use the task name from the timelog entry; default deliverable status to `in progress` |
-| Droplr capture cancelled (Esc) | Ask whether to retry or skip Section 5 (post comment without screenshot link) |
+| Droplr capture cancelled (Esc) | Ask whether to retry or skip Section 5 (post without screenshot link) |
 | Teamwork comment post returns non-2xx | Show the error response and the formatted body so the user can paste manually |
+| Slack DM send returns `not_in_channel` / `channel_not_found` | Confirm `SLACK_USER_ID` is correct (should be a `U…` ID, not a `C…` channel ID) |
+| Slack send fails for any other reason | Report the error but still attempt the Teamwork comment — the two sends are independent |
 | `EOD_TASK_ID` looks wrong (404 on task lookup) | Ask the user to confirm the task ID before posting |
 
 ---

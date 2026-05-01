@@ -29,6 +29,7 @@ presentations/
 decisions/
 projects/
 scripts/
+!combinate-plugins/skills/**/scripts/
 
 # MCP server / tool logs
 *.log

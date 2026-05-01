@@ -1,8 +1,8 @@
 ---
 name: intranet-presentation
-description: Publish a Combinate HTML presentation to the intranet presentations database. Trigger on "publish presentation", "add presentation to intranet", "upload presentation to intranet", or "add to presentations page". v1.0.0
+description: Publish a Combinate HTML presentation to the intranet presentations database. Trigger on "publish presentation", "add presentation to intranet", "upload presentation to intranet", or "add to presentations page". v1.2.0
 metadata:
-  version: 1.0.0
+  version: 1.2.0
   category: 01-General
 ---
 
@@ -10,7 +10,7 @@ metadata:
 
 ## Purpose
 
-Publishes a self-contained HTML presentation file into the `modules/ins_databases/ai-presentations` database on the Combinate intranet. Once published, the presentation appears on the `/presentations` page and is accessible at `/presentation/{slug}`.
+Publishes a self-contained HTML presentation file into the AI Presentations database (table ID `29990`) on the Combinate intranet. Once published, the presentation appears on the `/presentations` page and is accessible at `/presentation/{slug}`.
 
 ## When to Trigger
 
@@ -22,105 +22,133 @@ Publishes a self-contained HTML presentation file into the `modules/ins_database
 
 ## Prerequisites
 
-- Must be run from within the `cmb-intranet` repository (`.insites` must exist in the working directory)
 - Node.js must be installed
-- The HTML file must exist on disk
+- `.env` in the Executive-Assistant repo must have `COMBINATE_INTRANET_URL` and `COMBINATE_INTRANET_KEY` set
+
+### Getting the API key
+
+The `COMBINATE_INTRANET_KEY` is personal — each team member has their own.
+
+1. Go to `https://intranet.combinate.me/admin/insites#/integrations/instance-api-key`
+2. Copy the **Instance API Key**
+3. Paste it here — the assistant will write it to `.env` automatically
 
 ---
 
 ## Workflow
 
-### Step 1 — Locate the HTML file
+### Step 0 — Check credentials
 
-Ask: **"What is the path to the HTML presentation file?"**
+Read `.env` from the current working directory. Check that `COMBINATE_INTRANET_KEY` has a non-empty value.
+
+If the key is missing or empty, stop and prompt the user:
+
+```
+COMBINATE_INTRANET_KEY is not set in .env. This key is personal — each team member has their own.
+
+1. Go to https://intranet.combinate.me/admin/insites#/integrations/instance-api-key
+2. Copy the Instance API Key and paste it here — I'll add it to .env automatically.
+```
+
+Once the user provides the key, write it to `COMBINATE_INTRANET_KEY` in `.env` using the Edit tool, then continue the workflow without asking the user to do anything further.
+
+Do not proceed until the key is confirmed set.
+
+---
+
+### Step 1 — Locate the HTML file
 
 If the user just finished generating a presentation with the `combinate-presentation` skill, infer the file path from context (e.g. the last saved `.html` file) and confirm: **"I'll use `{path}`. Is that correct?"**
 
-Read the file to confirm it exists and is a valid HTML document (starts with `<!DOCTYPE html>` or `<html`).
+Otherwise ask: **"What is the path to the HTML presentation file?"**
+
+Read the file using the Read tool. Confirm it is a valid HTML document (starts with `<!DOCTYPE html>` or `<html`).
 
 If the file cannot be found, stop and ask the user to provide the correct path.
 
 ---
 
-### Step 2 — Collect metadata
+### Step 2 — Extract metadata from the HTML
 
-Ask for each of the following, one message at a time (or accept them all at once if the user provides them upfront):
+Read the HTML content and extract the following automatically. Do not ask the user for these:
 
-| Field | Question | Notes |
-|-------|----------|-------|
-| **Title** | "What is the presentation title?" | Displayed on the card |
-| **Short Description** | "Write a one-sentence description for the card (shown under the title)." | Keep it under 120 characters |
-| **Category** | "Which category does this belong to?" | See category list below |
-| **Slug** | "What URL slug should it use? (e.g. `qa-design` → `/presentation/qa-design`)" | Lowercase, hyphens only, no spaces |
+| Field | Where to look | Fallback |
+|-------|---------------|---------|
+| **Title** | `<title>` tag (strip ` - Combinate Presentation` suffix if present) | First `<h1>` text content |
+| **Slug** | Generated from title: lowercase, strip special characters, replace spaces with hyphens, max 60 chars | `presentation-{timestamp}` |
+| **Description** | `<meta name="description" content="...">` | First `.subtitle` element text; or first `<p>` sentence in the body |
 
-**Valid categories:**
-
-| Value to use | Display label |
-|---|---|
-| `Company` | Company |
-| `HR` | HR |
-| `Philippines` | Philippines |
-| `Marketing` | Marketing |
-| `Sales` | Sales |
-| `Support` | Support |
-| `Design` | Design |
-| `Developers` | Developers |
-| `Executive Assistant` | Executive Assistant |
-| `07-QA` | QA |
-
-If unsure, default to `Company`.
-
-Confirm all values with the user before proceeding:
-
-```
-Ready to publish:
-
-- Title:       {title}
-- Slug:        presentation/{slug}  →  /presentation/{slug}
-- Category:    {category}
-- Description: {short_description}
-- File:        {file_path}
-
-Proceed?
-```
+Slug generation rules:
+- Lowercase everything
+- Replace spaces and underscores with hyphens
+- Strip characters that are not alphanumeric or hyphens
+- Collapse multiple hyphens into one
+- Trim leading/trailing hyphens
 
 ---
 
-### Step 3 — Check for duplicate slug
+### Step 3 — Ask for category only
 
-Before inserting, check if a record with this slug already exists by reading `.insites` and querying the GraphQL API:
+Present the inferred values and ask for the category in a single message:
+
+```
+Extracted from the HTML:
+
+- Title:       {title}
+- Slug:        /presentation/{slug}
+- Description: {description}
+
+Which category does this belong to?
+General / Sales / Marketing / Management / Design / Development / QA / Support
+```
+
+**Valid categories:**
+
+| Value to store | Display label |
+|---|---|
+| `General` | General |
+| `Sales` | Sales |
+| `Marketing` | Marketing |
+| `Management` | Management |
+| `Design` | Design |
+| `Development` | Development |
+| `QA` | QA |
+| `Support` | Support |
+
+Accept the user's answer as a case-insensitive label match (e.g. "01" or "general" → `General`, "07" or "qa" → `QA`). If unsure, default to `General`.
+
+If the user also overrides the title, slug, or description at this point, use their values instead.
+
+---
+
+### Step 4 — Check for duplicate slug
+
+Before inserting, write and run a temp Node.js script to fetch existing presentations and check if the slug is already taken.
 
 ```js
 // check-slug.js  (write to a temp file, run, then delete)
 const fs = require('fs');
+const path = require('path');
 const https = require('https');
-const url = require('url');
 
-const insites = JSON.parse(fs.readFileSync('.insites', 'utf8')).production;
-const slug = 'presentation/SLUG_VALUE';
+const envContent = fs.readFileSync(path.join(process.cwd(), '.env'), 'utf8');
+const env = {};
+for (const line of envContent.split('\n')) {
+  const m = line.match(/^([^#\s][^=]*)=(.*)/);
+  if (m) env[m[1].trim()] = m[2].trim();
+}
+const INTRANET_URL = new URL(env.COMBINATE_INTRANET_URL);
+const INTRANET_KEY = env.COMBINATE_INTRANET_KEY;
 
-const query = `
-query {
-  items: models(
-    per_page: 1,
-    filter: {
-      deleted_at: { exists: false },
-      model_schema_name: { value: "modules/ins_databases/ai-presentations" },
-      properties: [{ name: "slug", value: "${slug}" }]
-    }
-  ) { total_entries }
-}`;
+const targetSlug = 'presentation/SLUG_VALUE';
 
-const parsed = url.parse(insites.url);
-const body = JSON.stringify({ query });
 const options = {
-  hostname: parsed.hostname,
-  path: '/api/graph',
-  method: 'POST',
+  hostname: INTRANET_URL.hostname,
+  path: '/databases/api/v2/database/29990/items?page=1&size=100',
+  method: 'GET',
   headers: {
-    'Content-Type': 'application/json',
-    'Authorization': \`Token \${insites.key}\`,
-    'Content-Length': Buffer.byteLength(body)
+    'Authorization': INTRANET_KEY,
+    'Accept': 'application/json'
   }
 };
 
@@ -129,59 +157,59 @@ const req = https.request(options, res => {
   res.on('data', chunk => data += chunk);
   res.on('end', () => {
     const result = JSON.parse(data);
-    console.log(result.data.items.total_entries > 0 ? 'EXISTS' : 'FREE');
+    const items = (result.items || result).results || [];
+    const exists = items.some(item => item.properties.slug === targetSlug);
+    console.log(exists ? 'EXISTS' : 'FREE');
   });
 });
 req.on('error', err => { console.error(err); process.exit(1); });
-req.write(body);
 req.end();
 ```
 
-- If output is `EXISTS`: stop and warn **"A presentation with slug `presentation/{slug}` already exists. Please choose a different slug or confirm you want to overwrite it."** — do not overwrite without explicit confirmation.
-- If output is `FREE`: proceed to Step 4.
+- If output is `EXISTS`: stop and warn **"A presentation with slug `presentation/{slug}` already exists. Please choose a different slug or confirm you want to overwrite it."** Do not overwrite without explicit confirmation.
+- If output is `FREE`: proceed to Step 5.
 
 ---
 
-### Step 4 — Insert the database record
+### Step 5 — Insert the database record
 
-Write and run a Node.js script to create the entry via the Insites GraphQL API. Read the HTML file content and send it as the `content` property.
+Write and run a temp Node.js script to create the entry via the Insites REST API.
 
 ```js
 // insert-presentation.js  (write to a temp file, run, then delete)
 const fs = require('fs');
+const path = require('path');
 const https = require('https');
-const url = require('url');
 
-const insites = JSON.parse(fs.readFileSync('.insites', 'utf8')).production;
-const content = fs.readFileSync('HTML_FILE_PATH', 'utf8');
+const envContent = fs.readFileSync(path.join(process.cwd(), '.env'), 'utf8');
+const env = {};
+for (const line of envContent.split('\n')) {
+  const m = line.match(/^([^#\s][^=]*)=(.*)/);
+  if (m) env[m[1].trim()] = m[2].trim();
+}
+const INTRANET_URL = new URL(env.COMBINATE_INTRANET_URL);
+const INTRANET_KEY = env.COMBINATE_INTRANET_KEY;
 
-const mutation = `
-mutation {
-  model_create(
-    model: {
-      model_schema_name: "modules/ins_databases/ai-presentations"
-      properties: [
-        { name: "slug",              value: "presentation/SLUG_VALUE" }
-        { name: "title",             value: ${JSON.stringify('TITLE_VALUE')} }
-        { name: "short_description", value: ${JSON.stringify('DESC_VALUE')} }
-        { name: "category",          value: ${JSON.stringify('CATEGORY_VALUE')} }
-        { name: "status",            value: "Published" }
-        { name: "content",           value: ${JSON.stringify(content)} }
-      ]
-    }
-  ) { id }
-}`;
+const htmlContent = fs.readFileSync('HTML_FILE_PATH', 'utf8');
 
-const parsed = url.parse(insites.url);
-const body = JSON.stringify({ query: mutation });
+const payload = JSON.stringify({
+  'properties.slug':              'presentation/SLUG_VALUE',
+  'properties.title':             'TITLE_VALUE',
+  'properties.short_description': 'DESC_VALUE',
+  'properties.category':          'CATEGORY_VALUE',
+  'properties.status':            'Published',
+  'content':                      htmlContent
+});
+
 const options = {
-  hostname: parsed.hostname,
-  path: '/api/graph',
+  hostname: INTRANET_URL.hostname,
+  path: '/databases/api/v2/database/29990/items',
   method: 'POST',
   headers: {
+    'Authorization': INTRANET_KEY,
+    'Accept': 'application/json',
     'Content-Type': 'application/json',
-    'Authorization': \`Token \${insites.key}\`,
-    'Content-Length': Buffer.byteLength(body)
+    'Content-Length': Buffer.byteLength(payload)
   }
 };
 
@@ -190,19 +218,20 @@ const req = https.request(options, res => {
   res.on('data', chunk => data += chunk);
   res.on('end', () => {
     const result = JSON.parse(data);
-    if (result.errors) {
-      console.error('ERROR:', JSON.stringify(result.errors, null, 2));
+    if (result.errors || result.error) {
+      console.error('ERROR:', JSON.stringify(result.errors || result.error, null, 2));
       process.exit(1);
     }
-    console.log('Created ID:', result.data.model_create.id);
+    console.log('Created ID:', result.id);
+    console.log('Created UUID:', result.uuid);
   });
 });
 req.on('error', err => { console.error(err); process.exit(1); });
-req.write(body);
+req.write(payload);
 req.end();
 ```
 
-Substitute the actual values for `HTML_FILE_PATH`, `SLUG_VALUE`, `TITLE_VALUE`, `DESC_VALUE`, and `CATEGORY_VALUE` before writing the file.
+Substitute actual values for `HTML_FILE_PATH`, `SLUG_VALUE`, `TITLE_VALUE`, `DESC_VALUE`, and `CATEGORY_VALUE` before writing the file.
 
 Run with:
 
@@ -214,17 +243,15 @@ After the script runs successfully, delete both temp files.
 
 ---
 
-### Step 5 — Confirm to the user
+### Step 6 — Confirm to the user
 
 ```
-Presentation published successfully.
+Published successfully.
 
 - Title:    {title}
 - URL:      https://intranet.combinate.me/presentation/{slug}
 - Category: {category}
 - DB ID:    {id returned from API}
-
-It will appear on the /presentations page immediately.
 ```
 
 ---
@@ -233,16 +260,21 @@ It will appear on the /presentations page immediately.
 
 | Error | Action |
 |-------|--------|
-| `.insites` not found | Stop: "Run this skill from within the `cmb-intranet` repository directory where `.insites` exists." |
+| `.env` missing `COMBINATE_INTRANET_KEY` | Stop and prompt user to get it from the admin panel (see Step 0) |
 | HTML file not found | Stop and ask the user to provide the correct path |
-| GraphQL returns errors | Show the error message and stop. Do not retry automatically. |
+| Cannot extract title from HTML | Ask the user: "What should the title be?" |
+| API returns 401 | Stop: "The API key in `.env` was rejected. Go to https://intranet.combinate.me/admin/insites#/integrations/instance-api-key and paste the current key here." |
+| API returns errors | Show the error message and stop. Do not retry automatically. |
 | Slug already exists | Stop and ask user to choose a different slug or confirm overwrite |
 | Node.js not installed | Stop: "Node.js is required. Install it from nodejs.org and retry." |
 
 ## Notes
 
-- Always delete temp `.js` files after running — they may contain the API key embedded in the script
+- Always delete temp `.js` files after running — they contain the API key
+- Auth uses `Authorization: {key}` directly — no `Token` prefix, no `Bearer` prefix
+- The API is REST-based (`/databases/api/v2/`), not GraphQL
+- Table ID for `ai-presentations` is `29990`
 - The `status` field is always set to `"Published"` — there is no draft mode in this workflow
-- HTML files are stored verbatim in the `content` field; the intranet renders them with `| html_safe`
-- The presentation page uses `layout: modules/website/raw_layout` so the full HTML document renders without any wrapping
-- Slug format must be `presentation/{slug}` — the leading `presentation/` is part of the slug stored in the DB, matching the dynamic route `presentation/:slug`
+- HTML files are stored verbatim in the `content` field
+- Slug format must be `presentation/{slug}` — the leading `presentation/` is part of the slug stored in the DB
+- Credentials come from `.env` in the Executive-Assistant repo — no need to switch to the `cmb-intranet` repo

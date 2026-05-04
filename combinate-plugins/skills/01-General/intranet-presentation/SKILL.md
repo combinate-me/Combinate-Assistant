@@ -1,8 +1,8 @@
 ---
 name: intranet-presentation
-description: Publish a Combinate HTML presentation to the intranet presentations database. Trigger on "publish presentation", "add presentation to intranet", "upload presentation to intranet", or "add to presentations page". v1.2.0
+description: Publish a Combinate HTML presentation to the intranet presentations database. Trigger on "publish presentation", "add presentation to intranet", "upload presentation to intranet", or "add to presentations page". v1.3.0
 metadata:
-  version: 1.2.0
+  version: 1.3.0
   category: 01-General
 ---
 
@@ -192,13 +192,17 @@ const INTRANET_KEY = env.COMBINATE_INTRANET_KEY;
 
 const htmlContent = fs.readFileSync('HTML_FILE_PATH', 'utf8');
 
+// The Insites REST API interpolates property values into GraphQL string literals server-side.
+// Double quotes in the value break the query. Pre-escape " as \" so GraphQL parses them correctly.
+const escapedHtml = htmlContent.replace(/"/g, '\\"');
+
 const payload = JSON.stringify({
   'properties.slug':              'presentation/SLUG_VALUE',
   'properties.title':             'TITLE_VALUE',
   'properties.short_description': 'DESC_VALUE',
   'properties.category':          'CATEGORY_VALUE',
   'properties.status':            'Published',
-  'content':                      htmlContent
+  'properties.content':           escapedHtml
 });
 
 const options = {
@@ -275,6 +279,7 @@ Published successfully.
 - The API is REST-based (`/databases/api/v2/`), not GraphQL
 - Table ID for `ai-presentations` is `29990`
 - The `status` field is always set to `"Published"` — there is no draft mode in this workflow
-- HTML files are stored verbatim in the `content` field
+- HTML content is stored in `properties.content` (not a top-level `content` key)
+- Double quotes in HTML must be pre-escaped as `\"` before JSON serialization — the API interpolates property values into GraphQL string literals server-side, and unescaped `"` breaks the query. Use `.replace(/"/g, '\\"')` before `JSON.stringify`
 - Slug format must be `presentation/{slug}` — the leading `presentation/` is part of the slug stored in the DB
 - Credentials come from `.env` in the Executive-Assistant repo — no need to switch to the `cmb-intranet` repo

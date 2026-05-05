@@ -219,15 +219,42 @@ EOF
 Status logic for **deliverables** (applied in this order — first match wins):
 
 - `done - for qa` if **project name is `Combinate Support Board`** (these are SWAT/support fixes; logged time means done — board column on that project is usually empty)
-- `to be released` if the task has a Teamwork **tag** named `To Be Released` (case-insensitive). Tags often carry the release-readiness signal when board columns are empty.
-- `done - for qa` if board column is `QA`
-- `to be released` if board column is `To Be Released`
-- `to do` if board column is `To Do`
-- `blocked` if board column is `Blocked` (or the user explicitly says so)
-- `completed` if marked done in Teamwork and no matching board column
-- `in progress` if still open and no matching board column
+- **Workflow stage** match (highest signal — Teamwork migrated from Boards to Workflows; stage is the primary status indicator now):
+  - `QA` &rarr; `done - for qa`
+  - `To Be Released` &rarr; `to be released`
+  - `Done` &rarr; `completed`
+  - `Blocked` &rarr; `blocked`
+  - `To Do` &rarr; `to do`
+  - `In Progress` &rarr; `in progress`
+  - `Planning` &rarr; `in progress`
+- Tag fallback (when no workflow stage is set on the task):
+  - Tag `To Be Released` &rarr; `to be released`
+  - Tag `QA` &rarr; `done - for qa`
+- Legacy board column fallback (only relevant on projects that haven't migrated to Workflows):
+  - `QA` &rarr; `done - for qa`
+  - `To Be Released` &rarr; `to be released`
+  - `To Do` &rarr; `to do`
+  - `Blocked` &rarr; `blocked`
+- `completed` if marked done in Teamwork and no other signal
+- `in progress` otherwise
 
-When fetching the task in Step 3, read `task['tags']` from the response and pass the list of tag names into the classifier alongside the board column.
+### How to read the workflow stage
+
+Teamwork's **workflow stage** is the modern equivalent of board columns. Two API calls are needed because v1 and v3 carry different fields:
+
+1. `GET /tasks/{id}.json` (v1) &mdash; for `tags`, `completed`, and the legacy `board-column` (often empty)
+2. `GET /projects/api/v3/tasks/{id}.json` (v3) &mdash; for `workflowStages` (an array of `{workflowId, stageId}`)
+3. `GET /projects/api/v3/workflows/{workflowId}/stages.json` &mdash; resolves `stageId` &rarr; stage name. **Cache** this per workflow ID since multiple tasks share workflows.
+
+Pseudo-flow:
+
+```python
+v1 = GET /tasks/{tid}.json
+v3 = GET /projects/api/v3/tasks/{tid}.json
+ws  = v3.task.workflowStages
+stage_name = stages_cache[ws[0].workflowId][ws[0].stageId] if ws else ''
+classify(name, project, completed=v1.completed, tags=v1.tags, stage=stage_name)
+```
 
 Meetings don't have a status — just list the link.
 
@@ -444,14 +471,37 @@ with urllib.request.urlopen(req) as resp:
     entries = json.loads(resp.read()).get('time-entries', [])
 
 # 2. Re-classify (mirrors Step 3 logic)
-def classify(name, project, board_column, completed, tags):
+STAGE_TO_STATUS = {
+    'qa': 'done - for qa',
+    'to be released': 'to be released',
+    'done': 'completed',
+    'blocked': 'blocked',
+    'to do': 'to do',
+    'in progress': 'in progress',
+    'planning': 'in progress',
+}
+
+stage_cache = {}  # workflow_id -> {stage_id: stage_name}
+def get_stage_name(workflow_id, stage_id):
+    if workflow_id not in stage_cache:
+        sreq = urllib.request.Request(f"{site}/projects/api/v3/workflows/{workflow_id}/stages.json",
+            headers={"Authorization": f"Basic {token}"})
+        with urllib.request.urlopen(sreq) as r:
+            stages = json.loads(r.read()).get('stages', [])
+        stage_cache[workflow_id] = {s['id']: s.get('name','') for s in stages}
+    return stage_cache[workflow_id].get(stage_id, '')
+
+def classify(name, project, board_column, completed, tags, stage_name):
     if any(k in name.lower() for k in MEETING_KEYWORDS):
         return 'meeting', None
     if project == 'Combinate Support Board':
         return 'deliverable', 'done - for qa'
+    sn = (stage_name or '').lower()
+    if sn in STAGE_TO_STATUS:
+        return 'deliverable', STAGE_TO_STATUS[sn]
     tag_names = {(t or '').lower() for t in (tags or [])}
-    if 'to be released' in tag_names:
-        return 'deliverable', 'to be released'
+    if 'to be released' in tag_names: return 'deliverable', 'to be released'
+    if 'qa' in tag_names:             return 'deliverable', 'done - for qa'
     bc = (board_column or '').lower()
     if bc == 'qa':              return 'deliverable', 'done - for qa'
     if bc == 'to be released':  return 'deliverable', 'to be released'
@@ -468,14 +518,20 @@ for e in entries:
     seen.add(tid)
     name = e.get('todo-item-name', '')
     project = e.get('project-name', '')
-    # Fetch task to get board column + completed flag
+    # v1: tags + completed + legacy board column
     treq = urllib.request.Request(f"{site}/tasks/{tid}.json", headers={"Authorization": f"Basic {token}"})
     with urllib.request.urlopen(treq) as r:
         t = json.loads(r.read()).get('todo-item', {})
     bc = (t.get('board-column') or {}).get('name', '')
     completed = t.get('completed', False)
     tag_names = [(x or {}).get('name','') for x in (t.get('tags') or [])]
-    kind, status = classify(name, project, bc, completed, tag_names)
+    # v3: workflowStages
+    treq3 = urllib.request.Request(f"{site}/projects/api/v3/tasks/{tid}.json", headers={"Authorization": f"Basic {token}"})
+    with urllib.request.urlopen(treq3) as r:
+        t3 = json.loads(r.read()).get('task', {})
+    ws = t3.get('workflowStages') or []
+    stage_name = get_stage_name(ws[0]['workflowId'], ws[0]['stageId']) if ws else ''
+    kind, status = classify(name, project, bc, completed, tag_names, stage_name)
     tasks[tid] = {
         'name': t.get('content', name),
         'project': project,

@@ -21,6 +21,7 @@ credentials/
 
 # Claude session data
 .claude/projects/
+.claude/scheduled_tasks.lock
 
 # Generated HTML presentations
 presentations/

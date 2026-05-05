@@ -131,6 +131,14 @@ Combinate's signature visual is a **blue liquid blurred blob** (`#1E43FF`) on a 
 [Content area - cards, grids, stats, steps, etc.]
 ```
 
+## Client Logos
+
+When a presentation is for or about a client, use the client's **actual logo** (SVG or PNG sourced from their website, brand kit, or Drive folder). Never substitute a text-only rendering of the company name. If no logo asset is available, pause and ask the user where to find one rather than shipping a text placeholder.
+
+## Favicon
+
+Every presentation must include the Combinate favicon. The template ships with an inline SVG favicon (icosahedron mark in `--cmb-blue` on `--cmb-black`) embedded as a data URI in the `<head>`, so the file stays self-contained and the browser tab shows the Combinate brand. Do not remove it.
+
 ## Navigation Component
 
 Fixed bottom bar with frosted glass effect:
@@ -148,7 +156,11 @@ Fixed bottom bar with frosted glass effect:
 
 ## Presenter Timer
 
-The template includes a presenter timer in the nav bar (between the theme toggle and the dot indicators). Click `▶ Start` to begin, click again to pause/resume.
+**Off by default.** The timer is hidden unless the user explicitly asks for one (e.g. "add a presenter timer", "include a countdown", "I need to keep this to 30 minutes"). Do not enable it on every deck.
+
+To enable, remove the `style="display:none"` from the `<div class="nav-timer" id="navTimer">` element in the template (or set it to `inline-flex`). Then configure `agendaSegments` and `slideSegmentMap` as below.
+
+When enabled, the timer sits in the nav bar (between the theme toggle and the dot indicators). Click `▶ Start` to begin, click again to pause/resume.
 
 **Behaviour:**
 - Counts down per agenda segment (configurable). Auto-advances to the next segment when you reach a slide that belongs to it.

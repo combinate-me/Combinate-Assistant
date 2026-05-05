@@ -2,7 +2,7 @@
 name: eod-report
 description: End-of-day or midday standup workflow for Combinate team members. Pulls today's Teamwork timelogs, classifies tasks as deliverables vs meetings, captures a time logs screenshot via Droplr, then posts a structured HTML comment to a recurring EOD/Midday Teamwork task. Trigger on "eod report", "EOD standup", "end of day", "midday report", "generate EOD", "daily wrap-up", "log my day", or "post EOD".
 metadata:
-  version: 3.1.0
+  version: 3.2.0
   category: 01-General
 model: claude-haiku-4-5-20251001
 ---
@@ -31,6 +31,47 @@ Find your Teamwork user ID by calling `GET $TEAMWORK_SITE/me.json` once and savi
 Find your Slack user ID via Slack profile menu → "Copy member ID" and save as `SLACK_USER_ID`.
 
 The skill also relies on the **droplr** skill being installed (same plugin) for the time logs screenshot. Droplr requires `DROPLR_EMAIL` and `DROPLR_PASSWORD` in `.env` and macOS Screen Recording + Accessibility permissions — see `combinate-plugins/skills/01-General/droplr/SKILL.md` for setup.
+
+---
+
+## Setup for new users
+
+One-time setup. Run through the checklist below before the first EOD.
+
+**1. `.env` variables** — add to the project root `.env`:
+
+| Variable | How to get it |
+|---|---|
+| `TEAMWORK_API_KEY` | Teamwork → My Profile → API & Mobile → API Token |
+| `TEAMWORK_SITE` | Your Teamwork site URL, e.g. `https://pm.cbo.me` |
+| `TEAMWORK_USER_ID` | `curl -u "$TEAMWORK_API_KEY:x" $TEAMWORK_SITE/me.json` → copy `person.id` |
+| `EOD_TASKLIST_ID` | The Teamwork tasklist holding your recurring "Midday and EOD Report" task. Open one instance of the task in Teamwork and note the tasklist name; then call `GET $TEAMWORK_SITE/projects/{projectId}/tasklists.json` to find the ID. |
+| `SLACK_BOT_TOKEN` | Provided centrally by the team lead |
+| `SLACK_USER_ID` | Slack profile → "..." menu → "Copy member ID" (starts with `U…`) |
+| `DROPLR_EMAIL` / `DROPLR_PASSWORD` | Your Droplr account credentials. If you sign in via Google SSO, set a password from droplr.com → Account Settings first. |
+
+**2. Droplr skill** — required for the screenshot capture in Step 5:
+
+```bash
+combinate-plugins/skills/01-General/droplr/setup.sh
+```
+
+This writes Droplr credentials to `.env` and verifies macOS permissions.
+
+**3. macOS permissions** (System Settings → Privacy & Security):
+
+- **Screen Recording** → enable for your terminal (Terminal/iTerm/Claude). Required for any screencapture.
+- **Accessibility** → enable for the same terminal. Required for the `app` capture mode used in Step 5 (auto-capture of Chrome).
+
+**4. Browser** — Google Chrome must be installed. Step 5 auto-capture targets Chrome's frontmost window. Make sure you've signed into Teamwork in Chrome at least once so `$TEAMWORK_SITE/app/time/all` opens directly to the time logs.
+
+**5. Smoke test** — run the skill once and verify:
+
+- Step 1 auto-resolves your EOD task ID without prompting
+- Step 5 produces a `cbo.d.pr/i/...` URL pointing to your time logs
+- Step 8 schedule fires at 16:00 Manila and produces a logged time entry, Slack DM, and Teamwork comment
+
+If anything fails, see the **Error Handling** table at the bottom.
 
 ---
 
@@ -310,39 +351,107 @@ Apply any edits, then proceed.
 
 ---
 
-## Step 8 — Send the Slack DM
+## Step 8 — Schedule the send for 16:00 Asia/Manila
 
-Use `chat.postMessage` with the bot token, posting to the user's Slack user ID (Slack treats a user ID as a DM channel).
+The team convention is to post the EOD comment at the end of the working day. Rather than firing immediately, this step writes a background Python script that sleeps until **16:00 Asia/Manila** then performs three actions in order:
+
+1. **Log 15 minutes** on the EOD task — description `EOD`, time `15:45`, duration `15m`, **non-billable**
+2. **Send the Slack DM** to `$SLACK_USER_ID`
+3. **Post the HTML comment** to the EOD task
+
+If the user explicitly asks for an immediate send (e.g. "send now, don't wait"), skip the sleep but keep the same three calls.
+
+Write the script to `/tmp/eod_send.py` and run it detached so the conversation can continue:
 
 ```bash
 set -a && source .env && set +a
-python3 << EOF
-import json, urllib.request, os
 
-text = """[FULL SLACK MRKDWN BODY FROM STEP 6a]"""
-url = "https://slack.com/api/chat.postMessage"
-payload = json.dumps({
-    "channel": os.environ['SLACK_USER_ID'],
-    "text": text
-}).encode()
-req = urllib.request.Request(url, data=payload, headers={
-    "Authorization": f"Bearer {os.environ['SLACK_BOT_TOKEN']}",
-    "Content-Type": "application/json; charset=utf-8"
-}, method="POST")
-with urllib.request.urlopen(req) as resp:
-    data = json.loads(resp.read())
-    if data.get('ok'):
-        print("Slack DM sent.")
-    else:
-        print("Slack error:", data.get('error'))
-EOF
+cat > /tmp/eod_send.py << 'PYEOF'
+import json, urllib.request, base64, os, time, datetime
+
+slack_text = """[FULL SLACK MRKDWN BODY FROM STEP 6a]"""
+
+html_body = """[FULL HTML BODY FROM STEP 6b — keep all newlines and tags as-is]"""
+
+EOD_TASK_ID = "[EOD_TASK_ID]"
+
+# Wait until 16:00 Asia/Manila
+os.environ['TZ'] = 'Asia/Manila'
+time.tzset()
+target = datetime.datetime.now().replace(hour=16, minute=0, second=0, microsecond=0)
+now = datetime.datetime.now()
+wait = (target - now).total_seconds()
+print(f"[scheduler] now={now} target={target} wait={wait:.0f}s", flush=True)
+if wait > 0:
+    time.sleep(wait)
+
+api_key = os.environ['TEAMWORK_API_KEY']
+site = os.environ['TEAMWORK_SITE']
+user_id = os.environ['TEAMWORK_USER_ID']
+token = base64.b64encode(f"{api_key}:x".encode()).decode()
+today = datetime.datetime.now().strftime("%Y%m%d")
+
+# 1. Log 15 minutes on the EOD task (3:45–4:00, non-billable, "EOD")
+try:
+    tl_payload = json.dumps({"time-entry": {
+        "description": "EOD",
+        "person-id": user_id,
+        "date": today,
+        "time": "15:45",
+        "hours": "0",
+        "minutes": "15",
+        "isbillable": "0"
+    }}).encode()
+    req = urllib.request.Request(f"{site}/tasks/{EOD_TASK_ID}/time_entries.json", data=tl_payload, headers={
+        "Content-Type": "application/json", "Authorization": f"Basic {token}"
+    }, method="POST")
+    with urllib.request.urlopen(req) as resp:
+        d = json.loads(resp.read())
+        print("[timelog] id=", d.get("timeLogId") or d.get("id"), "status=", d.get("STATUS"), flush=True)
+except Exception as e:
+    print("[timelog] EXC", e, flush=True)
+
+# 2. Send the Slack DM
+try:
+    payload = json.dumps({"channel": os.environ['SLACK_USER_ID'], "text": slack_text}).encode()
+    req = urllib.request.Request("https://slack.com/api/chat.postMessage", data=payload, headers={
+        "Authorization": f"Bearer {os.environ['SLACK_BOT_TOKEN']}",
+        "Content-Type": "application/json; charset=utf-8"
+    }, method="POST")
+    with urllib.request.urlopen(req) as resp:
+        d = json.loads(resp.read())
+        print("[slack]", "ok" if d.get('ok') else d.get('error'), flush=True)
+except Exception as e:
+    print("[slack] EXC", e, flush=True)
+
+# 3. Post the HTML comment to the EOD task
+try:
+    payload = json.dumps({"comment": {"body": html_body, "content-type": "html"}}).encode()
+    req = urllib.request.Request(f"{site}/tasks/{EOD_TASK_ID}/comments.json", data=payload, headers={
+        "Content-Type": "application/json", "Authorization": f"Basic {token}"
+    }, method="POST")
+    with urllib.request.urlopen(req) as resp:
+        d = json.loads(resp.read())
+        print("[teamwork] comment id=", d.get("id"), "status=", d.get("STATUS"), flush=True)
+except Exception as e:
+    print("[teamwork] EXC", e, flush=True)
+PYEOF
+
+nohup python3 -u /tmp/eod_send.py > /tmp/eod_send.log 2>&1 &
+disown
+sleep 1
+cat /tmp/eod_send.log
 ```
+
+Tell the user the script is queued and confirm when it has fired by checking `/tmp/eod_send.log` shortly after 16:00 Manila — you should see three lines: `[timelog] id=...`, `[slack] ok`, `[teamwork] comment id=...`.
+
+**Important**: the user's machine must stay awake (lid open, no sleep) until 16:00 Manila for the scheduled send to fire. If queuing more than ~30 minutes early, remind the user.
 
 ---
 
-## Step 9 — Post the comment to the EOD Teamwork task
+## Step 9 — (Optional) Immediate send fallback
 
-Same auth pattern as the deployment-plan skill — Python with `urllib` so the HTML body is JSON-escaped cleanly without shell quoting issues.
+If the user requests immediate send, run the same script but skip the `time.sleep(wait)` block. Same three actions: timelog, Slack DM, Teamwork comment.
 
 ```bash
 set -a && source .env && set +a

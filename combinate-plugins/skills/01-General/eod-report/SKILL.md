@@ -2,7 +2,7 @@
 name: eod-report
 description: End-of-day or midday standup workflow for Combinate team members. Pulls today's Teamwork timelogs, classifies tasks as deliverables vs meetings, captures a time logs screenshot via Droplr, then posts a structured HTML comment to a recurring EOD/Midday Teamwork task. Trigger on "eod report", "EOD standup", "end of day", "midday report", "generate EOD", "daily wrap-up", "log my day", or "post EOD".
 metadata:
-  version: 3.2.0
+  version: 3.3.0
   category: 01-General
 model: claude-haiku-4-5-20251001
 ---
@@ -351,15 +351,42 @@ Apply any edits, then proceed.
 
 ---
 
-## Step 8 — Schedule the send for 16:00 Asia/Manila
+## Step 8 — Schedule the send for 16:00 Asia/Manila (with re-fetch at fire time)
 
-The team convention is to post the EOD comment at the end of the working day. Rather than firing immediately, this step writes a background Python script that sleeps until **16:00 Asia/Manila** then performs three actions in order:
+The team convention is to post the EOD comment at the end of the working day. Because the user may queue this hours before 16:00 (e.g. queuing at 09:00), the scheduled script **re-fetches today's timelogs and re-captures the screenshot at fire time** — so any work logged between the queue moment and 16:00 is included. The user's manual overrides from Step 7 (project moves, status corrections) are persisted as JSON and re-applied after the fresh fetch.
 
-1. **Log 15 minutes** on the EOD task — description `EOD`, time `15:45`, duration `15m`, **non-billable**
-2. **Send the Slack DM** to `$SLACK_USER_ID`
-3. **Post the HTML comment** to the EOD task
+At 16:00 Asia/Manila, the script performs these actions in order:
 
-If the user explicitly asks for an immediate send (e.g. "send now, don't wait"), skip the sleep but keep the same three calls.
+1. **Re-fetch** today's timelogs from Teamwork
+2. **Re-classify** tasks using the auto-rules from Step 3
+3. **Apply user overrides** (from Step 7) on top of the auto-classification
+4. **Re-capture the screenshot** (open Teamwork time logs in Chrome → wait → `capture.sh app "Google Chrome"` → close tab)
+5. **Re-build** the Slack mrkdwn body and Teamwork HTML body fresh from the new data
+6. **Log 15 minutes** on the EOD task — description `EOD`, time `15:45`, duration `15m`, **non-billable**
+7. **Send the Slack DM** to `$SLACK_USER_ID`
+8. **Post the HTML comment** to the EOD task
+
+If the user explicitly asks for an immediate send (e.g. "send now, don't wait"), use Step 9 (no sleep, no re-fetch — just send what was previewed).
+
+### 8a. Build the overrides JSON from Step 7 corrections
+
+After the user confirms the previews in Step 7 with any corrections (project moves, status changes, meeting reclassifications), capture those as a single JSON object keyed by Teamwork task ID:
+
+```json
+{
+  "26181826": {
+    "project": "International Eucharistic Congress (IEC)",
+    "status": "done - for qa"
+  },
+  "26167780": {
+    "is_meeting": true
+  }
+}
+```
+
+Each override is optional. Omit any key that doesn't change. Tasks without an override use the auto-classification from Step 3.
+
+### 8b. Write and launch the scheduled script
 
 Write the script to `/tmp/eod_send.py` and run it detached so the conversation can continue:
 
@@ -367,13 +394,16 @@ Write the script to `/tmp/eod_send.py` and run it detached so the conversation c
 set -a && source .env && set +a
 
 cat > /tmp/eod_send.py << 'PYEOF'
-import json, urllib.request, base64, os, time, datetime
-
-slack_text = """[FULL SLACK MRKDWN BODY FROM STEP 6a]"""
-
-html_body = """[FULL HTML BODY FROM STEP 6b — keep all newlines and tags as-is]"""
+import json, urllib.request, base64, os, time, datetime, subprocess, re
+from urllib.parse import quote
 
 EOD_TASK_ID = "[EOD_TASK_ID]"
+USER_FULL_NAME = "[USER_FULL_NAME]"   # e.g. "Maiks Ardona"
+
+# Overrides captured from Step 7. Empty {} means "use auto-rules for everything".
+OVERRIDES = [OVERRIDES_JSON]
+
+MEETING_KEYWORDS = ['rsm', 'rapid standup', 'daily standup', 'show and tell', 'team huddle', 'huddle', '1:1']
 
 # Wait until 16:00 Asia/Manila
 os.environ['TZ'] = 'Asia/Manila'
@@ -386,50 +416,158 @@ if wait > 0:
     time.sleep(wait)
 
 api_key = os.environ['TEAMWORK_API_KEY']
-site = os.environ['TEAMWORK_SITE']
+site   = os.environ['TEAMWORK_SITE']
 user_id = os.environ['TEAMWORK_USER_ID']
+slack_token = os.environ['SLACK_BOT_TOKEN']
+slack_uid   = os.environ['SLACK_USER_ID']
 token = base64.b64encode(f"{api_key}:x".encode()).decode()
 today = datetime.datetime.now().strftime("%Y%m%d")
+today_human = datetime.datetime.now().strftime("%a, %d %b %Y")
 
-# 1. Log 15 minutes on the EOD task (3:45–4:00, non-billable, "EOD")
+# 1. Re-fetch timelogs
+print("[refetch] timelogs", flush=True)
+req = urllib.request.Request(
+    f"{site}/time_entries.json?userId={user_id}&fromdate={today}&todate={today}&pageSize=250",
+    headers={"Authorization": f"Basic {token}"})
+with urllib.request.urlopen(req) as resp:
+    entries = json.loads(resp.read()).get('time-entries', [])
+
+# 2. Re-classify (mirrors Step 3 logic)
+def classify(name, project, board_column, completed):
+    if any(k in name.lower() for k in MEETING_KEYWORDS):
+        return 'meeting', None
+    if project == 'Combinate Support Board':
+        return 'deliverable', 'done - for qa'
+    bc = (board_column or '').lower()
+    if bc == 'qa':              return 'deliverable', 'done - for qa'
+    if bc == 'to be released':  return 'deliverable', 'to be released'
+    if bc == 'to do':           return 'deliverable', 'to do'
+    if bc == 'blocked':         return 'deliverable', 'blocked'
+    if completed:               return 'deliverable', 'completed'
+    return 'deliverable', 'in progress'
+
+seen = set()
+tasks = {}  # tid -> {name, project, status, kind, url}
+for e in entries:
+    tid = str(e.get('todo-item-id', ''))
+    if not tid or tid in seen: continue
+    seen.add(tid)
+    name = e.get('todo-item-name', '')
+    project = e.get('project-name', '')
+    # Fetch task to get board column + completed flag
+    treq = urllib.request.Request(f"{site}/tasks/{tid}.json", headers={"Authorization": f"Basic {token}"})
+    with urllib.request.urlopen(treq) as r:
+        t = json.loads(r.read()).get('todo-item', {})
+    bc = (t.get('board-column') or {}).get('name', '')
+    completed = t.get('completed', False)
+    kind, status = classify(name, project, bc, completed)
+    tasks[tid] = {
+        'name': t.get('content', name),
+        'project': project,
+        'status': status,
+        'kind': kind,
+        'url': f"{site}/app/tasks/{tid}",
+    }
+
+# 3. Apply user overrides on top of auto-classification
+for tid, ov in OVERRIDES.items():
+    if tid not in tasks: continue
+    if 'project' in ov:    tasks[tid]['project'] = ov['project']
+    if 'status' in ov:     tasks[tid]['status']  = ov['status']
+    if ov.get('is_meeting') is True:  tasks[tid]['kind'] = 'meeting'; tasks[tid]['status'] = None
+    if ov.get('is_meeting') is False: tasks[tid]['kind'] = 'deliverable'
+
+# 4. Re-capture screenshot
+screenshot_url = None
+try:
+    subprocess.run(['open', '-a', 'Google Chrome', f"{site}/app/time/all"], check=False)
+    time.sleep(15)
+    r = subprocess.run(['combinate-plugins/skills/01-General/droplr/capture.sh', 'app', 'Google Chrome'],
+                       capture_output=True, text=True, timeout=60)
+    out = (r.stdout or '').strip().splitlines()
+    for line in reversed(out):
+        if line.startswith('https://') and 'd.pr' in line:
+            screenshot_url = line; break
+    print(f"[screenshot] {screenshot_url or 'FAILED'}", flush=True)
+    # Close the time-logs tab
+    subprocess.run(['osascript', '-e',
+        'tell application "Google Chrome" to tell front window to if (URL of active tab) contains "/app/time" then close active tab'],
+        check=False)
+except Exception as e:
+    print(f"[screenshot] EXC {e}", flush=True)
+
+# 5. Re-build Slack mrkdwn + HTML
+deliverables = {tid: r for tid, r in tasks.items() if r['kind'] == 'deliverable'}
+meetings     = {tid: r for tid, r in tasks.items() if r['kind'] == 'meeting'}
+
+# Group deliverables by project
+by_proj = {}
+for tid, r in deliverables.items():
+    by_proj.setdefault(r['project'], []).append((tid, r))
+
+slack_lines = [f"*EOD Standup - {USER_FULL_NAME} - {today_human}*", "⠀", "*Deliverables*"]
+for proj, items in by_proj.items():
+    slack_lines.append(f"• *{proj}*")
+    for tid, r in items:
+        slack_lines.append(f"  • <{r['url']}|{r['name']}> `{r['status']}`")
+slack_lines += ["", "*Meetings*"]
+for tid, r in meetings.items():
+    slack_lines.append(f"• <{r['url']}|{r['name']}>")
+if screenshot_url:
+    slack_lines += ["", f"*Time logs:* <{screenshot_url}|screenshot>"]
+slack_text = "\n".join(slack_lines)
+
+html_parts = ['<strong>Midday / End-of-Day Report (must be posted on / before 6:00PM, PHT)</strong><br/>',
+              '1. List down updates on your priorities / tasks for the day including urgent SWAT tickets, if any<br/>',
+              '2. Make sure to itemise deliverables with the correct TW links']
+html_parts.append('<ul>')
+for proj, items in by_proj.items():
+    html_parts.append(f'  <li><strong>{proj}</strong><ul>')
+    for tid, r in items:
+        html_parts.append(f'    <li><a href="{r["url"]}">{r["name"]}</a> &mdash; <code>{r["status"]}</code></li>')
+    html_parts.append('  </ul></li>')
+html_parts.append('</ul>3. Enumerate other priorities accordingly that were not included in the SOD Report (i.e. Ops and other tickets with dependencies)<br/>')
+html_parts.append('4. Meetings scheduled')
+html_parts.append('<ul>')
+for tid, r in meetings.items():
+    html_parts.append(f'  <li><a href="{r["url"]}">{r["name"]}</a></li>')
+html_parts.append('</ul>5. Provide a screenshot of your time logs')
+if screenshot_url:
+    html_parts.append(f'<ul><li><a href="{screenshot_url}">{screenshot_url}</a></li></ul>')
+else:
+    html_parts.append('<br/><em>[Screenshot to be uploaded]</em>')
+html_body = "\n".join(html_parts)
+
+# 6. Log 15 minutes on the EOD task
 try:
     tl_payload = json.dumps({"time-entry": {
-        "description": "EOD",
-        "person-id": user_id,
-        "date": today,
-        "time": "15:45",
-        "hours": "0",
-        "minutes": "15",
-        "isbillable": "0"
+        "description": "EOD", "person-id": user_id, "date": today,
+        "time": "15:45", "hours": "0", "minutes": "15", "isbillable": "0"
     }}).encode()
-    req = urllib.request.Request(f"{site}/tasks/{EOD_TASK_ID}/time_entries.json", data=tl_payload, headers={
-        "Content-Type": "application/json", "Authorization": f"Basic {token}"
-    }, method="POST")
+    req = urllib.request.Request(f"{site}/tasks/{EOD_TASK_ID}/time_entries.json", data=tl_payload,
+        headers={"Content-Type": "application/json", "Authorization": f"Basic {token}"}, method="POST")
     with urllib.request.urlopen(req) as resp:
         d = json.loads(resp.read())
         print("[timelog] id=", d.get("timeLogId") or d.get("id"), "status=", d.get("STATUS"), flush=True)
 except Exception as e:
     print("[timelog] EXC", e, flush=True)
 
-# 2. Send the Slack DM
+# 7. Send the Slack DM
 try:
-    payload = json.dumps({"channel": os.environ['SLACK_USER_ID'], "text": slack_text}).encode()
-    req = urllib.request.Request("https://slack.com/api/chat.postMessage", data=payload, headers={
-        "Authorization": f"Bearer {os.environ['SLACK_BOT_TOKEN']}",
-        "Content-Type": "application/json; charset=utf-8"
-    }, method="POST")
+    payload = json.dumps({"channel": slack_uid, "text": slack_text}).encode()
+    req = urllib.request.Request("https://slack.com/api/chat.postMessage", data=payload,
+        headers={"Authorization": f"Bearer {slack_token}", "Content-Type": "application/json; charset=utf-8"}, method="POST")
     with urllib.request.urlopen(req) as resp:
         d = json.loads(resp.read())
         print("[slack]", "ok" if d.get('ok') else d.get('error'), flush=True)
 except Exception as e:
     print("[slack] EXC", e, flush=True)
 
-# 3. Post the HTML comment to the EOD task
+# 8. Post the HTML comment to the EOD task
 try:
     payload = json.dumps({"comment": {"body": html_body, "content-type": "html"}}).encode()
-    req = urllib.request.Request(f"{site}/tasks/{EOD_TASK_ID}/comments.json", data=payload, headers={
-        "Content-Type": "application/json", "Authorization": f"Basic {token}"
-    }, method="POST")
+    req = urllib.request.Request(f"{site}/tasks/{EOD_TASK_ID}/comments.json", data=payload,
+        headers={"Content-Type": "application/json", "Authorization": f"Basic {token}"}, method="POST")
     with urllib.request.urlopen(req) as resp:
         d = json.loads(resp.read())
         print("[teamwork] comment id=", d.get("id"), "status=", d.get("STATUS"), flush=True)
@@ -443,9 +581,13 @@ sleep 1
 cat /tmp/eod_send.log
 ```
 
-Tell the user the script is queued and confirm when it has fired by checking `/tmp/eod_send.log` shortly after 16:00 Manila — you should see three lines: `[timelog] id=...`, `[slack] ok`, `[teamwork] comment id=...`.
+Tell the user the script is queued and confirm when it has fired by checking `/tmp/eod_send.log` shortly after 16:00 Manila — you should see lines for `[refetch]`, `[screenshot]`, `[timelog]`, `[slack]`, `[teamwork]`.
 
-**Important**: the user's machine must stay awake (lid open, no sleep) until 16:00 Manila for the scheduled send to fire. If queuing more than ~30 minutes early, remind the user.
+**Important**:
+
+- The user's machine must stay awake (lid open, no sleep) until 16:00 Manila for the scheduled send to fire. If queuing more than ~30 minutes early, remind the user.
+- The screenshot re-capture targets Google Chrome's frontmost window. At 16:00, the script opens the time logs URL itself, so the user does not need to keep the tab open — but Chrome must be running and Accessibility permission must still be granted for `osascript`.
+- Manual corrections from Step 7 are persisted in the `OVERRIDES` JSON. Any new task that lands between queue time and 16:00 is auto-classified using the Step 3 rules. If a new task needs a manual correction, it will not be applied — flag this caveat to the user when queuing.
 
 ---
 

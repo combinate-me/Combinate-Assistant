@@ -2,7 +2,7 @@
 name: eod-report
 description: End-of-day or midday standup workflow for Combinate team members. Pulls today's Teamwork timelogs, classifies tasks as deliverables vs meetings, captures a time logs screenshot via Droplr, then posts a structured HTML comment to a recurring EOD/Midday Teamwork task. Trigger on "eod report", "EOD standup", "end of day", "midday report", "generate EOD", "daily wrap-up", "log my day", or "post EOD".
 metadata:
-  version: 3.0.0
+  version: 3.1.0
   category: 01-General
 model: claude-haiku-4-5-20251001
 ---
@@ -23,6 +23,7 @@ Reads from `.env` (cwd-relative — same pattern as the teamwork skill):
 | `TEAMWORK_API_KEY` | Teamwork API auth |
 | `TEAMWORK_SITE` | Teamwork instance URL (e.g. `https://pm.cbo.me`) |
 | `TEAMWORK_USER_ID` | Your Teamwork user ID — fetches your timelogs |
+| `EOD_TASKLIST_ID` | Teamwork tasklist ID containing the recurring "Midday and EOD Report" task (e.g. `788768`) — used to auto-resolve today's EOD task ID |
 | `SLACK_BOT_TOKEN` | Slack Bot User OAuth token — sends the digest DM |
 | `SLACK_USER_ID` | Your Slack user ID — destination for the digest DM |
 
@@ -33,11 +34,68 @@ The skill also relies on the **droplr** skill being installed (same plugin) for 
 
 ---
 
-## Step 1 — Ask for the EOD Teamwork task ID
+## Step 1 — Auto-resolve today's EOD Teamwork task ID
 
-The EOD/Midday Teamwork task is recurring (a new task instance is created daily), so its ID changes every day. Ask:
+The EOD/Midday Teamwork task is recurring. Teamwork only materializes the next instance after the previous one is **closed (completed)**, so we may need to close yesterday's instance first.
 
-> "What's today's EOD/Midday Teamwork task ID? (the recurring task you want me to comment on)"
+Use the following resolution logic — do not ask the user unless every fallback fails:
+
+```bash
+set -a && source .env && set +a
+TODAY=$(TZ=Asia/Manila date +%Y%m%d)
+
+resolve_eod_task_id() {
+  curl -s -u "$TEAMWORK_API_KEY:x" \
+    "$TEAMWORK_SITE/tasklists/$EOD_TASKLIST_ID/tasks.json" \
+    | python3 -c "
+import json, sys, re
+today = '$TODAY'
+tasks = json.load(sys.stdin).get('todo-items', [])
+eod = [t for t in tasks if re.search(r'(?i)midday|eod', t.get('content',''))]
+todays = [t for t in eod if t.get('due-date') == today and not t.get('completed')]
+if len(todays) == 1:
+    print('FOUND', todays[0]['id'])
+elif len(todays) > 1:
+    print('MULTI', ','.join(str(t['id']) for t in todays))
+else:
+    open_prior = [t for t in eod if not t.get('completed')]
+    if open_prior:
+        open_prior.sort(key=lambda t: t.get('due-date') or '', reverse=True)
+        print('NEEDS_CLOSE', open_prior[0]['id'])
+    else:
+        print('NONE')
+"
+}
+
+result=$(resolve_eod_task_id)
+case "$result" in
+  FOUND\ *)
+    EOD_TASK_ID=${result#FOUND }
+    ;;
+  NEEDS_CLOSE\ *)
+    PREV=${result#NEEDS_CLOSE }
+    echo "Closing previous EOD task $PREV so today's instance materializes..."
+    curl -s -u "$TEAMWORK_API_KEY:x" -X PUT "$TEAMWORK_SITE/tasks/$PREV/complete.json"
+    sleep 2
+    result2=$(resolve_eod_task_id)
+    case "$result2" in
+      FOUND\ *) EOD_TASK_ID=${result2#FOUND } ;;
+      *) echo "Auto-resolve failed after closing prev. Ask user."; exit 1 ;;
+    esac
+    ;;
+  MULTI\ *|NONE)
+    echo "Auto-resolve found $result — ask user for the task ID."
+    exit 1
+    ;;
+esac
+echo "EOD_TASK_ID=$EOD_TASK_ID"
+```
+
+Outcomes:
+
+- **FOUND** → use it directly, skip the prompt
+- **NEEDS_CLOSE** → close the most recent open EOD task via `PUT /tasks/{id}/complete.json`, wait ~2s for Teamwork to materialize the next instance, re-query, then use it
+- **MULTI** or **NONE** → fall back to asking: "Couldn't auto-resolve today's EOD task. What's today's EOD/Midday Teamwork task ID?"
 
 Save as `EOD_TASK_ID`. Do not proceed without it.
 
@@ -117,13 +175,15 @@ print(f"Deliverables: {len(deliverables)}  |  Meetings: {len(meetings)}")
 EOF
 ```
 
-Status logic for **deliverables** (board column takes priority over Teamwork completed state):
+Status logic for **deliverables** (applied in this order — first match wins):
 
+- `done - for qa` if **project name is `Combinate Support Board`** (these are SWAT/support fixes; logged time means done — board column on that project is usually empty)
 - `done - for qa` if board column is `QA`
+- `to be released` if board column is `To Be Released`
 - `to do` if board column is `To Do`
+- `blocked` if board column is `Blocked` (or the user explicitly says so)
 - `completed` if marked done in Teamwork and no matching board column
 - `in progress` if still open and no matching board column
-- `blocked` only if the user explicitly says so
 
 Meetings don't have a status — just list the link.
 
@@ -200,21 +260,20 @@ Match the team's standard EOD template format. Build the HTML body using these r
 - Section 2 **deliverables**: `<ul>` of `<li><a href="URL">TASK_NAME</a> — <code>STATUS</code></li>` — group by Teamwork project name with project name as a sub-bullet
 - Section 3: user-provided content, or omit the body entirely if blank (keep the heading)
 - Section 4 **meetings**: `<ul>` of `<li><a href="URL">TASK_NAME</a></li>` — no status, no grouping
-- Section 5: `<a href="SCREENSHOT_URL">View time logs screenshot</a>`, or `<em>[Screenshot to be uploaded]</em>` if the screenshot was skipped
+- Section 5: bulleted list containing the raw Droplr URL as both the href and the link text (matches sections 2 and 4 visual rhythm), or `<em>[Screenshot to be uploaded]</em>` if the screenshot was skipped
 
-Template (with placeholders). Spacing is intentionally tight — `<ul>` blocks provide their own vertical rhythm, so use single `<br/>` only after numbered text lines that aren't immediately followed by a list.
+Template (with placeholders). Spacing is intentionally tight — `<ul>` blocks provide their own vertical rhythm. **Critical:** keep section number lines (e.g. `3. ...`, `4. ...`, `5. ...`) immediately after the prior closing tag with no leading whitespace or newlines, or Teamwork renders a stray space before the digit.
 
 ```html
 <strong>Midday / End-of-Day Report (must be posted on / before 6:00PM, PHT)</strong><br/>
 1. List down updates on your priorities / tasks for the day including urgent SWAT tickets, if any<br/>
 2. Make sure to itemise deliverables with the correct TW links
-[DELIVERABLES_BLOCK]
-3. Enumerate other priorities accordingly that were not included in the SOD Report (i.e. Ops and other tickets with dependencies)<br/>
-[SECTION_3_CONTENT_OR_BLANK]
-4. Meetings scheduled
-[MEETINGS_BLOCK]
-5. Provide a screenshot of your time logs<br/>
-<a href="[SCREENSHOT_URL]">View time logs screenshot</a>
+[DELIVERABLES_BLOCK]3. Enumerate other priorities accordingly that were not included in the SOD Report (i.e. Ops and other tickets with dependencies)<br/>
+[SECTION_3_CONTENT_OR_BLANK]4. Meetings scheduled
+[MEETINGS_BLOCK]5. Provide a screenshot of your time logs
+<ul>
+  <li><a href="[SCREENSHOT_URL]">[SCREENSHOT_URL]</a></li>
+</ul>
 ```
 
 Where `[DELIVERABLES_BLOCK]` is, for each project group:
@@ -336,7 +395,8 @@ If only one of the two sends succeeded, report which succeeded and which failed,
 
 ## Notes
 
-- The EOD/Midday Teamwork task is recurring — its ID changes daily. Always ask, never cache the ID across runs.
+- The EOD/Midday Teamwork task is recurring — its ID changes daily. Auto-resolve via Step 1 (tasklist `$EOD_TASKLIST_ID`); only ask the user when auto-resolve fails.
+- Teamwork only materializes the next recurring instance after the previous one is closed. The Step 1 logic handles this by auto-closing the prior open instance when today's hasn't appeared yet.
 - Section 3 is usually blank. Don't pester the user — accept "blank" / "none" / empty input cleanly.
 - Meetings (RSM, Show and Tell, Team Huddle, etc.) are **not** filtered out — they appear in Section 4 with their TW links so the team can see what time went where.
 - HTML output is required because Teamwork comments render HTML and the template uses bold for the header.

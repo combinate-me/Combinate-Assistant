@@ -33,3 +33,9 @@ scripts/
 
 # MCP server / tool logs
 *.log
+
+# Playwright MCP scratch
+.playwright-mcp/
+
+# Scheduled tasks runtime lock
+.claude/scheduled_tasks.lock

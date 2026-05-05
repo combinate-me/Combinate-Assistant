@@ -574,8 +574,8 @@ Updates the local git remote URL after a repository has been renamed on GitHub. 
 
 | | URL |
 |---|---|
-| **Old** | `git@github.com:combinate-me/Combinate-Assistant.git` |
-| **New** | `git@github.com:combinate-me/Executive-Assistant.git` |
+| **Old** | `https://github.com/combinate-me/Combinate-Assistant.git` |
+| **New** | `https://github.com/combinate-me/Executive-Assistant.git` |
 
 If the current remote matches the old URL, the update is applied automatically with no prompts.
 
@@ -593,11 +593,11 @@ git remote get-url origin
 
 Save the output as `CURRENT_REMOTE_URL`.
 
-- If `CURRENT_REMOTE_URL` is `git@github.com:combinate-me/Combinate-Assistant.git`:
-  - Set `NEW_REMOTE_URL` = `git@github.com:combinate-me/Executive-Assistant.git`
+- If `CURRENT_REMOTE_URL` is `https://github.com/combinate-me/Combinate-Assistant.git`:
+  - Set `NEW_REMOTE_URL` = `https://github.com/combinate-me/Executive-Assistant.git`
   - Tell the user: "Detected the old remote. Updating to the new repository automatically."
   - Proceed to D2.
-- If `CURRENT_REMOTE_URL` is already `git@github.com:combinate-me/Executive-Assistant.git`:
+- If `CURRENT_REMOTE_URL` is already `https://github.com/combinate-me/Executive-Assistant.git`:
   - Tell the user: "Your remote is already pointing to the new repository. Nothing to update."
   - Stop.
 - If `CURRENT_REMOTE_URL` is something else:

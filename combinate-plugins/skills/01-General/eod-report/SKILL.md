@@ -2,7 +2,7 @@
 name: eod-report
 description: End-of-day or midday standup workflow for Combinate team members. Pulls today's Teamwork timelogs, classifies tasks as deliverables vs meetings, captures a time logs screenshot via Droplr, then posts a structured HTML comment to a recurring EOD/Midday Teamwork task. Trigger on "eod report", "EOD standup", "end of day", "midday report", "generate EOD", "daily wrap-up", "log my day", or "post EOD".
 metadata:
-  version: 3.3.0
+  version: 3.4.0
   category: 01-General
 model: claude-haiku-4-5-20251001
 ---
@@ -351,20 +351,27 @@ Apply any edits, then proceed.
 
 ---
 
-## Step 8 — Schedule the send for 16:00 Asia/Manila (with re-fetch at fire time)
+## Step 8 — Schedule the send for 16:00 Asia/Manila (with re-fetch at 15:55)
 
-The team convention is to post the EOD comment at the end of the working day. Because the user may queue this hours before 16:00 (e.g. queuing at 09:00), the scheduled script **re-fetches today's timelogs and re-captures the screenshot at fire time** — so any work logged between the queue moment and 16:00 is included. The user's manual overrides from Step 7 (project moves, status corrections) are persisted as JSON and re-applied after the fresh fetch.
+The team convention is to post the EOD comment at the end of the working day. Because the user may queue this hours before 16:00 (e.g. queuing at 09:00), the scheduled script **re-fetches today's timelogs and re-captures the screenshot at 15:55 Manila** (5 minutes before send). The user's manual overrides from Step 7 (project moves, status corrections) are persisted as JSON and re-applied after the fresh fetch.
 
-At 16:00 Asia/Manila, the script performs these actions in order:
+The script splits into two phases:
+
+**Phase 1 — at 15:55 Asia/Manila** (refresh and rebuild):
 
 1. **Re-fetch** today's timelogs from Teamwork
 2. **Re-classify** tasks using the auto-rules from Step 3
 3. **Apply user overrides** (from Step 7) on top of the auto-classification
 4. **Re-capture the screenshot** (open Teamwork time logs in Chrome → wait → `capture.sh app "Google Chrome"` → close tab)
 5. **Re-build** the Slack mrkdwn body and Teamwork HTML body fresh from the new data
+
+**Phase 2 — at 16:00 Asia/Manila** (commit):
+
 6. **Log 15 minutes** on the EOD task — description `EOD`, time `15:45`, duration `15m`, **non-billable**
 7. **Send the Slack DM** to `$SLACK_USER_ID`
 8. **Post the HTML comment** to the EOD task
+
+The 5-minute window between Phase 1 and Phase 2 means the Teamwork comment is posted exactly at 16:00 PHT (matching the team convention) while still capturing any timelog entries made up to 15:55.
 
 If the user explicitly asks for an immediate send (e.g. "send now, don't wait"), use Step 9 (no sleep, no re-fetch — just send what was previewed).
 
@@ -405,15 +412,16 @@ OVERRIDES = [OVERRIDES_JSON]
 
 MEETING_KEYWORDS = ['rsm', 'rapid standup', 'daily standup', 'show and tell', 'team huddle', 'huddle', '1:1']
 
-# Wait until 16:00 Asia/Manila
+# Phase 1: wait until 15:55 Asia/Manila (refresh and rebuild)
 os.environ['TZ'] = 'Asia/Manila'
 time.tzset()
-target = datetime.datetime.now().replace(hour=16, minute=0, second=0, microsecond=0)
+phase1 = datetime.datetime.now().replace(hour=15, minute=55, second=0, microsecond=0)
+phase2 = datetime.datetime.now().replace(hour=16, minute=0,  second=0, microsecond=0)
 now = datetime.datetime.now()
-wait = (target - now).total_seconds()
-print(f"[scheduler] now={now} target={target} wait={wait:.0f}s", flush=True)
-if wait > 0:
-    time.sleep(wait)
+wait1 = (phase1 - now).total_seconds()
+print(f"[scheduler] now={now} phase1={phase1} wait1={wait1:.0f}s", flush=True)
+if wait1 > 0:
+    time.sleep(wait1)
 
 api_key = os.environ['TEAMWORK_API_KEY']
 site   = os.environ['TEAMWORK_SITE']
@@ -538,6 +546,13 @@ else:
     html_parts.append('<br/><em>[Screenshot to be uploaded]</em>')
 html_body = "\n".join(html_parts)
 
+# Phase 2: wait until 16:00 Asia/Manila (commit)
+now = datetime.datetime.now()
+wait2 = (phase2 - now).total_seconds()
+print(f"[scheduler] now={now} phase2={phase2} wait2={wait2:.0f}s", flush=True)
+if wait2 > 0:
+    time.sleep(wait2)
+
 # 6. Log 15 minutes on the EOD task
 try:
     tl_payload = json.dumps({"time-entry": {
@@ -581,7 +596,7 @@ sleep 1
 cat /tmp/eod_send.log
 ```
 
-Tell the user the script is queued and confirm when it has fired by checking `/tmp/eod_send.log` shortly after 16:00 Manila — you should see lines for `[refetch]`, `[screenshot]`, `[timelog]`, `[slack]`, `[teamwork]`.
+Tell the user the script is queued. The log will show two scheduler entries (Phase 1 wakeup at 15:55 then Phase 2 wakeup at 16:00) followed by `[refetch]`, `[screenshot]`, `[timelog]`, `[slack]`, `[teamwork]`. Confirm by checking `/tmp/eod_send.log` shortly after 16:00 Manila.
 
 **Important**:
 

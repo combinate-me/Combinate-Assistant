@@ -2,7 +2,7 @@
 name: eod-report
 description: End-of-day or midday standup workflow for Combinate team members. Pulls today's Teamwork timelogs, classifies tasks as deliverables vs meetings, captures a time logs screenshot via Droplr, then posts a structured HTML comment to a recurring EOD/Midday Teamwork task. Trigger on "eod report", "EOD standup", "end of day", "midday report", "generate EOD", "daily wrap-up", "log my day", or "post EOD".
 metadata:
-  version: 3.4.0
+  version: 3.1.0
   category: 01-General
 model: claude-haiku-4-5-20251001
 ---
@@ -219,12 +219,15 @@ EOF
 Status logic for **deliverables** (applied in this order — first match wins):
 
 - `done - for qa` if **project name is `Combinate Support Board`** (these are SWAT/support fixes; logged time means done — board column on that project is usually empty)
+- `to be released` if the task has a Teamwork **tag** named `To Be Released` (case-insensitive). Tags often carry the release-readiness signal when board columns are empty.
 - `done - for qa` if board column is `QA`
 - `to be released` if board column is `To Be Released`
 - `to do` if board column is `To Do`
 - `blocked` if board column is `Blocked` (or the user explicitly says so)
 - `completed` if marked done in Teamwork and no matching board column
 - `in progress` if still open and no matching board column
+
+When fetching the task in Step 3, read `task['tags']` from the response and pass the list of tag names into the classifier alongside the board column.
 
 Meetings don't have a status — just list the link.
 
@@ -441,11 +444,14 @@ with urllib.request.urlopen(req) as resp:
     entries = json.loads(resp.read()).get('time-entries', [])
 
 # 2. Re-classify (mirrors Step 3 logic)
-def classify(name, project, board_column, completed):
+def classify(name, project, board_column, completed, tags):
     if any(k in name.lower() for k in MEETING_KEYWORDS):
         return 'meeting', None
     if project == 'Combinate Support Board':
         return 'deliverable', 'done - for qa'
+    tag_names = {(t or '').lower() for t in (tags or [])}
+    if 'to be released' in tag_names:
+        return 'deliverable', 'to be released'
     bc = (board_column or '').lower()
     if bc == 'qa':              return 'deliverable', 'done - for qa'
     if bc == 'to be released':  return 'deliverable', 'to be released'
@@ -468,7 +474,8 @@ for e in entries:
         t = json.loads(r.read()).get('todo-item', {})
     bc = (t.get('board-column') or {}).get('name', '')
     completed = t.get('completed', False)
-    kind, status = classify(name, project, bc, completed)
+    tag_names = [(x or {}).get('name','') for x in (t.get('tags') or [])]
+    kind, status = classify(name, project, bc, completed, tag_names)
     tasks[tid] = {
         'name': t.get('content', name),
         'project': project,

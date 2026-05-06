@@ -2,7 +2,7 @@
 name: task-update
 description: Post a standardised 8-section progress comment on a Teamwork task for a specific commit. Requires two arguments — TW task ID and commit ID. Covers Summary, Files Changed, Acceptance Criteria, Manual Test Plan, Deep Links, Tests Performed, Unit Test Prompt, and Pull Request details. Trigger before git commit, or on "task update", "post task comment", "update TW#".
 metadata:
-  version: 1.1.0
+  version: 1.2.0
   category: 06-Development
 model: claude-sonnet-4-6
 ---
@@ -36,7 +36,7 @@ After committing. The sequence is:
 | # | Section | Rule when it doesn't apply |
 |---|---------|---------------------------|
 | 1 | Summary | Always required — 1 paragraph, outcome first. |
-| 2 | Files changed | `N/A — docs-only / comment-only / no files modified` |
+| 2 | Files changed | `N/A — docs-only / comment-only / no files modified` — when present, every row requires an `action` (🟢 Created / 🟠 Updated / 🔴 Deleted) |
 | 3 | Acceptance criteria | `N/A — <why, e.g. 'internal refactor with no external behaviour change'>` |
 | 4 | Manual Test Plan (for QA) | `N/A — plugin-internal, nothing for QA to click` |
 | 5 | Deep links | `N/A — change is not customer-facing` |
@@ -66,7 +66,7 @@ If the commit is not found, tell the user and stop.
 
 ### Step 2 — Gather each section in parallel
 
-- **Files changed:** Run `git show --name-status --format="" <COMMIT_ID>` to get files changed in that specific commit. Map the first-column letter: `A` → `"created"`, `M` → `"updated"`, `D` → `"deleted"`. Populate the **Why** column from the commit diff — do not leave it blank.
+- **Files changed:** Run `git show --name-status --format="" <COMMIT_ID>` to get files changed in that specific commit. Map the first-column letter: `A` → `"created"`, `M` → `"updated"`, `D` → `"deleted"`. Set `action` on every row — omitting it defaults to `🟠 Updated` but is treated as incomplete. Populate the **Why** column from the commit diff — do not leave it blank.
 
   For the full diff context: `git show <COMMIT_ID>`
 
@@ -89,31 +89,33 @@ If the commit is not found, tell the user and stop.
 Compose the comment in this exact format:
 
 ```
-## Summary
+#### Summary
 
 <one paragraph, outcome first>
 
-## Files Changed
+#### Files Changed
 
-| File | Action | Why |
-|------|--------|-----|
-| path/to/file.ext | Updated | <reason> |
+| Action | File | Why |
+|--------|------|-----|
+| 🟢 Created | path/to/new-file.ext | <reason> |
+| 🟠 Updated | path/to/existing.ext | <reason> |
+| 🔴 Deleted | path/to/removed.ext | <reason> |
 
-## Acceptance Criteria
+#### Acceptance Criteria
 
 - <testable statement 1>
 - <testable statement 2>
 
-## Manual Test Plan
+#### Manual Test Plan
 
 1. <step> → Expected: <outcome>
 2. <step> → Expected: <outcome>
 
-## Deep Links
+#### Deep Links
 
 - <label>: <url>
 
-## Tests Performed
+#### Tests Performed
 
 | Test type | File / command | Outcome |
 |-----------|----------------|---------|
@@ -122,11 +124,11 @@ Compose the comment in this exact format:
 | E2E | <path or N/A — reason> | <pass/fail/skipped> |
 | Manual | <what was clicked> | <pass/fail/skipped> |
 
-## Unit Test Prompt
+#### Unit Test Prompt
 
 <paste-ready prompt, or N/A — reason>
 
-## Pull Request
+#### Pull Request
 
 <PR link and details, or N/A — reason>
 ```
@@ -147,7 +149,7 @@ Do not post until they reply with explicit approval. Every round of edits gets a
 source .env && curl -s -X POST \
   -u "$TEAMWORK_API_KEY:x" \
   -H "Content-Type: application/json" \
-  -d "{\"comment\": {\"body\": \"<ESCAPED_BODY>\", \"content-type\": \"markdown\"}}" \
+  -d "{\"comment\": {\"body\": \"<ESCAPED_BODY>\"}}" \
   "$TEAMWORK_SITE/tasks/TASK_ID/comments.json"
 ```
 

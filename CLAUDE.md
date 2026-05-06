@@ -98,6 +98,18 @@ Pull context from these sources in parallel:
 
 Do not ask me to provide context that can be gathered from these sources directly. Pull first, ask only if something is genuinely missing or ambiguous.
 
+## Design Handoff Requirements
+
+Before any Figma design is handed to the development team, the following must be completed:
+
+1. **Accessibility check** — Run `figma-accessibility-checking` on the Figma file. This applies to every design, regardless of the tech stack or component system used. Skill: `.claude/skills/figma/figma-accessibility-checking/SKILL.md`
+2. **Handoff doc** — Run the appropriate handoff skill for the project type:
+   - Insites projects: `figma-insites-handoff` (`.claude/skills/figma/figma-insites-handoff/SKILL.md`)
+   - Other projects: use `design-qa` or produce a specs summary appropriate to the build
+3. **Teamwork comment** — Leave a comment on the task confirming both are done, with links to any documents and a note that accessibility annotations are visible in the Figma file.
+
+The accessibility check is the constant. The handoff doc varies by project type.
+
 ## Client Task Workflow
 
 Every piece of client work must be anchored to a Teamwork task. Before starting any client task:
@@ -194,6 +206,7 @@ Reference material lives in `references/`.
 
 - `references/sops/` - Standard operating procedures
 - `references/examples/` - Example outputs and style guides
+- `references/insites-design-system.md` - Insites design system: Figma library key, component categories, font icons (400+), CSS architecture, design rules for Insites projects
 
 ## Archives
 

@@ -3,7 +3,7 @@ name: combinate-presentation
 description: Generate branded, self-contained HTML presentations for Combinate.
 model: sonnet
 metadata:
-  version: 1.0.0
+  version: 1.1.0
   category: 01-General
 ---
 

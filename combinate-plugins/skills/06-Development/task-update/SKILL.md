@@ -66,7 +66,12 @@ If the commit is not found, tell the user and stop.
 
 ### Step 2 — Gather each section in parallel
 
-- **Files changed:** Run `git show --name-status --format="" <COMMIT_ID>` to get files changed in that specific commit. Map the first-column letter: `A` → `"created"`, `M` → `"updated"`, `D` → `"deleted"`. Set `action` on every row — omitting it defaults to `🟠 Updated` but is treated as incomplete. Populate the **Why** column from the commit diff — do not leave it blank.
+- **Files changed:** Run `git show --name-status --format="" <COMMIT_ID>` to get files changed in that specific commit. Map the first-column letter to the exact emoji + label — no exceptions:
+  - `A` → `🟢 Created`
+  - `M` → `🟠 Updated`
+  - `D` → `🔴 Deleted`
+
+  The emoji is mandatory — never use the plain word alone. Populate the **Why** column from the commit diff — do not leave it blank.
 
   For the full diff context: `git show <COMMIT_ID>`
 

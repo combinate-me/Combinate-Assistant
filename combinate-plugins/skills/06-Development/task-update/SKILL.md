@@ -2,7 +2,7 @@
 name: task-update
 description: Post a standardised 8-section progress comment on a Teamwork task for a specific commit. Requires two arguments — TW task ID and commit ID. Covers Summary, Files Changed, Acceptance Criteria, Manual Test Plan, Deep Links, Tests Performed, Unit Test Prompt, and Pull Request details. Trigger before git commit, or on "task update", "post task comment", "update TW#".
 metadata:
-  version: 1.2.0
+  version: 1.3.0
   category: 06-Development
 model: claude-sonnet-4-6
 ---
@@ -89,11 +89,11 @@ If the commit is not found, tell the user and stop.
 Compose the comment in this exact format:
 
 ```
-#### Summary
+###### Summary
 
 <one paragraph, outcome first>
 
-#### Files Changed
+###### Files Changed
 
 | Action | File | Why |
 |--------|------|-----|
@@ -101,21 +101,21 @@ Compose the comment in this exact format:
 | 🟠 Updated | path/to/existing.ext | <reason> |
 | 🔴 Deleted | path/to/removed.ext | <reason> |
 
-#### Acceptance Criteria
+###### Acceptance Criteria
 
 - <testable statement 1>
 - <testable statement 2>
 
-#### Manual Test Plan
+###### Manual Test Plan
 
 1. <step> → Expected: <outcome>
 2. <step> → Expected: <outcome>
 
-#### Deep Links
+###### Deep Links
 
 - <label>: <url>
 
-#### Tests Performed
+###### Tests Performed
 
 | Test type | File / command | Outcome |
 |-----------|----------------|---------|
@@ -124,11 +124,11 @@ Compose the comment in this exact format:
 | E2E | <path or N/A — reason> | <pass/fail/skipped> |
 | Manual | <what was clicked> | <pass/fail/skipped> |
 
-#### Unit Test Prompt
+###### Unit Test Prompt
 
 <paste-ready prompt, or N/A — reason>
 
-#### Pull Request
+###### Pull Request
 
 <PR link and details, or N/A — reason>
 ```

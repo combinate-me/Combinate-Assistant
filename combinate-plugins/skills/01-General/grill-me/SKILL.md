@@ -4,6 +4,7 @@ description: Interview the user relentlessly about a plan or design until reachi
 metadata:
   version: 1.0.0
   category: 01-General
+  intranet_url: https://intranet.combinate.me/presentation/skill-grill-me
 ---
 
 ## Overview

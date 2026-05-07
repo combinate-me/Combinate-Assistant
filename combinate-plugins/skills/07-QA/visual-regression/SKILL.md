@@ -1,6 +1,7 @@
 ---
 name: visual-regression
 description: Run a full visual regression test between two web environments. Covers public pages, sign-up flow, sign-in flow, portal/authenticated pages, system pages, error pages, and functional QA. Screenshotted at desktop and mobile, pixel-diffed, and compiled into a branded HTML report. Use whenever comparing two staging environments, staging vs production, or before/after a deployment. Trigger on any mention of regression testing, visual comparison between environments, "check what changed", "compare staging", or "regression report".
+  intranet_url: https://intranet.combinate.me/presentation/skill-visual-regression
 ---
 
 # Visual Regression Testing

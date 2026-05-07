@@ -4,6 +4,7 @@ description: Insites Data module. Use for listing databases and reading or writi
 model: claude-haiku-4-5-20251001
 metadata:
   version: 1.0.0
+  intranet_url: https://intranet.combinate.me/presentation/skill-data
 ---
 
 # Insites: Data Module

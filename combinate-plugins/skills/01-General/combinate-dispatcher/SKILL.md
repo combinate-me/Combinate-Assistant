@@ -4,6 +4,7 @@ description: Combinate command dispatcher. Routes /combinate [command] to the ri
 metadata:
   version: 1.0.0
   category: 01-General
+  intranet_url: https://intranet.combinate.me/presentation/skill-combinate-dispatcher
 model: claude-sonnet-4-6
 ---
 

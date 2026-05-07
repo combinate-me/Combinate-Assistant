@@ -4,6 +4,7 @@ description: Insites Events module. Use for managing events, including creating 
 model: claude-sonnet-4-6
 metadata:
   version: 1.0.0
+  intranet_url: https://intranet.combinate.me/presentation/skill-insites-events
 ---
 
 # Insites: Events Module

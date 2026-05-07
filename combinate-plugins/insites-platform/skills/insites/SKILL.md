@@ -4,6 +4,7 @@ description: Insites platform integration. Use this skill as the entry point for
 model: claude-sonnet-4-6
 metadata:
   version: 1.0.0
+  intranet_url: https://intranet.combinate.me/presentation/skill-insites
 ---
 
 # Skill: Insites

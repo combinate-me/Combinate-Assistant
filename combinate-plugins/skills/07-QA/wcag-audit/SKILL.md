@@ -3,6 +3,7 @@ name: wcag-audit
 metadata:
   version: 1.0.0
   category: 07-QA
+  intranet_url: https://intranet.combinate.me/presentation/skill-wcag-audit
 description: Perform a WCAG 2.1 AA accessibility audit on a staging URL and fix issues one by one with user approval. Trigger on any request to audit, check, or fix accessibility on a page. v1.0.0
 ---
 

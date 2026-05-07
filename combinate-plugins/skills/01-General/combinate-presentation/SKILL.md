@@ -5,6 +5,7 @@ model: sonnet
 metadata:
   version: 1.1.0
   category: 01-General
+  intranet_url: https://intranet.combinate.me/presentation/skill-combinate-presentation
 ---
 
 # Combinate Presentation Skill

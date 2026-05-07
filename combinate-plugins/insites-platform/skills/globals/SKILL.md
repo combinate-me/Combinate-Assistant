@@ -4,6 +4,7 @@ description: Insites Globals covers tasks, task comments, activities, and attach
 model: claude-haiku-4-5-20251001
 metadata:
   version: 1.0.0
+  intranet_url: https://intranet.combinate.me/presentation/skill-insites-globals
 ---
 
 # Insites Globals

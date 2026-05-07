@@ -4,6 +4,7 @@ description: Builds a branded HTML presentation for any client meeting before it
 metadata:
   version: 1.0.0
   category: 01-General
+  intranet_url: https://intranet.combinate.me/presentation/skill-pre-meeting-presentation
 ---
 
 # Skill: Pre-Meeting Presentation

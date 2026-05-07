@@ -3,6 +3,7 @@ name: daily-task-brief
 description: Sends a teammate's daily task summary to their Slack DM. Pulls overdue and due-today tasks from Teamwork, plus tasks from the Developers column on the Combinate Support Board, and posts a formatted message with clickable Teamwork links. Dynamic — works for any Combinate teammate by name or email. Trigger on any request like "send my tasks to Slack", "daily task brief", "task summary", "what's on my plate today", "send standup tasks", "post my tasks", or "task brief for [name]". v2.0.0
 metadata:
   version: 2.0.0
+  intranet_url: https://intranet.combinate.me/presentation/skill-daily-task-brief
 ---
 
 # Skill: Daily Task Brief

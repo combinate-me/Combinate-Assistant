@@ -4,6 +4,7 @@ description: Post a standardised 8-section progress comment on a Teamwork task f
 metadata:
   version: 1.3.0
   category: 06-Development
+  intranet_url: https://intranet.combinate.me/presentation/skill-task-update
 model: claude-sonnet-4-6
 ---
 

@@ -4,6 +4,7 @@ description: Operate in token-efficient mode. Invoke this skill when the user wa
 metadata:
   version: 1.0.0
   category: 01-General
+  intranet_url: https://intranet.combinate.me/presentation/skill-token-efficiency
 ---
 
 # Token Efficiency Mode

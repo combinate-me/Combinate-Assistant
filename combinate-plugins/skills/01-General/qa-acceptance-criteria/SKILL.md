@@ -3,6 +3,7 @@ name: qa-acceptance-criteria
 metadata:
   version: 1.0.0
   category: 06-Engineering
+  intranet_url: https://intranet.combinate.me/presentation/skill-qa-acceptance-criteria
 description: Generate user stories, acceptance criteria, and matching Playwright tests for a Combinate workblock or feature. Reads the Teamwork task, scans the codebase and recent commits, then produces (1) an engineering-format user-stories doc, (2) a client-facing user-stories doc, and (3) a Playwright spec where every test maps to an acceptance criterion. Trigger when someone says "user stories", "test criteria", "acceptance criteria", "dev QA", "automation QA", "QA the workblock", "user stories for WB0X", "test criteria for task 12345", or asks for a structured QA artifact tied to a workblock or Teamwork task. Use this whenever a workblock is being signed off and needs a documented, testable definition of done.
 ---
 

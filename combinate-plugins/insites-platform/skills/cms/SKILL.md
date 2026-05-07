@@ -4,6 +4,7 @@ description: Insites CMS developer skill. Use when building or modifying pages, 
 model: claude-opus-4-6
 metadata:
   version: 1.0.0
+  intranet_url: https://intranet.combinate.me/presentation/skill-insites-cms
 ---
 
 # Insites: CMS Developer Skill

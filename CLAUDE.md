@@ -60,6 +60,7 @@ Skills are built organically. When you notice a recurring request, suggest turni
 - **teamwork-timelog-report** - Extracts Teamwork time entries for a team member over a date range and writes them to a new tab in a Google Sheet. Skill: `combinate-plugins/skills/08-Support/teamwork-timelog-report/SKILL.md`
 - **pcd-summary** - Reads a Project Centric Document (PCD) as a PDF attachment or Google Doc link and produces a structured summary covering team, tech stack, features, integrations, user flows, admin portals, and major changes. Skill: `combinate-plugins/skills/08-Support/pcd-summary/SKILL.md`
 - **task-test-criteria** - Analyzes a Teamwork task and its comment thread, then produces a structured QA document covering: (1) the issue explained, (2) fixes made, and (3) test criteria. Posts the result as a comment on the task with relevant team members notified. Skill: `combinate-plugins/skills/08-Support/task-test-criteria/SKILL.md`
+- **task-summary** - Reads a Teamwork task and its full comment thread and produces a structured catch-up summary (issue, progress, current state, blockers, key people, attachments, external links). Renders in chat first, then asks whether to post as a comment on the task. Trigger on "summarise task", "catch me up on task", "task summary", or `/combinate task-summary [task]`. Skill: `combinate-plugins/skills/01-General/task-summary/SKILL.md`
 
 **Insites module sub-skills** (load the relevant one when working with a specific module):
 

@@ -20,6 +20,7 @@ templates/zendesk-queue-responses.md
 
 # Credentials and service account keys
 credentials/
+.secrets/
 
 # Claude session data
 .claude/projects/

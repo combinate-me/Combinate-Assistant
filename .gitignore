@@ -13,7 +13,9 @@ node_modules/
 context/me.md
 context/current-priorities.md
 context/insites-instances.md
-.claude/skills
+.claude/skills/*
+!.claude/skills/combinate/
+!.claude/skills/combinate/SKILL.md
 templates/zendesk-queue-responses.md
 
 # Credentials and service account keys
@@ -21,6 +23,7 @@ credentials/
 
 # Claude session data
 .claude/projects/
+.claude/scheduled_tasks.lock
 
 # Generated HTML presentations
 presentations/

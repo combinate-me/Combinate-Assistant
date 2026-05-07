@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{TITLE}} - Combinate Presentation</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%23181818'/><path d='M50 18 L82 36 L82 64 L50 82 L18 64 L18 36 Z M50 18 L50 82 M18 36 L82 64 M82 36 L18 64' stroke='%231E43FF' stroke-width='4' fill='none' stroke-linejoin='round'/></svg>">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     /* ============================================
@@ -495,7 +496,8 @@
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 000 20V2z" fill="currentColor"/></svg>
       </button>
     </div>
-    <div class="nav-timer" id="navTimer" onclick="toggleTimer()">
+    <!-- Timer is hidden by default. Remove style="display:none" (or set to inline-flex) to enable when the user requests a presenter timer. -->
+    <div class="nav-timer" id="navTimer" onclick="toggleTimer()" style="display:none;">
       <button class="timer-start-btn" id="timerStartBtn" onclick="event.stopPropagation(); toggleTimer();">&#9654; Start</button>
       <span class="timer-segment" id="timerSegment" style="display:none;"></span>
       <span class="timer-countdown" id="timerCountdown" style="display:none;"></span>

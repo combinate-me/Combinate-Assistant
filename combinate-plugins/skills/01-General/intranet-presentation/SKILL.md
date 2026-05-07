@@ -1,8 +1,8 @@
 ---
 name: intranet-presentation
-description: Publish a Combinate HTML presentation to the intranet presentations database. Trigger on "publish presentation", "add presentation to intranet", "upload presentation to intranet", or "add to presentations page". v1.3.0
+description: Publish a Combinate HTML presentation to the intranet presentations database. Asks for HTML file, category, and access token. Trigger on "publish presentation", "add presentation to intranet", "upload presentation to intranet", or "add to presentations page". v1.4.0
 metadata:
-  version: 1.3.0
+  version: 1.4.0
   category: 01-General
 ---
 
@@ -87,9 +87,9 @@ Slug generation rules:
 
 ---
 
-### Step 3 — Ask for category only
+### Step 3 — Ask for category and token
 
-Present the inferred values and ask for the category in a single message:
+Present the inferred values and ask for the category and token in a single message:
 
 ```
 Extracted from the HTML:
@@ -100,6 +100,8 @@ Extracted from the HTML:
 
 Which category does this belong to?
 General / Sales / Marketing / Management / Design / Development / QA / Support
+
+Access token (saved to the token field — used to protect the presentation):
 ```
 
 **Valid categories:**
@@ -115,7 +117,9 @@ General / Sales / Marketing / Management / Design / Development / QA / Support
 | `QA` | QA |
 | `Support` | Support |
 
-Accept the user's answer as a case-insensitive label match (e.g. "01" or "general" → `General`, "07" or "qa" → `QA`). If unsure, default to `General`.
+Accept the user's category answer as a case-insensitive label match (e.g. "01" or "general" → `General`, "07" or "qa" → `QA`). If unsure, default to `General`.
+
+The token is stored as-is in `properties.token`. There is no auto-generation — the user must provide it.
 
 If the user also overrides the title, slug, or description at this point, use their values instead.
 
@@ -201,6 +205,7 @@ const payload = JSON.stringify({
   'properties.title':             'TITLE_VALUE',
   'properties.short_description': 'DESC_VALUE',
   'properties.category':          'CATEGORY_VALUE',
+  'properties.token':             'TOKEN_VALUE',
   'properties.status':            'Published',
   'properties.content':           escapedHtml
 });
@@ -235,7 +240,7 @@ req.write(payload);
 req.end();
 ```
 
-Substitute actual values for `HTML_FILE_PATH`, `SLUG_VALUE`, `TITLE_VALUE`, `DESC_VALUE`, and `CATEGORY_VALUE` before writing the file.
+Substitute actual values for `HTML_FILE_PATH`, `SLUG_VALUE`, `TITLE_VALUE`, `DESC_VALUE`, `CATEGORY_VALUE`, and `TOKEN_VALUE` before writing the file.
 
 Run with:
 

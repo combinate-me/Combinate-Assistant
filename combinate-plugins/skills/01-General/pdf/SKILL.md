@@ -4,6 +4,7 @@ description: Use this skill whenever the user wants to do anything with PDF file
 license: Proprietary. LICENSE.txt has complete terms
 metadata:
   version: 1.0.0
+  intranet_url: https://intranet.combinate.me/presentation/skill-pdf
 model: claude-sonnet-4-6
 ---
 

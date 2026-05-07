@@ -4,6 +4,7 @@ description: Combinate command dispatcher. Routes /combinate [command] to the ri
 metadata:
   version: 1.0.0
   category: 01-General
+  intranet_url: https://intranet.combinate.me/presentation/skill-combinate-dispatcher
 model: claude-sonnet-4-6
 ---
 
@@ -30,6 +31,16 @@ Pass the client name or TLA from `$ARGUMENTS` as the subject.
 Pull a Teamwork task and summarise it — title, project, assignees, due date, description, and latest comments.
 
 Load and follow: `combinate-plugins/skills/01-General/teamwork/SKILL.md`
+
+Extract the task ID from `$ARGUMENTS` (strip URL if needed, keep the numeric ID).
+
+---
+
+### `task-summary [task ID or URL]`
+
+Produce a structured catch-up summary of a Teamwork task and its full comment thread — issue, progress, current state, blockers, key people, attachments, and external links (GitHub PRs, Figma, Drive). Renders the summary in chat first, then asks whether to post as a comment on the task.
+
+Load and follow: `combinate-plugins/skills/01-General/task-summary/SKILL.md`
 
 Extract the task ID from `$ARGUMENTS` (strip URL if needed, keep the numeric ID).
 

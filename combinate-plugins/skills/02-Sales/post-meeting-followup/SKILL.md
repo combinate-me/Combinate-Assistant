@@ -3,6 +3,7 @@ name: post-meeting-followup
 metadata:
   version: 1.0.0
   category: 02-Sales
+  intranet_url: https://intranet.combinate.me/presentation/skill-post-meeting-followup
 model: claude-opus-4-6
 description: Full post-meeting follow-up workflow for Combinate client meetings. Use this skill whenever Shane has just had a client meeting and needs to follow up - this includes creating a summary document, analysis spreadsheet, and a client-ready email draft. Trigger on phrases like "help me follow up from my [client] meeting", "we just had a call with [client]", "create a follow-up doc", "draft a follow-up email after our meeting", or any post-meeting task where a client email, summary, or action items are needed. v1.0.0
 ---

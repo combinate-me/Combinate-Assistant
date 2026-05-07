@@ -3,6 +3,7 @@ name: zendesk
 metadata:
   version: 1.0.0
   category: 08-Support
+  intranet_url: https://intranet.combinate.me/presentation/skill-zendesk
 model: claude-sonnet-4-6
 description: Zendesk integration for Combinate's support ticket system. Use this skill for any interaction with Zendesk - reading tickets, adding internal notes, writing draft replies to customers, updating ticket status, and searching for tickets by requester or keyword. Trigger on any mention of support tickets, Zendesk, customer support requests, or phrases like "what tickets are open", "reply to the ticket from [person]", "add a note to ticket [ID]", "show me open tickets", or "draft a response to [ticket]". v1.0.0
 ---

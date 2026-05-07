@@ -4,6 +4,7 @@ description: Combinate-specific workflows layered on top of Insites. Use this sk
 metadata:
   version: 1.0.0
   category: 02-Sales
+  intranet_url: https://intranet.combinate.me/presentation/skill-combinate
 model: claude-sonnet-4-6
 ---
 

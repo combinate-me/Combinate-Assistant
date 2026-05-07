@@ -4,6 +4,7 @@ description: Generate a deployment plan for a Teamwork task. Use this skill when
 metadata:
   version: 1.1.0
   category: 01-General
+  intranet_url: https://intranet.combinate.me/presentation/skill-deployment-plan
 model: claude-haiku-4-5-20251001
 ---
 

@@ -4,6 +4,7 @@ description: Insites Pipelines module. Use for managing sales pipelines, pipelin
 model: claude-sonnet-4-6
 metadata:
   version: 1.0.0
+  intranet_url: https://intranet.combinate.me/presentation/skill-insites-pipelines
 ---
 
 # Insites: Pipelines Module

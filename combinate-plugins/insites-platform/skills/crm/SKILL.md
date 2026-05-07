@@ -4,6 +4,7 @@ description: Insites CRM module. Use for looking up contacts and companies, sear
 model: claude-sonnet-4-6
 metadata:
   version: 1.0.0
+  intranet_url: https://intranet.combinate.me/presentation/skill-insites-crm
 ---
 
 # Insites: CRM Module

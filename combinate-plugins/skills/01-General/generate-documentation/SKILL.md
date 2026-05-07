@@ -4,6 +4,7 @@ description: Generate a Google Doc from a project's COMPONENTS.md (or any markdo
 metadata:
   version: 1.0.0
   category: 01-General
+  intranet_url: https://intranet.combinate.me/presentation/skill-generate-documentation
 model: claude-sonnet-4-6
 ---
 

@@ -4,6 +4,7 @@ description: Run the full automated QA suite (Lighthouse, axe accessibility, W3C
 metadata:
   version: 1.0.0
   category: 07-QA
+  intranet_url: https://intranet.combinate.me/presentation/skill-workblock-automated-qa
 ---
 
 # Skill: Workblock Automated QA

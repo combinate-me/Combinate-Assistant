@@ -9,6 +9,7 @@ metadata:
   requires:
     os: macOS
     binaries: [curl, python3, screencapture, osascript, pbcopy, file, base64]
+  intranet_url: https://intranet.combinate.me/presentation/skill-droplr
 ---
 
 # Skill: Droplr

@@ -4,6 +4,7 @@ description: Publish a Combinate HTML presentation to the intranet presentations
 metadata:
   version: 1.4.0
   category: 01-General
+  intranet_url: https://intranet.combinate.me/presentation/skill-intranet-presentation
 ---
 
 # Skill: Publish Presentation to Intranet
@@ -285,6 +286,6 @@ Published successfully.
 - Table ID for `ai-presentations` is `29990`
 - The `status` field is always set to `"Published"` — there is no draft mode in this workflow
 - HTML content is stored in `properties.content` (not a top-level `content` key)
-- Double quotes in HTML must be pre-escaped as `\"` before JSON serialization — the API interpolates property values into GraphQL string literals server-side, and unescaped `"` breaks the query. Use `.replace(/"/g, '\\"')` before `JSON.stringify`
+- Double quotes in HTML must be pre-escaped as `\"` before JSON serialization — the API interpolates property values into GraphQL string literals server-side, and unescaped `"` breaks the query. Use `.replace(/"/g, '\\"')` before `JSON.stringify`. **Important:** HTML entity `&quot;` is also decoded to `"` by the server before interpolation — when generating HTML for upload, use raw `"` in text content (not `&quot;`), so the `replace(/"/g, '\\"')` step catches them correctly.
 - Slug format must be `presentation/{slug}` — the leading `presentation/` is part of the slug stored in the DB
 - Credentials come from `.env` in the Executive-Assistant repo — no need to switch to the `cmb-intranet` repo

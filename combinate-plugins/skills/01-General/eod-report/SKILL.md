@@ -4,6 +4,7 @@ description: End-of-day or midday standup workflow for Combinate team members. P
 metadata:
   version: 3.1.0
   category: 01-General
+  intranet_url: https://intranet.combinate.me/presentation/skill-eod-report
 model: claude-haiku-4-5-20251001
 ---
 

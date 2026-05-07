@@ -4,6 +4,7 @@ description: All-in-one GitHub repository skill. Handles checking sync status, p
 metadata:
   version: 1.2.0
   category: 01-General
+  intranet_url: https://intranet.combinate.me/presentation/skill-skill-sharing
 ---
 
 # Skill: Sync and Push

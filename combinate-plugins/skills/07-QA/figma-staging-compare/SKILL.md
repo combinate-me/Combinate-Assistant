@@ -3,6 +3,7 @@ name: figma-staging-compare
 metadata:
   version: 1.0.0
   category: 07-QA
+  intranet_url: https://intranet.combinate.me/presentation/skill-figma-staging-compare
 description: Compare a Figma design node against a staging page for font, spacing, and style alignment. Supports single or dual Figma URLs (desktop + mobile), live Playwright screenshots at a given viewport width, WebFetch HTML fallback, and three-way comparison against the style guide. Outputs a structured QA report and applies fixes on confirmation. Trigger on any request to QA, compare, or verify a Figma design against a staging URL or screenshot. v1.0.0
 ---
 

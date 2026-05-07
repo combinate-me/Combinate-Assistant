@@ -2,7 +2,7 @@
 name: eod-report
 description: End-of-day or midday standup workflow for Combinate team members. Pulls today's Teamwork timelogs, classifies tasks as deliverables vs meetings, captures a time logs screenshot via Droplr, then posts a structured HTML comment to a recurring EOD/Midday Teamwork task. Trigger on "eod report", "EOD standup", "end of day", "midday report", "generate EOD", "daily wrap-up", "log my day", or "post EOD".
 metadata:
-  version: 3.1.0
+  version: 3.1.1
   category: 01-General
   intranet_url: https://intranet.combinate.me/presentation/skill-eod-report
 model: claude-haiku-4-5-20251001
@@ -70,7 +70,7 @@ This writes Droplr credentials to `.env` and verifies macOS permissions.
 
 - Step 1 auto-resolves your EOD task ID without prompting
 - Step 5 produces a `cbo.d.pr/i/...` URL pointing to your time logs
-- Step 8 schedule fires at 16:00 Manila and produces a logged time entry, Slack DM, and Teamwork comment
+- Step 8 schedule fires at 15:58 Manila (re-fetch + timelog + screenshot) and 15:59 Manila (Slack DM + Teamwork comment)
 
 If anything fails, see the **Error Handling** table at the bottom.
 
@@ -382,27 +382,27 @@ Apply any edits, then proceed.
 
 ---
 
-## Step 8 — Schedule the send for 16:00 Asia/Manila (with re-fetch at 15:55)
+## Step 8 — Schedule the send for 15:59 Asia/Manila (with re-fetch at 15:58)
 
-The team convention is to post the EOD comment at the end of the working day. Because the user may queue this hours before 16:00 (e.g. queuing at 09:00), the scheduled script **re-fetches today's timelogs and re-captures the screenshot at 15:55 Manila** (5 minutes before send). The user's manual overrides from Step 7 (project moves, status corrections) are persisted as JSON and re-applied after the fresh fetch.
+The team convention is to post the EOD comment at the end of the working day. Because the user may queue this hours before, the scheduled script **re-fetches today's timelogs at 15:58 Manila**, logs the EOD time entry, captures the screenshot (so the EOD entry itself is visible in it), then sends the Slack DM and posts the Teamwork comment at 15:59. The user's manual overrides from Step 7 (project moves, status corrections) are persisted as JSON and re-applied after the fresh fetch.
 
 The script splits into two phases:
 
-**Phase 1 — at 15:55 Asia/Manila** (refresh and rebuild):
+**Phase 1 — at 15:58 Asia/Manila** (refresh, log time, capture):
 
 1. **Re-fetch** today's timelogs from Teamwork
 2. **Re-classify** tasks using the auto-rules from Step 3
 3. **Apply user overrides** (from Step 7) on top of the auto-classification
-4. **Re-capture the screenshot** (open Teamwork time logs in Chrome → wait → `capture.sh app "Google Chrome"` → close tab)
-5. **Re-build** the Slack mrkdwn body and Teamwork HTML body fresh from the new data
+4. **Log 15 minutes** on the EOD task — description `EOD`, time `15:45`, duration `15m`, **non-billable** — done before the screenshot so the EOD entry appears in the captured time logs
+5. **Re-capture the screenshot** (open Teamwork time logs in Chrome → wait → `capture.sh app "Google Chrome"` → close tab)
+6. **Re-build** the Slack mrkdwn body and Teamwork HTML body fresh from the new data
 
-**Phase 2 — at 16:00 Asia/Manila** (commit):
+**Phase 2 — at 15:59 Asia/Manila** (commit):
 
-6. **Log 15 minutes** on the EOD task — description `EOD`, time `15:45`, duration `15m`, **non-billable**
-7. **Send the Slack DM** to `$SLACK_USER_ID`
-8. **Post the HTML comment** to the EOD task
+7. **Send the Slack DM** to `$SLACK_USER_ID` — Deliverables section only (Meetings and Time logs sections removed from the Slack message)
+8. **Post the HTML comment** to the EOD task — full template including Meetings (Section 4) and Time logs screenshot (Section 5)
 
-The 5-minute window between Phase 1 and Phase 2 means the Teamwork comment is posted exactly at 16:00 PHT (matching the team convention) while still capturing any timelog entries made up to 15:55.
+The 1-minute window between Phase 1 and Phase 2 means the Teamwork comment is posted at 15:59 PHT (one minute before the 16:00 deadline) while still capturing any timelog entries made up to 15:58, plus the EOD entry itself.
 
 If the user explicitly asks for an immediate send (e.g. "send now, don't wait"), use Step 9 (no sleep, no re-fetch — just send what was previewed).
 
@@ -443,11 +443,11 @@ OVERRIDES = [OVERRIDES_JSON]
 
 MEETING_KEYWORDS = ['rsm', 'rapid standup', 'daily standup', 'show and tell', 'team huddle', 'huddle', '1:1']
 
-# Phase 1: wait until 15:55 Asia/Manila (refresh and rebuild)
+# Phase 1: wait until 15:58 Asia/Manila (refresh, log time, capture)
 os.environ['TZ'] = 'Asia/Manila'
 time.tzset()
-phase1 = datetime.datetime.now().replace(hour=15, minute=55, second=0, microsecond=0)
-phase2 = datetime.datetime.now().replace(hour=16, minute=0,  second=0, microsecond=0)
+phase1 = datetime.datetime.now().replace(hour=15, minute=58, second=0, microsecond=0)
+phase2 = datetime.datetime.now().replace(hour=15, minute=59, second=0, microsecond=0)
 now = datetime.datetime.now()
 wait1 = (phase1 - now).total_seconds()
 print(f"[scheduler] now={now} phase1={phase1} wait1={wait1:.0f}s", flush=True)
@@ -549,7 +549,21 @@ for tid, ov in OVERRIDES.items():
     if ov.get('is_meeting') is True:  tasks[tid]['kind'] = 'meeting'; tasks[tid]['status'] = None
     if ov.get('is_meeting') is False: tasks[tid]['kind'] = 'deliverable'
 
-# 4. Re-capture screenshot
+# 4. Log 15 minutes on the EOD task BEFORE the screenshot so the entry is visible in it
+try:
+    tl_payload = json.dumps({"time-entry": {
+        "description": "EOD", "person-id": user_id, "date": today,
+        "time": "15:45", "hours": "0", "minutes": "15", "isbillable": "0"
+    }}).encode()
+    req = urllib.request.Request(f"{site}/tasks/{EOD_TASK_ID}/time_entries.json", data=tl_payload,
+        headers={"Content-Type": "application/json", "Authorization": f"Basic {token}"}, method="POST")
+    with urllib.request.urlopen(req) as resp:
+        d = json.loads(resp.read())
+        print("[timelog] id=", d.get("timeLogId") or d.get("id"), "status=", d.get("STATUS"), flush=True)
+except Exception as e:
+    print("[timelog] EXC", e, flush=True)
+
+# 5. Re-capture screenshot (after the EOD timelog is in place)
 screenshot_url = None
 try:
     subprocess.run(['open', '-a', 'Google Chrome', f"{site}/app/time/all"], check=False)
@@ -582,11 +596,6 @@ for proj, items in by_proj.items():
     slack_lines.append(f"• *{proj}*")
     for tid, r in items:
         slack_lines.append(f"  • <{r['url']}|{r['name']}> `{r['status']}`")
-slack_lines += ["", "*Meetings*"]
-for tid, r in meetings.items():
-    slack_lines.append(f"• <{r['url']}|{r['name']}>")
-if screenshot_url:
-    slack_lines += ["", f"*Time logs:* <{screenshot_url}|screenshot>"]
 slack_text = "\n".join(slack_lines)
 
 html_parts = ['<strong>Midday / End-of-Day Report (must be posted on / before 6:00PM, PHT)</strong><br/>',
@@ -610,26 +619,12 @@ else:
     html_parts.append('<br/><em>[Screenshot to be uploaded]</em>')
 html_body = "\n".join(html_parts)
 
-# Phase 2: wait until 16:00 Asia/Manila (commit)
+# Phase 2: wait until 15:59 Asia/Manila (commit)
 now = datetime.datetime.now()
 wait2 = (phase2 - now).total_seconds()
 print(f"[scheduler] now={now} phase2={phase2} wait2={wait2:.0f}s", flush=True)
 if wait2 > 0:
     time.sleep(wait2)
-
-# 6. Log 15 minutes on the EOD task
-try:
-    tl_payload = json.dumps({"time-entry": {
-        "description": "EOD", "person-id": user_id, "date": today,
-        "time": "15:45", "hours": "0", "minutes": "15", "isbillable": "0"
-    }}).encode()
-    req = urllib.request.Request(f"{site}/tasks/{EOD_TASK_ID}/time_entries.json", data=tl_payload,
-        headers={"Content-Type": "application/json", "Authorization": f"Basic {token}"}, method="POST")
-    with urllib.request.urlopen(req) as resp:
-        d = json.loads(resp.read())
-        print("[timelog] id=", d.get("timeLogId") or d.get("id"), "status=", d.get("STATUS"), flush=True)
-except Exception as e:
-    print("[timelog] EXC", e, flush=True)
 
 # 7. Send the Slack DM
 try:
@@ -660,13 +655,13 @@ sleep 1
 cat /tmp/eod_send.log
 ```
 
-Tell the user the script is queued. The log will show two scheduler entries (Phase 1 wakeup at 15:55 then Phase 2 wakeup at 16:00) followed by `[refetch]`, `[screenshot]`, `[timelog]`, `[slack]`, `[teamwork]`. Confirm by checking `/tmp/eod_send.log` shortly after 16:00 Manila.
+Tell the user the script is queued. The log will show two scheduler entries (Phase 1 wakeup at 15:58 then Phase 2 wakeup at 15:59) followed by `[refetch]`, `[timelog]`, `[screenshot]`, `[slack]`, `[teamwork]`. Confirm by checking `/tmp/eod_send.log` shortly after 15:59 Manila.
 
 **Important**:
 
-- The user's machine must stay awake (lid open, no sleep) until 16:00 Manila for the scheduled send to fire. If queuing more than ~30 minutes early, remind the user.
-- The screenshot re-capture targets Google Chrome's frontmost window. At 16:00, the script opens the time logs URL itself, so the user does not need to keep the tab open — but Chrome must be running and Accessibility permission must still be granted for `osascript`.
-- Manual corrections from Step 7 are persisted in the `OVERRIDES` JSON. Any new task that lands between queue time and 16:00 is auto-classified using the Step 3 rules. If a new task needs a manual correction, it will not be applied — flag this caveat to the user when queuing.
+- The user's machine must stay awake (lid open, no sleep) until 15:59 Manila for the scheduled send to fire. If queuing more than ~30 minutes early, remind the user.
+- The screenshot re-capture targets Google Chrome's frontmost window. At 15:58, the script opens the time logs URL itself, so the user does not need to keep the tab open — but Chrome must be running and Accessibility permission must still be granted for `osascript`.
+- Manual corrections from Step 7 are persisted in the `OVERRIDES` JSON. Any new task that lands between queue time and 15:58 is auto-classified using the Step 3 rules. If a new task needs a manual correction, it will not be applied — flag this caveat to the user when queuing.
 
 ---
 

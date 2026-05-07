@@ -46,20 +46,71 @@ Skills are built organically. When you notice a recurring request, suggest turni
 
 #### Active Skills
 
-- **daily-task-brief** - Sends a teammate's daily task summary to their Slack DM. Pulls overdue and due-today tasks from Teamwork, plus Developers column tasks from the Support Board. Trigger on "what's on my plate today", "daily task brief", "send my tasks to Slack", "task brief for [name]". Skill: `combinate-plugins/skills/01-General/daily-task-brief/SKILL.md`
-- **grill-me** - Stress-tests a plan or design by interviewing the user relentlessly, resolving each branch of the decision tree one dependency at a time. Trigger on "grill me" or requests to pressure-test architecture, process, or strategy. Skill: `combinate-plugins/skills/01-General/grill-me/SKILL.md`
-- **eod-report** - End-of-day or midday standup. Pulls today's Teamwork timelogs, checks task statuses, asks about blockers, and posts a structured digest. Trigger on "eod report", "end of day", "log my day", "daily wrap-up". Skill: `combinate-plugins/skills/01-General/eod-report/SKILL.md`
-- **deployment-plan** - Generates a structured deployment plan for a feature or release, covering steps, rollback, and comms. Skill: `combinate-plugins/skills/01-General/deployment-plan/SKILL.md`
-- **token-efficiency** - Guides the user on reducing Claude token usage and optimising prompts for cost and speed. Skill: `combinate-plugins/skills/01-General/token-efficiency/SKILL.md`
+**01-General** — utilities, integrations, and daily tools:
+
+- **teamwork** - Read tasks, comments, create tasks. Trigger on any mention of tasks, projects, deadlines, or assignments. Skill: `combinate-plugins/skills/01-General/teamwork/SKILL.md`
+- **slack** - Search messages, read channels, post messages. Trigger on any mention of Slack or team conversations. Skill: `combinate-plugins/skills/01-General/slack/SKILL.md`
+- **pdf** - Read, extract, combine, split, and convert PDF files. Trigger on any mention of a .pdf file or request to produce one. Skill: `combinate-plugins/skills/01-General/pdf/SKILL.md`
+- **research** - Deep research via Perplexity API, tailored to Combinate's business context. Trigger on "research X", "look into X", or any question requiring synthesised external knowledge. Skill: `combinate-plugins/skills/01-General/research/SKILL.md`
+- **daily-task-brief** - Sends a teammate's daily task summary to their Slack DM. Trigger on "what's on my plate today", "daily task brief", "task brief for [name]". Skill: `combinate-plugins/skills/01-General/daily-task-brief/SKILL.md`
+- **eod-report** - End-of-day or midday standup. Pulls Teamwork timelogs, checks task statuses, posts a digest. Trigger on "eod report", "end of day", "log my day". Skill: `combinate-plugins/skills/01-General/eod-report/SKILL.md`
+- **grill-me** - Stress-tests a plan or design by interviewing the user relentlessly. Trigger on "grill me" or requests to pressure-test architecture or strategy. Skill: `combinate-plugins/skills/01-General/grill-me/SKILL.md`
+- **skill-creator** - Create new skills, modify existing skills, run evals, and benchmark performance. Skill: `combinate-plugins/skills/01-General/skill-creator/SKILL.md`
+- **skill-sharing** - Check sync status, pull latest, push changes as a PR, or update remote URL after a rename. Trigger on "do I have the latest", "push to repo", "create a PR". Skill: `combinate-plugins/skills/01-General/skill-sharing/SKILL.md`
+- **token-efficiency** - Guides on reducing Claude token usage and optimising prompts for cost and speed. Skill: `combinate-plugins/skills/01-General/token-efficiency/SKILL.md`
 - **droplr** - Share files and screenshots via Droplr. Trigger on any request to share, upload, or get a shareable link. Skill: `combinate-plugins/skills/01-General/droplr/SKILL.md`
-- **pre-meeting-presentation** - Builds a branded HTML presentation before any client or prospect meeting. Gathers context from Teamwork, Calendar, Gmail, CRM, Drive, and Slack. Exports to PDF. Skill: `combinate-plugins/skills/01-General/pre-meeting-presentation/SKILL.md`
-- **post-meeting-followup** - Full workflow for creating follow-up docs, spreadsheets, and client emails after client meetings. Skill: `combinate-plugins/skills/02-Sales/post-meeting-followup/SKILL.md`
-- **combinate** - Combinate-specific client context workflows: Google Drive folder lookup, cross-system context gathering, client TLA and custom CRM fields. Skill: `combinate-plugins/skills/02-Sales/client-context/SKILL.md`
+- **deployment-plan** - Generates a structured deployment plan for a feature or release, covering steps, rollback, and comms. Skill: `combinate-plugins/skills/01-General/deployment-plan/SKILL.md`
+- **combinate-presentation** - Generate branded, self-contained HTML presentations for Combinate. Skill: `combinate-plugins/skills/01-General/combinate-presentation/SKILL.md`
+- **intranet-presentation** - Publish a Combinate HTML presentation to the intranet presentations database. Trigger on "publish presentation", "add presentation to intranet". Skill: `combinate-plugins/skills/01-General/intranet-presentation/SKILL.md`
+- **pre-meeting-presentation** - Builds a branded HTML presentation before any client or prospect meeting. Gathers context from Teamwork, Calendar, Gmail, CRM, Drive, and Slack. Skill: `combinate-plugins/skills/01-General/pre-meeting-presentation/SKILL.md`
+- **generate-documentation** - Generate a Google Doc from a project's COMPONENTS.md or markdown documentation file. Trigger on "generate documentation", "create a doc from the components". Skill: `combinate-plugins/skills/01-General/generate-documentation/SKILL.md`
+- **combinate-dispatcher** - Routes /combinate [command] to the right workflow. Skill: `combinate-plugins/skills/01-General/combinate-dispatcher/SKILL.md`
+
+**02-Sales** — client context and meeting workflows:
+
+- **combinate** - Gather full client context from CRM, Teamwork, Calendar, Drive, Slack, Gmail in parallel. Trigger when a client is mentioned and context needs to be gathered. Skill: `combinate-plugins/skills/02-Sales/client-context/SKILL.md`
+- **post-meeting-followup** - Full workflow for creating follow-up docs, spreadsheets, and client emails after meetings. Skill: `combinate-plugins/skills/02-Sales/post-meeting-followup/SKILL.md`
+
+**05-Design** — brand and design standards:
+
+- **branding** - Apply Combinate brand standards to any client-facing content, documents, or communications. Trigger on any task involving Combinate brand application. Skill: `combinate-plugins/skills/05-Design/branding/SKILL.md`
+
+**07-QA** — quality assurance workflows:
+
+- **figma-staging-compare** - Compare a Figma design against a staging page for font, spacing, and style alignment. Trigger on any request to QA or verify a design against a staging URL. Skill: `combinate-plugins/skills/07-QA/figma-staging-compare/SKILL.md`
+- **qa-acceptance-criteria** - Generate user stories, acceptance criteria, and Playwright tests for a workblock. Trigger on "user stories", "acceptance criteria", "test criteria for WB0X". Skill: `combinate-plugins/skills/07-QA/qa-acceptance-criteria/SKILL.md`
+- **wcag-audit** - Perform a WCAG 2.1 AA accessibility audit on a staging URL and fix issues one by one. Trigger on any request to audit or fix accessibility. Skill: `combinate-plugins/skills/07-QA/wcag-audit/SKILL.md`
+- **workblock-automated-qa** - Run the full automated QA suite (Lighthouse, axe, W3C, Playwright) against a workblock. Trigger on "automated QA", "QA report for WB0X", "run QA on the workblock". Skill: `combinate-plugins/skills/07-QA/workblock-automated-qa/SKILL.md`
+- **visual-regression** - Run a full visual regression test between two web environments (desktop + mobile, pixel-diffed HTML report). Trigger on "regression testing", "compare staging", "regression report". Skill: `combinate-plugins/skills/07-QA/visual-regression/SKILL.md`
+
+**06-Development** — developer workflows:
+
+- **task-update** - Post a standardised progress comment on a Teamwork task for a specific commit (summary, files changed, test plan, PR details). Trigger on "task update", "post task comment", "update TW#". Skill: `combinate-plugins/skills/06-Development/task-update/SKILL.md`
+
+**08-Support** — support and delivery tools:
+
 - **zendesk** - Read and reply to support tickets, add internal notes, search and update ticket status. Skill: `combinate-plugins/skills/08-Support/zendesk/SKILL.md`
-- **create-user-guide** - Creates or extends client-facing User Guide Google Docs for delivered projects. Gathers context from Teamwork custom item (PCD, GitHub, Figma, Lucidchart, Slack channel, master project sheet), Insites instance, Gmail, and more. Logs time on the Teamwork task on completion. Skill: `combinate-plugins/skills/08-Support/create-user-guide/SKILL.md`
-- **teamwork-timelog-report** - Extracts Teamwork time entries for a team member over a date range and writes them to a new tab in a Google Sheet. Skill: `combinate-plugins/skills/08-Support/teamwork-timelog-report/SKILL.md`
-- **pcd-summary** - Reads a Project Centric Document (PCD) as a PDF attachment or Google Doc link and produces a structured summary covering team, tech stack, features, integrations, user flows, admin portals, and major changes. Skill: `combinate-plugins/skills/08-Support/pcd-summary/SKILL.md`
-- **task-test-criteria** - Analyzes a Teamwork task and its comment thread, then produces a structured QA document covering: (1) the issue explained, (2) fixes made, and (3) test criteria. Posts the result as a comment on the task with relevant team members notified. Skill: `combinate-plugins/skills/08-Support/task-test-criteria/SKILL.md`
+- **create-user-guide** - Creates or extends client-facing User Guide Google Docs for delivered projects. Skill: `combinate-plugins/skills/08-Support/create-user-guide/SKILL.md`
+- **teamwork-timelog-report** - Extracts Teamwork time entries for a team member over a date range and writes them to a Google Sheet. Skill: `combinate-plugins/skills/08-Support/teamwork-timelog-report/SKILL.md`
+- **pcd-summary** - Reads a Project Centric Document (PCD) and produces a structured summary covering team, tech stack, features, and integrations. Skill: `combinate-plugins/skills/08-Support/pcd-summary/SKILL.md`
+- **task-test-criteria** - Analyses a Teamwork task and produces a QA document covering the issue, fixes made, and test criteria. Posts the result as a task comment. Skill: `combinate-plugins/skills/08-Support/task-test-criteria/SKILL.md`
+
+**Combinate local skills** (in `.claude/skills/`, used daily for project delivery):
+
+- **active-project-summary** - Top-level weekly summary of all active Combinate projects from Teamwork. Trigger on "active project summary", "what are the active projects", "project overview". Skill: `.claude/skills/combinate/active-project-summary/SKILL.md`
+- **dev-tasks** - Creates developer subtasks under a workblock's Development Tasks parent task in Teamwork. Trigger on "create dev tasks", "create developer tasks". Skill: `.claude/skills/combinate/create-dev-tasks/SKILL.md`
+- **fill-claude-custom-item** - Fills in missing fields in a Teamwork project's Claude tab. Trigger on "fill in the Claude tab", "complete the Claude custom item". Skill: `.claude/skills/combinate/fill-claude-custom-item/SKILL.md`
+- **initial-design-concepts** - Sends the initial design concepts email to a client with two design options and Figma prototype links. Trigger on "send design concepts", "design handover email". Skill: `.claude/skills/combinate/initial-design-concepts/SKILL.md`
+- **new-project-setup** - Copies the standard Insites tasklists from the master template into a new Teamwork project. Trigger on "new project setup", "set up new project". Skill: `.claude/skills/combinate/new-project-teamwork-setup/SKILL.md`
+- **post-email-task-update** - Updates a Teamwork task after a client email is sent (adds comment, Waiting on Client tag if needed). Trigger on "log this email on the task", "update the task". Skill: `.claude/skills/combinate/post-email-task-update/SKILL.md`
+- **project-onboarding** - Generates a full onboarding brief for a project from a Teamwork task, tasklist, or project URL. Trigger on "onboard me to", "brief me on", "catch me up on [project]". Skill: `.claude/skills/combinate/project-onboarding/SKILL.md`
+- **qa-plan** - Generates Design QA and Functional QA test criteria from dev subtasks and posts them to QA tasks. Trigger on "create QA plan", "write QA criteria". Skill: `.claude/skills/combinate/qa-plan/SKILL.md`
+- **session-closeout** - End-of-session summary saved as a Google Doc to Erin's session notes Drive folder. Trigger on "close out", "end session", "wrap up", "session summary". Skill: `.claude/skills/combinate/session-closeout/SKILL.md`
+- **team-daily** - RSM standup view: yesterday's tasks and today's tasks + overdue for the dev team. Trigger on "what's on for my team today", "team standup". Skill: `.claude/skills/combinate/team-daily/SKILL.md`
+- **technical-sitemap** - Populates the Technical Sitemap tab of a Master Project Sheet from a Figma visual sitemap. Trigger on "fill in the technical sitemap", "populate the sitemap". Skill: `.claude/skills/combinate/technical-sitemap/SKILL.md`
+- **time-log-export** - Export time logs from a Teamwork project into a classified Google Sheet in the client's Drive folder. Trigger on "time log export", "export time logs", "time report". Skill: `.claude/skills/combinate/time-log-export/SKILL.md`
+- **monthly-time-report** - Generates the Service Delivery monthly time report from Teamwork data. Populates a monthly tab in the Service Delivery Time Reports spreadsheet. Trigger on "monthly time report", "service delivery report". Skill: `.claude/skills/combinate/monthly-time-report/SKILL.md`
+- **notebooklm** - Query Google NotebookLM notebooks for source-grounded, citation-backed answers. Trigger on any request to query a NotebookLM notebook or add materials to the notebook library. Skill: `.claude/skills/notebooklm/SKILL.md`
 
 **Insites module sub-skills** (load the relevant one when working with a specific module):
 

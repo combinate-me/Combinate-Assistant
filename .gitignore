@@ -16,6 +16,28 @@ context/insites-instances.md
 .claude/skills/*
 !.claude/skills/combinate/
 !.claude/skills/combinate/SKILL.md
+!.claude/skills/combinate/create-dev-tasks/
+!.claude/skills/combinate/create-dev-tasks/**
+!.claude/skills/combinate/fill-claude-custom-item/
+!.claude/skills/combinate/fill-claude-custom-item/**
+!.claude/skills/combinate/initial-design-concepts/
+!.claude/skills/combinate/initial-design-concepts/**
+!.claude/skills/combinate/new-project-teamwork-setup/
+!.claude/skills/combinate/new-project-teamwork-setup/**
+!.claude/skills/combinate/post-email-task-update/
+!.claude/skills/combinate/post-email-task-update/**
+!.claude/skills/combinate/project-onboarding/
+!.claude/skills/combinate/project-onboarding/**
+!.claude/skills/combinate/qa-plan/
+!.claude/skills/combinate/qa-plan/**
+!.claude/skills/combinate/session-closeout/
+!.claude/skills/combinate/session-closeout/**
+!.claude/skills/combinate/team-daily/
+!.claude/skills/combinate/team-daily/**
+!.claude/skills/combinate/time-log-export/
+!.claude/skills/combinate/time-log-export/**
+!.claude/skills/notebooklm/
+!.claude/skills/notebooklm/**
 templates/zendesk-queue-responses.md
 
 # Credentials and service account keys

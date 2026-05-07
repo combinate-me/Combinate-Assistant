@@ -36,6 +36,16 @@ Extract the task ID from `$ARGUMENTS` (strip URL if needed, keep the numeric ID)
 
 ---
 
+### `task-summary [task ID or URL]`
+
+Produce a structured catch-up summary of a Teamwork task and its full comment thread — issue, progress, current state, blockers, key people, attachments, and external links (GitHub PRs, Figma, Drive). Renders the summary in chat first, then asks whether to post as a comment on the task.
+
+Load and follow: `combinate-plugins/skills/01-General/task-summary/SKILL.md`
+
+Extract the task ID from `$ARGUMENTS` (strip URL if needed, keep the numeric ID).
+
+---
+
 ### `ticket [ticket ID]`
 
 Pull a Zendesk support ticket and summarise it — subject, status, requester, and thread.
